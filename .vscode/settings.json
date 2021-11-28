@@ -1,0 +1,21 @@
+{
+    "explorer.compactFolders": false,
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv",
+    "python.envFile": "${workspaceFolder}/.env",
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "bash",
+            "args": ["-c", "export `cat .env`; $SHELL"]
+        }
+    },
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+}
