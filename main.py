@@ -1,14 +1,18 @@
-from src.domain.configs.cams import CAM_CROSSING
+from src.domain.configs.cams import CAM_CROSSING, CAM_STREET, CAM_EASY_STREET
 from src.external.opencv.live_video_capture import LiveVideoCapture
 
 import cv2
 
-cam = LiveVideoCapture(0, lambda _, frame: cv2.imshow('frame', frame))
+cams = []
+for cam in [CAM_CROSSING, CAM_STREET, CAM_EASY_STREET]:
+    cams.append((str(cam), LiveVideoCapture(cam)))
 
 while True:
-    frame = cam.frame
-    if frame is not None:
-        mirror = cv2.flip(frame, 1)
-        cv2.imshow('frame', mirror)
+    frames = [cam[1].frame for cam in cams]
+    
+    for index, frame in enumerate(frames):
+        if frame is not None:
+            cv2.imshow(cams[index][0], frame)
+            
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
