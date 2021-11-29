@@ -1,4 +1,5 @@
 from threading import Thread
+from copy import deepcopy
 
 import cv2
 
@@ -31,6 +32,13 @@ class LiveVideoCapture:
         self._cam.release()
         
         
+    def pop_last_frame(self):
+        """ Pop the last frame """
+        frame = deepcopy(self.frame)
+        self.frame = None
+        return frame
+
+
     def _update(self):
         """ Update the lastest frame """
         while True:
