@@ -1,4 +1,5 @@
-from src.domain.configs.cams import CAM_CROSSING, CAM_STREET, CAM_EASY_STREET
+from src.domain.configs.cams import CAM_CROSSING, CAM_STREET, CAM_EASY_STREET, CAM_PEOPLE, CAM_GARAGE
+from src.domain.configs.cams import CAM_HOUSE_1, CAM_HOUSE_2, CAM_HOUSE_3, CAM_HOUSE_4
 from src.domain.configs.yolo_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
 from src.external.opencv.live_video_capture import LiveVideoCapture
@@ -13,7 +14,7 @@ LiveVideo = namedtuple('LiveVideo', 'title cam')
 yolo = YoloDNN(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 
 videos = []
-for cam in [CAM_CROSSING, CAM_STREET, CAM_EASY_STREET, 0]:
+for cam in [CAM_HOUSE_1, CAM_HOUSE_2, CAM_HOUSE_3, CAM_HOUSE_4]:
     videos.append(LiveVideo(str(cam), LiveVideoCapture(cam)))
 
 while True:
@@ -23,7 +24,7 @@ while True:
         if frame is not None:
             title = videos[index].title
             boxes, scores, classes = yolo.predict(frame)
-            yolo.show_img_with_boxes(title, frame, boxes, scores, classes)
+            yolo.show_img_with_boxes(title, frame, boxes, scores, classes, scale=2)
             
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

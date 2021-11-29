@@ -129,7 +129,7 @@ class YoloDNN:
         return self._filter_boxes(output_results, width, height)
         
         
-    def show_img_with_boxes(self, title, image, boxes, scores, classes):
+    def show_img_with_boxes(self, title, image, boxes, scores, classes, scale=None):
         """ 
         Show image with boxes
         
@@ -164,4 +164,5 @@ class YoloDNN:
             cv2.rectangle(image, (bx,by), (bx+bw, by+bh), color, 3)
             cv2.putText(image, text, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
             
+        image = cv2.resize(image, dsize=None,fx=scale,fy=scale) if scale else image
         cv2.imshow(title, image)
