@@ -25,9 +25,11 @@ class LiveVideoCapture:
         self._thread.daemon = True
         self._thread.start()
         
+        
     def release(self):
         """ Release the video capture object """
         self._cam.release()
+        
         
     def _update(self):
         """ Update the lastest frame """

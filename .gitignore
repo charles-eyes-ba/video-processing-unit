@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/node,python,pycharm,macos,serverless
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,python,pycharm,macos,serverless
 
@@ -410,3 +409,6 @@ Thumbs.db
 .serverless
 
 # End of https://www.toptal.com/developers/gitignore/api/node,python,pycharm,macos,serverless
+
+# Custom files
+resources/imgs
