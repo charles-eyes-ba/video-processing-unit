@@ -1,4 +1,4 @@
-from src.domain.configs.cams import CAM_CROSSING, CAM_STREET, CAM_EASY_STREET, CAM_JAPAN_ROAD
+from src.domain.configs.cams import CAM_CROSSING, CAM_STREET, CAM_EASY_STREET
 from src.domain.configs.yolo_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
 from src.external.opencv.live_video_capture import LiveVideoCapture
@@ -9,7 +9,7 @@ import cv2
 yolo = YoloDNN(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 
 cams = []
-for cam in [CAM_CROSSING, CAM_EASY_STREET, CAM_JAPAN_ROAD]:
+for cam in [CAM_CROSSING, CAM_STREET, CAM_EASY_STREET]:
     cams.append((str(cam), LiveVideoCapture(cam)))
 
 while True:
