@@ -15,7 +15,7 @@ class YoloDNN:
         Path to load Yolo classes names file
     """
     def __init__(self, config_path, weights_path, classes_path):
-        self._threshold = 0.5
+        self._threshold = 0.6
         self._threshold_NMS = 0.3
         self._blob_size = (416, 416)
 
