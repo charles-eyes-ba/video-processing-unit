@@ -15,7 +15,6 @@ import cv2
 # Neural Network
 yolo = YoloDNN(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 
-
 # Setup Cams and their titles
 live_video_1 = Camera(
     title="CAM_HOUSE_EXTERNAL_RIGHT",
@@ -41,12 +40,17 @@ live_video_4 = Camera(
     algorithms=[VehicleCounter()]
 )
 
-live_videos = [live_video_3, live_video_4]
+live_videos = [live_video_3]
 
 [live.start_thread(yolo) for live in live_videos]
 cv2.waitKey(0)
 
-# # Main Loop
+
+
+
+
+
+# Main Loop
 # while True:
 #     for live_video in live_videos:
 #         frame = live_video.cam.frame
@@ -58,15 +62,6 @@ cv2.waitKey(0)
 #             image = frame.image
     
 #             boxes, scores, classes = yolo.predict(image)
-            
-#             for alg in live_video.algorithms:
-#                 if type(alg) is VehicleCounter:
-#                     vehicles_len = alg.run(boxes, scores, classes)
-#                     print(vehicles_len)
-#                 elif type(alg) is PersonalDetection:
-#                     personal = alg.run(boxes, scores, classes)
-#                     print(personal)
-            
 #             yolo.show_img_with_boxes(title, image, boxes, scores, classes, scale=2)
             
 #     if cv2.waitKey(1) & 0xFF == ord('q'):
