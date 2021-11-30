@@ -1,7 +1,14 @@
 from threading import Thread
 from copy import deepcopy
+from datetime import datetime
 
 import cv2
+
+class Frame:
+    """ Frame image with id """
+    def __init__(self, image, datetime):
+        self.id = datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+        self.image = image
 
 class LiveVideoCapture:
     """
@@ -30,16 +37,10 @@ class LiveVideoCapture:
     def release(self):
         """ Release the video capture object """
         self._cam.release()
-        
-        
-    def pop_last_frame(self):
-        """ Pop the last frame """
-        frame = deepcopy(self.frame)
-        self.frame = None
-        return frame
 
 
     def _update(self):
         """ Update the lastest frame """
         while True:
-            self.status, self.frame = self._cam.read()
+            self.status, frame = self._cam.read()
+            self.frame = Frame(frame, datetime.now())
