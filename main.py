@@ -1,49 +1,15 @@
 from src.domain.configs.cams import CAM_HOUSE_EXTERNAL_RIGHT, CAM_HOUSE_EXTERNAL_LEFT, CAM_HOUSE_GARAGE, CAM_HOUSE_BACKYARD
 from src.domain.configs.yolo_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
-from src.domain.algorithms.vehicle_counter import VehicleCounter
 from src.domain.algorithms.personal_detection import PersonalDetection
+from src.domain.algorithms.vehicle_counter import VehicleCounter
 
 from src.external.opencv.live_video_capture import LiveVideoCapture
 from src.external.opencv.yolo import YoloDNN
 
-from time import sleep
-from threading import Thread
+from src.domain.camera import Camera
 
 import cv2
-
-# Aux Struct
-class LiveVideo:
-    def __init__(self, title, cam, algorithms):
-        self.title = title
-        self.cam = cam
-        self.last_frame_id = None
-        self.algorithms = algorithms
-        
-    
-    def _loop(self, yolo, delay=1):
-        while True:
-            frame = self.cam.frame
-            
-            if frame is not None and self.last_frame_id != frame.id:
-                self.last_frame_id = frame.id
-                boxes, scores, classes = yolo.predict(frame.image)
-                
-                for algorithm in self.algorithms:
-                    if type(algorithm) is VehicleCounter:
-                        vehicles_len = algorithm.run(boxes, scores, classes)
-                        print(self.title, vehicles_len)
-                    elif type(algorithm) is PersonalDetection:
-                        personal = algorithm.run(boxes, scores, classes)
-                        print(self.title, personal)
-
-            sleep(delay)
-        
-        
-    def start_thread(self, yolo, delay=1):
-        thread = Thread(target=self._loop, args=(yolo, delay))
-        thread.start()
-        
 
 
 # Neural Network
@@ -51,25 +17,25 @@ yolo = YoloDNN(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 
 
 # Setup Cams and their titles
-live_video_1 = LiveVideo(
+live_video_1 = Camera(
     title="CAM_HOUSE_EXTERNAL_RIGHT",
     cam=LiveVideoCapture(CAM_HOUSE_EXTERNAL_RIGHT),
     algorithms=[VehicleCounter(), PersonalDetection()]
 )
 
-live_video_2 = LiveVideo(
+live_video_2 = Camera(
     title="CAM_HOUSE_EXTERNAL_LEFT",
     cam=LiveVideoCapture(CAM_HOUSE_EXTERNAL_LEFT),
     algorithms=[VehicleCounter()]
 )
 
-live_video_3 = LiveVideo(
+live_video_3 = Camera(
     title="CAM_HOUSE_GARAGE",
     cam=LiveVideoCapture(CAM_HOUSE_GARAGE),
     algorithms=[VehicleCounter(), PersonalDetection()]
 )
 
-live_video_4 = LiveVideo(
+live_video_4 = Camera(
     title="CAM_HOUSE_BACKYARD",
     cam=LiveVideoCapture(CAM_HOUSE_BACKYARD),
     algorithms=[VehicleCounter()]
