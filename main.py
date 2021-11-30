@@ -1,73 +1,61 @@
 from src.domain.configs.cams import CAM_HOUSE_EXTERNAL_RIGHT, CAM_HOUSE_EXTERNAL_LEFT, CAM_HOUSE_GARAGE, CAM_HOUSE_BACKYARD
-from src.domain.configs.yolo_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
+from src.domain.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
-from src.domain.algorithms.personal_detection import PersonalDetection
-from src.domain.algorithms.vehicle_counter import VehicleCounter
+from src.external.opencv.video_feed import VideoFeed
+from src.external.opencv.deep_neural_network import DeepNeuralNetwork
 
-from src.external.opencv.live_video_capture import LiveVideoCapture
-from src.external.opencv.yolo import YoloDNN
+from src.domain.video_processor import VideoProcessor
 
-from src.domain.camera import Camera
-
-import cv2
-
-
-# Neural Network
-yolo = YoloDNN(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
-
-
-# Setup Cams and their titles
-live_video_1 = Camera(
-    title="CAM_HOUSE_EXTERNAL_RIGHT",
-    cam=LiveVideoCapture(CAM_HOUSE_EXTERNAL_RIGHT),
-    algorithms=[VehicleCounter(), PersonalDetection()]
+# Setup Video Processors
+camera_1 = VideoProcessor(
+    id="CAM_HOUSE_EXTERNAL_RIGHT",
+    video_feed=VideoFeed(CAM_HOUSE_EXTERNAL_RIGHT),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 )
 
-live_video_2 = Camera(
-    title="CAM_HOUSE_EXTERNAL_LEFT",
-    cam=LiveVideoCapture(CAM_HOUSE_EXTERNAL_LEFT),
-    algorithms=[VehicleCounter()]
+camera_2 = VideoProcessor(
+    id="CAM_HOUSE_EXTERNAL_LEFT",
+    video_feed=VideoFeed(CAM_HOUSE_EXTERNAL_LEFT),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 )
 
-live_video_3 = Camera(
-    title="CAM_HOUSE_GARAGE",
-    cam=LiveVideoCapture(CAM_HOUSE_GARAGE),
-    algorithms=[VehicleCounter(), PersonalDetection()]
+camera_3 = VideoProcessor(
+    id="CAM_HOUSE_GARAGE",
+    video_feed=VideoFeed(CAM_HOUSE_GARAGE),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 )
 
-live_video_4 = Camera(
-    title="CAM_HOUSE_BACKYARD",
-    cam=LiveVideoCapture(CAM_HOUSE_BACKYARD),
-    algorithms=[VehicleCounter()]
+camera_4 = VideoProcessor(
+    id="CAM_HOUSE_BACKYARD",
+    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 )
 
-live_videos = [live_video_3, live_video_4]
+camera_5 = VideoProcessor(
+    id="CAM_HOUSE_BACKYARD_5",
+    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
+)
 
-[live.start_thread(yolo) for live in live_videos]
-cv2.waitKey(0)
+camera_6 = VideoProcessor(
+    id="CAM_HOUSE_BACKYARD_6",
+    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
+)
 
-# # Main Loop
-# while True:
-#     for live_video in live_videos:
-#         frame = live_video.cam.frame
-        
-#         if frame is not None and live_video.last_frame_id != frame.id:
-#             live_video.last_frame_id = frame.id
-            
-#             title = live_video.title
-#             image = frame.image
-    
-#             boxes, scores, classes = yolo.predict(image)
-            
-#             for alg in live_video.algorithms:
-#                 if type(alg) is VehicleCounter:
-#                     vehicles_len = alg.run(boxes, scores, classes)
-#                     print(vehicles_len)
-#                 elif type(alg) is PersonalDetection:
-#                     personal = alg.run(boxes, scores, classes)
-#                     print(personal)
-            
-#             yolo.show_img_with_boxes(title, image, boxes, scores, classes, scale=2)
-            
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
+camera_7 = VideoProcessor(
+    id="CAM_HOUSE_BACKYARD_7",
+    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
+)
+
+camera_8 = VideoProcessor(
+    id="CAM_HOUSE_BACKYARD_8",
+    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
+)
+
+
+from time import sleep
+while True:
+    sleep(100)
