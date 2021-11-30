@@ -8,23 +8,21 @@ The Video Processing Unit (A.k.a VPU) is the module that run the classification 
   <img src="imgs/vpu.arch.png">
 </p>
 
-## Configuration
+## Dependencies
+
+| Module | Version |
+| --- | --- |
+| [NumPy](https://github.com/numpy/numpy) | 1.21.4 |
+| [OpenCV](https://github.com/opencv/opencv-python) | 4.5.4.60 |
+
+
+## Setup
 Create a `.env` file following the `.env.example` file.
 
-## Iniciando
-To start the VPU you must run the following command
+## Start
+To start the VPU you must install dependencies and run. You can do this with following command
+
 ```shell
-python main.py
+$ pip install -r requirements.txt
+$ python main.py
 ```
-
-## Application Server APIs
-
-É necessário duas _requests_ para interagir com o servidor de aplicação, uma para leitura e outra envio de dados.
-
-- Read data:
-    - Method: GET
-    - Reponse: cameras URL and IDs
-
-- Send data:
-    - Method: POST
-    - Body: camera id, camera width, camera height, boxes, scores and classes 
