@@ -18,9 +18,9 @@ class VideoFeed:
         
         self._video_capture = cv2.VideoCapture(feed_url)
         
-        self.width = int(self._cam.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.height = int(self._cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.fps = int(self._cam.get(cv2.CAP_PROP_FPS))
+        self.width = int(self._video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.height = int(self._video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        self.fps = int(self._video_capture.get(cv2.CAP_PROP_FPS))
         
         self._thread = Thread(target=self._update, args=())
         self._thread.daemon = True

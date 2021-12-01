@@ -14,10 +14,11 @@ class VideoProcessor:
     dnn : DNN
         The Deep Neural Network used to detect objects
     """
-    def __init__(self, id, video_feed, dnn):
+    def __init__(self, id, video_feed, dnn, delay=5):
         self.id = id
-        self.video_feed = video_feed
-        self.dnn = dnn
+        self._video_feed = video_feed
+        self._dnn = dnn
+        self._delay = delay
 
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
@@ -28,11 +29,11 @@ class VideoProcessor:
         """ Main loop of the video processor """
         while True:
             overview = ''
-            frame = self.cam.pop_lastest_frame()
+            frame = self._video_feed.pop_lastest_frame()
 
             if frame is not None:
-                boxes, scores, classes = self.yolo.predict(frame)
-                overview += f'Camera: {self.id} {classes}'
+                boxes, scores, classes = self._dnn.predict(frame)
+                overview += f'Video Processor: {self.id} {classes}'
 
             print(overview)
-            sleep(5)
+            sleep(self._delay)
