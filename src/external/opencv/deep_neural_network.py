@@ -1,18 +1,18 @@
 import cv2
 import numpy
 
-class YoloDNN:
+class DeepNeuralNetwork:
     """
-    Class that wraps a video capture object and provides a lastest frame
+    Class that handles the detection of objects in an image
     
     Parameters
     ----------
     config_path : str
-        Path to load Yolo config file
+        Path to load DNN config file
     weights_path : str
-        Path to load Yolo weights file
+        Path to load DNN weights file
     classes_path : str
-        Path to load Yolo classes names file
+        Path to load DNN classes names file
     """
     def __init__(self, config_path, weights_path, classes_path):
         self._threshold = 0.6

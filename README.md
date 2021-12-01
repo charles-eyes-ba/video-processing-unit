@@ -26,3 +26,26 @@ To start the VPU you must install dependencies and run. You can do this with fol
 $ pip install -r requirements.txt
 $ python main.py
 ```
+
+## Debugging
+- Show the video feed with boxes
+
+```python
+while True:
+    overview = ''
+    start_time = datetime.now()
+
+    for camera in [camera_1, camera_2, camera_3, camera_4]:
+        frame = camera.pop_lastest_frame()
+
+        if frame is not None:
+            boxes, scores, classes = yolo.predict(frame)
+            overview += f'Camera: {camera.id} {classes}\n'
+
+    overview += f'Time to process: {datetime.now() - start_time}\n'
+    overview += f'Stated time: {start_time}\n'
+    print(overview)
+            
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+```

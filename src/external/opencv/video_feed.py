@@ -3,20 +3,20 @@ from copy import deepcopy
 
 import cv2
 
-class LiveVideoCapture:
+class VideoFeed:
     """
     Class that wraps a video capture object and provides a lastest frame
     
     Parameters
     ----------
-    cam : str or int
+    feed_url : str or int
         URL (str) or code (int) to access remote video or local camera
     """
-    def __init__(self, cam):
+    def __init__(self, feed_url):
         self.status = None
         self.frame = None
         
-        self._cam = cv2.VideoCapture(cam)
+        self._video_capture = cv2.VideoCapture(feed_url)
         
         self.width = int(self._cam.get(cv2.CAP_PROP_FRAME_WIDTH))
         self.height = int(self._cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -29,7 +29,7 @@ class LiveVideoCapture:
         
     def release(self):
         """ Release the video capture object """
-        self._cam.release()
+        self._video_capture.release()
 
 
     def pop_lastest_frame(self):
@@ -42,4 +42,4 @@ class LiveVideoCapture:
     def _update(self):
         """ Update the lastest frame """
         while True:
-            self.status, self.frame = self._cam.read()
+            self.status, self.frame = self._video_capture.read()
