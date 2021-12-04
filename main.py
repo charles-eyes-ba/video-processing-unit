@@ -12,19 +12,19 @@ import asyncio
 websocket = WebSocket(url='http://localhost:5000/')
 
 # Setup Video Processors
-camera_1 = VideoProcessor(
-    id="CAM_HOUSE_EXTERNAL_RIGHT",
-    video_feed=VideoFeed(CAM_HOUSE_EXTERNAL_RIGHT),
-    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
-    websocket=websocket
-)
+# camera_1 = VideoProcessor(
+#     id="CAM_HOUSE_EXTERNAL_RIGHT",
+#     video_feed=VideoFeed(CAM_HOUSE_EXTERNAL_RIGHT),
+#     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
+#     websocket=websocket
+# )
 
-camera_2 = VideoProcessor(
-    id="CAM_HOUSE_EXTERNAL_LEFT",
-    video_feed=VideoFeed(CAM_HOUSE_EXTERNAL_LEFT),
-    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
-    websocket=websocket
-)
+# camera_2 = VideoProcessor(
+#     id="CAM_HOUSE_EXTERNAL_LEFT",
+#     video_feed=VideoFeed(CAM_HOUSE_EXTERNAL_LEFT),
+#     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
+#     websocket=websocket
+# )
 
 camera_3 = VideoProcessor(
     id="CAM_HOUSE_GARAGE",
@@ -33,39 +33,39 @@ camera_3 = VideoProcessor(
     websocket=websocket
 )
 
-camera_4 = VideoProcessor(
-    id="CAM_HOUSE_BACKYARD",
-    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
-    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
-    websocket=websocket
-)
+# camera_4 = VideoProcessor(
+#     id="CAM_HOUSE_BACKYARD",
+#     video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+#     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
+#     websocket=websocket
+# )
 
-camera_5 = VideoProcessor(
-    id="CAM_HOUSE_BACKYARD_5",
-    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
-    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
-    websocket=websocket
-)
+# camera_5 = VideoProcessor(
+#     id="CAM_HOUSE_BACKYARD_5",
+#     video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+#     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
+#     websocket=websocket
+# )
 
-camera_6 = VideoProcessor(
-    id="CAM_HOUSE_BACKYARD_6",
-    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
-    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
-    websocket=websocket
-)
+# camera_6 = VideoProcessor(
+#     id="CAM_HOUSE_BACKYARD_6",
+#     video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+#     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
+#     websocket=websocket
+# )
 
-camera_7 = VideoProcessor(
-    id="CAM_HOUSE_BACKYARD_7",
-    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
-    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
-    websocket=websocket
-)
+# camera_7 = VideoProcessor(
+#     id="CAM_HOUSE_BACKYARD_7",
+#     video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+#     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
+#     websocket=websocket
+# )
 
-camera_8 = VideoProcessor(
-    id="CAM_HOUSE_BACKYARD_8",
-    video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
-    dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
-    websocket=websocket
-)
+# camera_8 = VideoProcessor(
+#     id="CAM_HOUSE_BACKYARD_8",
+#     video_feed=VideoFeed(CAM_HOUSE_BACKYARD),
+#     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
+#     websocket=websocket
+# )
 
 asyncio.get_event_loop().run_forever()
