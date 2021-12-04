@@ -41,7 +41,7 @@ class VideoProcessor:
                 boxes, scores, classes = self._dnn.predict(frame)
 
                 hasNewDetections = self._last_detections_classes != classes
-                if hasNewDetections or True:
+                if hasNewDetections:
                     self._last_detections_classes = classes
                     self._websocket.send_detections(self.id, classes)
 
