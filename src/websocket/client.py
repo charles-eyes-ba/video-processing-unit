@@ -1,7 +1,7 @@
 import socketio
 
 from .namespaces.root_namespca import RootNamespace
-from .namespaces.detection_namescape import DetectionNamespace
+from .namespaces.detection_namespcae import DetectionNamespace
 from .namespaces.config_namespcae import ConfigNamespace
 
 class WebSocket:
