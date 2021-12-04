@@ -23,9 +23,13 @@ class VideoProcessor:
 
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
-        self._thread.start()
 
         self._websocket = websocket
+
+
+    def start(self):
+        """ Start the video processor """
+        self._thread.start()
 
 
     def _loop(self):

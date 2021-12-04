@@ -32,6 +32,7 @@ camera_3 = VideoProcessor(
     dnn=DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH),
     websocket=websocket
 )
+camera_3.start()
 
 # camera_4 = VideoProcessor(
 #     id="CAM_HOUSE_BACKYARD",
