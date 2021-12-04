@@ -9,6 +9,7 @@ from src.websocket import WebSocketClient
 import asyncio
 
 class VideoProcessingUnit:
+    
     def __init__(self):
         self._websocket = WebSocketClient('http://localhost:5000')
         self._video_feeds = [
@@ -19,6 +20,11 @@ class VideoProcessingUnit:
                 websocket=self._websocket
             )
         ]
+
+
+    def update_video_feed_list(self, video_feed_list):
+        """ Updates the list of video feeds to be processed """
+        self._video_feeds = video_feed_list
 
 
     def add_video_feed(self, video_feed):
