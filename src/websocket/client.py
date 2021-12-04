@@ -24,6 +24,7 @@ class WebSocket:
         self._socketio.register_namespace(self.config_namespace)
 
         self._socketio.connect(url)
+        self.config_namespace.emit('request_unit_configuration')
 
 
     # * Send Methods
