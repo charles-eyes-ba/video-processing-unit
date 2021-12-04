@@ -5,9 +5,10 @@ from src.external.opencv.video_feed import VideoFeed
 from src.external.opencv.deep_neural_network import DeepNeuralNetwork
 
 from src.domain.video_processor import VideoProcessor
-from src.websocket.clinet import WebSocket
+from src.websocket.client import WebSocket
 
 import asyncio
+
 websocket = WebSocket(url='http://localhost:5000/')
 
 # Setup Video Processors
