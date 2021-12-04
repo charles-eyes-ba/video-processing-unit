@@ -1,15 +1,15 @@
-from src.domain.configs.cams import CAM_HOUSE_EXTERNAL_RIGHT, CAM_HOUSE_EXTERNAL_LEFT, CAM_HOUSE_GARAGE, CAM_HOUSE_BACKYARD
-from src.domain.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
+from src.configs.cams import CAM_HOUSE_EXTERNAL_RIGHT, CAM_HOUSE_EXTERNAL_LEFT, CAM_HOUSE_GARAGE, CAM_HOUSE_BACKYARD
+from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
-from src.external.opencv.video_feed import VideoFeed
-from src.external.opencv.deep_neural_network import DeepNeuralNetwork
+from src.opencv.video_feed import VideoFeed
+from src.opencv.deep_neural_network import DeepNeuralNetwork
 
-from src.domain.video_processor import VideoProcessor
-from src.websocket.client import WebSocket
+from src.video_processor import VideoProcessor
+from src.websocket import WebSocketClient
 
 import asyncio
 
-websocket = WebSocket(url='http://localhost:5000/')
+websocket = WebSocketClient(url='http://localhost:5000/')
 
 # Setup Video Processors
 # camera_1 = VideoProcessor(

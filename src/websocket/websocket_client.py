@@ -4,7 +4,7 @@ from .namespaces.root_namespca import RootNamespace
 from .namespaces.detection_namespcae import DetectionNamespace
 from .namespaces.config_namespcae import ConfigNamespace
 
-class WebSocket:
+class WebSocketClient:
     """ 
     Class that handles the websocket connection 
 
