@@ -8,12 +8,12 @@ The Video Processing Unit (A.k.a VPU) is the module that run the classification 
   <img src="imgs/vpu.arch.png">
 </p>
 
-## Dependencies
+## Main Dependencies
 
 | Module | Version |
 | --- | --- |
-| [NumPy](https://github.com/numpy/numpy) | 1.21.4 |
 | [OpenCV](https://github.com/opencv/opencv-python) | 4.5.4.60 |
+| [Socket.IO](https://github.com/miguelgrinberg/python-socketio) | 5.5.0 |
 
 
 ## Setup
