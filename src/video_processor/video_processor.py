@@ -5,16 +5,27 @@ class VideoProcessor:
     """ 
     Class that handles the video feed and the detection of the objects
 
-    Parameters
+    Attributes
     ----------
     id : str
-        The id of the camera
-    video_feed : VideoFeed
-        The video feed of the camera
-    dnn : DNN
-        The Deep Neural Network used to detect objects
+        The id of the video processar (camera id)
+        
+    Methods
+    -------
+    start()
+        Start the video processor
     """
     def __init__(self, id, video_feed, dnn, websocket, delay=5):
+        """
+        Parameters
+        ----------
+        id : str
+            The id of the camera
+        video_feed : VideoFeed
+            The video feed of the camera
+        dnn : DNN
+            The Deep Neural Network used to detect objects
+        """
         self.id = id
         self._video_feed = video_feed
         self._dnn = dnn
