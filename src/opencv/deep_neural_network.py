@@ -5,16 +5,24 @@ class DeepNeuralNetwork:
     """
     Class that handles the detection of objects in an image
     
-    Parameters
-    ----------
-    config_path : str
-        Path to load DNN config file
-    weights_path : str
-        Path to load DNN weights file
-    classes_path : str
-        Path to load DNN classes names file
+    Methods
+    -------
+    predict(image)
+        Predict objects in image
+    show_img_with_boxes(title, image, boxes, scores, classes, scale=None)
+        Show image with boxes
     """
     def __init__(self, config_path, weights_path, classes_path):
+        """
+        Parameters
+        ----------
+        config_path : str
+            Path to load DNN config file
+        weights_path : str
+            Path to load DNN weights file
+        classes_path : str
+            Path to load DNN classes names file
+        """
         self._threshold = 0.6
         self._threshold_NMS = 0.3
         self._blob_size = (416, 416)
