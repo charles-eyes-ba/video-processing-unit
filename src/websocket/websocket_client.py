@@ -15,6 +15,8 @@ class WebSocketClient:
     """
     def __init__(self, url):
         self.on_video_feeds_update = None
+        self.on_add_video_feed = None
+        self.on_remove_video_feed = None
         
         self.root_namespace = self.generate_root_namespace()
         self.detection_namespace = self.generate_detection_namespace()
@@ -44,6 +46,8 @@ class WebSocketClient:
         """ Generate the config namespace """
         config_namespace = ConfigNamespace('/config')
         config_namespace.on_request_unit_configuration = self.on_request_unit_configuration
+        config_namespace.on_add_camera = self.on_add_camera
+        config_namespace.on_remove_camera = self.on_remove_camera
         return config_namespace
     
 
@@ -52,6 +56,18 @@ class WebSocketClient:
         """ Receive configs from server """
         if self.on_video_feeds_update != None:
             self.on_video_feeds_update(config['cameras'])
+            
+            
+    def on_add_camera(self, vide_feed):
+        """ Add a video feed to the server """
+        if self.on_add_video_feed != None:
+            self.on_add_video_feed(vide_feed)
+            
+            
+    def on_remove_camera(self, video_feed_id):
+        """ Remove a video feed from the server """
+        if self.on_remove_video_feed != None:
+            self.on_remove_video_feed(video_feed_id)
         
 
     # * Send Methods

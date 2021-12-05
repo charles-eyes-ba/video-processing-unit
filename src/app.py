@@ -10,7 +10,7 @@ import asyncio
 class VideoProcessingUnit:
     
     def __init__(self):
-        self._websocket = WebSocketClient('http://localhost:5000')
+        self._websocket = WebSocketClient('http://192.168.68.135:5000')
         self.setup_websocket_callbacks()
         self._video_feeds = []
 
@@ -28,6 +28,8 @@ class VideoProcessingUnit:
     def setup_websocket_callbacks(self):
         """ Sets up the websocket client """
         self._websocket.on_video_feeds_update = self.update_video_feed_list
+        self._websocket.on_add_video_feed = self.add_video_feed
+        self._websocket.on_remove_video_feed = self.remove_vide_feed
 
 
     # * Handle videos feed list
