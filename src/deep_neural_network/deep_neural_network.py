@@ -1,6 +1,8 @@
 import cv2
 import numpy
 
+from .exceptions import InvalidDeepNeuralNetworkFilesException
+
 class DeepNeuralNetwork:
     """
     Class that handles the detection of objects in an image
@@ -27,11 +29,13 @@ class DeepNeuralNetwork:
         self._threshold_NMS = 0.3
         self._blob_size = (416, 416)
 
-        self._net = cv2.dnn.readNet(config_path, weights_path)
-        
-        self._classes = open(classes_path).read().strip().split('\n')
+        try: 
+            self._net = cv2.dnn.readNet(config_path, weights_path)
+            self._classes = open(classes_path).read().strip().split('\n')
+        except Exception as e:
+            raise InvalidDeepNeuralNetworkFilesException('Invalid deep learning files')
+            
         self._classes_colors = self._get_classes_colors()
-        
         self._output_layers = self._get_output_layers()
         
         

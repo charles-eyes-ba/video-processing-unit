@@ -1,8 +1,8 @@
 from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
 from src.video_processor import VideoProcessor
-from src.opencv.video_feed import VideoFeed
-from src.opencv.deep_neural_network import DeepNeuralNetwork
+from src.video_feed.video_feed import VideoFeed
+from src.deep_neural_network.deep_neural_network import DeepNeuralNetwork
 from src.websocket import WebSocketClient
 
 from time import sleep
@@ -28,7 +28,7 @@ class VideoProcessingUnit:
         self._websocket = None
         while self._websocket == None:
             try:
-                self._websocket = WebSocketClient('http://192.168.68.135:5000')
+                self._websocket = WebSocketClient('http://0.0.0.0:5000')
                 logging.info('Connected to websocket')
             except:
                 logging.info('Trying to connect to websocket again in 30 seconds...')
