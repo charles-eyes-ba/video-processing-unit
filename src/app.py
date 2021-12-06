@@ -1,4 +1,3 @@
-from src import video_processor
 from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
 from src.video_processor import VideoProcessor
@@ -6,7 +5,12 @@ from src.opencv.video_feed import VideoFeed
 from src.opencv.deep_neural_network import DeepNeuralNetwork
 from src.websocket import WebSocketClient
 
+from time import sleep
+
+import logging
 import asyncio
+
+logging.basicConfig(level=logging.INFO)
 
 class VideoProcessingUnit:
     """ 
@@ -17,8 +21,19 @@ class VideoProcessingUnit:
     start()
         Starts the video processing unit
     """
+    
+    DELAY_TO_RETRY_WEBSCOKET_CONNECTION = 30
+    
     def __init__(self):
-        self._websocket = WebSocketClient('http://192.168.68.135:5000')
+        self._websocket = None
+        while self._websocket == None:
+            try:
+                self._websocket = WebSocketClient('http://192.168.68.135:5000')
+                logging.info('Connected to websocket')
+            except:
+                logging.info('Trying to connect to websocket again in 30 seconds...')
+                sleep(VideoProcessingUnit.DELAY_TO_RETRY_WEBSCOKET_CONNECTION)
+                
         self._setup_websocket_callbacks()
         self._video_feeds = []
 
@@ -42,33 +57,51 @@ class VideoProcessingUnit:
 
     # * Handle videos feed list
     def _update_video_feed_list(self, video_feed_list):
-        """ Updates the list of video feeds to be processed """
+        """ 
+        Updates the list of video feeds to be processed 
+        
+        Parameters
+        ----------
+        video_feed_list : list
+            The list of video feeds to be processed (replace all current video feeds)
+        """
         self._video_feeds = []
         for video_feed in video_feed_list:
-            processor = VideoProcessor(
-                id=video_feed['id'],
-                video_feed=VideoFeed(video_feed['feed_url']),
-                dnn=self._generate_deep_neural_network(),
-                websocket=self._websocket
-            )
-            self._video_feeds.append(processor)
-        self._start_video_processors()
+            self._add_video_feed(video_feed)
 
 
     def _add_video_feed(self, video_feed):
-        """ Adds a video feed to the list of video feeds to be processed """
+        """ 
+        Adds a video feed to the list of video feeds to be processed 
+        
+        Parameters
+        ----------
+        video_feed : VideoFeed
+            The video feed to be added
+        """
+        id = video_feed['id']
+        url = video_feed['feed_url']
         video_processor = VideoProcessor(
-            id=video_feed['id'],
-            video_feed=VideoFeed(video_feed['feed_url']),
+            id=id,
+            video_feed=VideoFeed(url),
             dnn=self._generate_deep_neural_network(),
             websocket=self._websocket
         )
+        logging.info(f'Adding video feed {id} with url {url}')
         video_processor.start()
+        logging.info(f'Started video feed {id} with url {url}')
         self._video_feeds.append(video_processor)
         
         
     def _remove_vide_feed(self, video_feed_id): # TODO: Delete video feed thread
-        """ Removes a video feed from the list of video feeds to be processed """
+        """ 
+        Removes a video feed from the list of video feeds to be processed 
+        
+        Parameters
+        ----------
+        video_feed_id : int
+            The id of the video feed to be removed
+        """
         for video in self._video_feeds:
             if video.id == video_feed_id:
                 self._video_feeds.remove(video)
