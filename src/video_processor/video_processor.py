@@ -32,7 +32,7 @@ class VideoProcessor:
         self._delay = delay
         self._last_detections_classes = []
 
-        self._thread = Thread(target=self._loop)
+        self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
 
         self._websocket = websocket
@@ -43,7 +43,7 @@ class VideoProcessor:
         self._thread.start()
 
 
-    def _loop(self):
+    def __loop(self):
         """ Main loop of the video processor """
         while True:
             frame = self._video_feed.pop_lastest_frame()

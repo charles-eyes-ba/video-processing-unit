@@ -40,11 +40,11 @@ class DeepNeuralNetwork:
         except Exception as e:
             raise InvalidDeepNeuralNetworkFilesException('Invalid deep neural network files')
             
-        self._classes_colors = self._get_classes_colors()
-        self._output_layers = self._get_output_layers()
+        self._classes_colors = self.__get_classes_colors()
+        self._output_layers = self.__get_output_layers()
         
         
-    def _get_classes_colors(self):
+    def __get_classes_colors(self):
         """ 
         Get classes box colors 
         
@@ -60,7 +60,7 @@ class DeepNeuralNetwork:
         return colors
         
         
-    def _get_output_layers(self):
+    def __get_output_layers(self):
         """ 
         Get output layers in Yolo architecture 
         

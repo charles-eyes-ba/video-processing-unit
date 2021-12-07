@@ -46,7 +46,7 @@ class VideoFeed:
         self.height = None
         self.fps = None
         
-        self._thread = Thread(target=self._loop, args=())
+        self._thread = Thread(target=self.__loop, args=())
         self._thread.daemon = True
         self._thread.start()
         
@@ -70,7 +70,7 @@ class VideoFeed:
         return frame
 
 
-    def _loop(self):
+    def __loop(self):
         """ 
         Loop that updates the lastest frame.
         
