@@ -1,9 +1,9 @@
 from threading import Thread
 from copy import deepcopy
 
-import cv2
+from .exceptions import VideoFeedConnectionLost, VideoFeedCouldNotConntect
 
-from src.exceptions.video_feed_exceptions import VideoFeedConnectionLost, VideoFeedCouldNotConntect
+import cv2
 
 class VideoFeed:
     """
@@ -46,7 +46,7 @@ class VideoFeed:
         self.height = None
         self.fps = None
         
-        self._thread = Thread(target=self._update, args=())
+        self._thread = Thread(target=self._loop, args=())
         self._thread.daemon = True
         self._thread.start()
         
@@ -63,9 +63,9 @@ class VideoFeed:
         return frame
 
 
-    def _update(self):
+    def _loop(self):
         """ 
-        Update the lastest frame 
+        Loop that updates the lastest frame.
         
         Raises
         ------
