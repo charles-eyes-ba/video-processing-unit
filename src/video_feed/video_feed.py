@@ -57,7 +57,14 @@ class VideoFeed:
 
 
     def pop_lastest_frame(self):
-        """ Pop the lastest frame """
+        """ 
+        Pop the lastest frame 
+        
+        Returns
+        -------
+        numpy.ndarray
+            Lastest frame
+        """
         frame = deepcopy(self.frame)
         self.frame = None
         return frame

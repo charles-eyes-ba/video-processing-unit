@@ -24,6 +24,11 @@ class DeepNeuralNetwork:
             Path to load DNN weights file
         classes_path : str
             Path to load DNN classes names file
+            
+        Raises
+        ------
+        InvalidDeepNeuralNetworkFilesException
+            If one of the files to load deep neural network is invalid
         """
         self._threshold = 0.6
         self._threshold_NMS = 0.3
@@ -33,14 +38,21 @@ class DeepNeuralNetwork:
             self._net = cv2.dnn.readNet(config_path, weights_path)
             self._classes = open(classes_path).read().strip().split('\n')
         except Exception as e:
-            raise InvalidDeepNeuralNetworkFilesException('Invalid deep learning files')
+            raise InvalidDeepNeuralNetworkFilesException('Invalid deep neural network files')
             
         self._classes_colors = self._get_classes_colors()
         self._output_layers = self._get_output_layers()
         
         
     def _get_classes_colors(self):
-        """ Get classes box colors """
+        """ 
+        Get classes box colors 
+        
+        Returns
+        -------
+        list
+            List of colors for each class
+        """
         colors = {}
         numpy.random.seed(42)
         for class_name in self._classes:
@@ -49,7 +61,14 @@ class DeepNeuralNetwork:
         
         
     def _get_output_layers(self):
-        """ Get output layers in Yolo architecture """
+        """ 
+        Get output layers in Yolo architecture 
+        
+        Returns
+        -------
+        list
+            List of output layers
+        """
         layers = self._net.getLayerNames()
         output_layers_indexs = self._net.getUnconnectedOutLayers()
         return [layers[i - 1] for i in output_layers_indexs]
@@ -63,6 +82,11 @@ class DeepNeuralNetwork:
         ----------
         image_path : str
             Image path to load with OpenCV
+            
+        Returns
+        -------
+        numpy.ndarray
+            Image loaded with OpenCV
         """
         return cv2.imread(image_path)
     
@@ -73,8 +97,13 @@ class DeepNeuralNetwork:
         
         Parameters
         ----------
-        image : opencv image
-            OpenCV image to predict detections with Yolo
+        image : numpy.ndarray
+            OpenCV image to predict detections with DNN
+            
+        Returns
+        -------
+        tuple
+            Tuple with all detections predicted by DNN
         """
         blob = cv2.dnn.blobFromImage(image, 1 / 255.0, self._blob_size, swapRB=True, crop=False)
         self._net.setInput(blob)
@@ -93,6 +122,11 @@ class DeepNeuralNetwork:
             Width to rescale the boxes
         height : double
             Height to rescale the boxes
+            
+        Returns
+        -------
+        tuple
+            Tuple with all detections filtered (boxes, scores and classes)
         """
         boxes = []
         scores = []
@@ -132,8 +166,13 @@ class DeepNeuralNetwork:
         
         Parameters
         ----------
-        image : opencv image or str
+        image : numpy.ndarray or str
             Image path to load with OpenCV or the image itself
+            
+        Returns
+        -------
+        tuple
+            Tuple with all detections filtered (boxes, scores and classes)
         """
         image = self._read_image(image) if type(image) == str else image
         height, width = image.shape[:2]
@@ -147,7 +186,7 @@ class DeepNeuralNetwork:
         
         Parameters
         ----------
-        image : opencv image or str
+        image : numpy.ndarray or str
             Image path to load with OpenCV or the image itself
         boxes : list
             List of boxes to show. Boxes are in the format [x, y, width, height]
