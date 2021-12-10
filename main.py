@@ -1,4 +1,6 @@
-from src.app import VideoProcessingUnit
+from src.video_processing_unit import VideoProcessingUnit
 
-vpu = VideoProcessingUnit()
-vpu.start()
+# Main
+if __name__ == '__main__':
+    vpu = VideoProcessingUnit()
+    vpu.start()

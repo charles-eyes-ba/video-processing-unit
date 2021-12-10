@@ -9,13 +9,15 @@ class VideoProcessor:
     ----------
     id : str
         The id of the video processar (camera id)
+    on_object_detection : function
+        The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
         
     Methods
     -------
     start()
         Start the video processor
     """
-    def __init__(self, id, video_feed, dnn, websocket, delay=5):
+    def __init__(self, id, video_feed, dnn, delay=5, on_object_detection=None):
         """
         Parameters
         ----------
@@ -25,6 +27,10 @@ class VideoProcessor:
             The video feed of the camera
         dnn : DNN
             The Deep Neural Network used to detect objects
+        delay : int
+            The delay between frames detection
+        on_object_detection : function
+            The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
         """
         self.id = id
         self._video_feed = video_feed
@@ -32,10 +38,10 @@ class VideoProcessor:
         self._delay = delay
         self._last_detections_classes = []
 
+        self.on_object_detection = on_object_detection
+
         self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
-
-        self._websocket = websocket
 
 
     def start(self):
@@ -46,6 +52,9 @@ class VideoProcessor:
     def __loop(self):
         """ Main loop of the video processor """
         while True:
+            if not self._video_feed.is_running:
+                return
+            
             frame = self._video_feed.pop_lastest_frame()
 
             if frame is not None:
@@ -54,6 +63,7 @@ class VideoProcessor:
                 hasNewDetections = self._last_detections_classes != classes
                 if hasNewDetections:
                     self._last_detections_classes = classes
-                    self._websocket.send_detections(self.id, classes)
+                    if self.on_object_detection is not None:
+                        self.on_object_detection(self.id, classes)
 
             sleep(self._delay)
