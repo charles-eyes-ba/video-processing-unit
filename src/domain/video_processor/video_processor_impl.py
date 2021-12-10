@@ -52,7 +52,7 @@ class VideoProcessorImpl(VideoProcessor):
             The exception that occurred
         """
         self.is_running = False
-        self.on_error(id, exception)
+        self._on_error(id, exception)
     
 
     # * Main loop
@@ -67,7 +67,7 @@ class VideoProcessorImpl(VideoProcessor):
                 hasNewDetections = self._last_detections_classes != classes
                 if hasNewDetections:
                     self._last_detections_classes = classes
-                    if self.on_object_detection is not None:
-                        self.on_object_detection(self.id, classes)
+                    if self._on_object_detection is not None:
+                        self._on_object_detection(self.id, classes)
 
             sleep(self._delay)
