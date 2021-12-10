@@ -9,6 +9,8 @@ class VideoProcessor:
     ----------
     id : str
         The id of the video processar (camera id)
+    is_running : bool
+        True if the video processor is running
     on_object_detection : function
         The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
     on_error : function
@@ -36,7 +38,7 @@ class VideoProcessor:
         self._dnn = dnn
         self._delay = delay
         self._last_detections_classes = []
-        self._is_running = False
+        self.is_running = False
         
         self._video_feed = video_feed
         self._video_feed.setup_callbacks(on_error=self._on_video_feed_error)
@@ -58,23 +60,37 @@ class VideoProcessor:
     # * Methods
     def start(self):
         """ Start the video processor """
-        self._is_running = True
+        self.is_running = True
         self._video_feed.start()
         self._thread.start()
+        
+        
+    def stop(self):
+        """ Stop the video processor """
+        self.is_running = False
+        self._video_feed.stop()
 
 
     # * Video Feed callbacks
     def _on_video_feed_error(self, id, exception):
-        """ Callback for the video feed error """
-        self._is_running = False
+        """ 
+        Callback for the video feed error 
+        
+        Parameters
+        ----------
+        id : str
+            The id of the camera
+        exception : Exception
+            The exception that occurred
+        """
+        self.is_running = False
         self.on_error(id, exception)
     
 
     # * Main loop
     def __loop(self):
         """ Main loop of the video processor """
-        while self._is_running:
-            
+        while self.is_running:
             frame = self._video_feed.pop_lastest_frame()
 
             if frame is not None:

@@ -108,8 +108,12 @@ class VideoProcessingUnit:
         video_feed_list : list
             The list of video feeds to be processed (replace all current video feeds)
         """
+        logging.info('Removing all video feed list')
+        for video_feed in self._video_feeds:
+            video_feed.stop()
+            
         logging.info('Updating all video feed list')
-        self._video_feeds = [] # TODO: Remove all video feeds and kill all threads
+        self._video_feeds = []
         for video_feed in video_feed_list:
             self._add_video_feed(video_feed)
 
@@ -150,7 +154,8 @@ class VideoProcessingUnit:
         for video in self._video_feeds:
             if video.id == video_feed_id:
                 logging.info(f'Removing {video_feed_id} video feed')
-                self._video_feeds.remove(video) # TODO: Kill video feed thread and video processor thread
+                video.stop()
+                self._video_feeds.remove(video)
                 break
     
     

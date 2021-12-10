@@ -82,7 +82,13 @@ class VideoFeed:
     # * Methods  
     def start(self):
         """ Start the video feed """
+        self.is_running = True
         self._thread.start()
+    
+    
+    def stop(self):
+        """ Stop the video feed """
+        self.is_running = False
     
     
     def pop_lastest_frame(self):
@@ -117,8 +123,6 @@ class VideoFeed:
         VideoFeedConnectionLost
             If the video feed connection was lost. Message Format: Lost connection to {feed_url}
         """
-        self.is_running = True
-        
         try:
             self._video_capture = cv2.VideoCapture(self._feed_url)
         except Exception as e:
@@ -132,7 +136,7 @@ class VideoFeed:
         self.height = int(self._video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
         self.fps = int(self._video_capture.get(cv2.CAP_PROP_FPS))
         
-        while True:
+        while self.is_running:
             try:
                 self.status, self.frame = self._video_capture.read()
             except Exception as e:
