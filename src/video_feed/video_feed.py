@@ -43,6 +43,8 @@ class VideoFeed:
             Id of the video feed
         feed_url : str or int
             URL (str) or code (int) to access remote video or local camera
+        on_connection_error : function
+            Function to be called when the video feed receive an error
         """
         self.id = id
         self.status = None
@@ -65,6 +67,7 @@ class VideoFeed:
     def release(self):
         """ Release the video capture object """
         self._video_capture.release()
+        # TODO: kill _thread
 
 
     def pop_lastest_frame(self):
@@ -85,8 +88,8 @@ class VideoFeed:
         """ 
         Loop that updates the lastest frame.
         
-        Raises
-        ------
+        Raises (at on_connection_error)
+        -------------------------------
         VideoFeedCouldNotConntect
             If the video feed could not be connected. Message Format: Could not connect to {feed_url}
         VideoFeedConnectionLost
@@ -97,6 +100,7 @@ class VideoFeed:
         except Exception as e:
             exception = VideoFeedCouldNotConntect(f'Could not connect to {self._feed_url}')
             self.on_connection_error(exception)
+            self.release()
             return
         
         self.width = int(self._video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -109,4 +113,5 @@ class VideoFeed:
             except Exception as e:
                 exception = VideoFeedConnectionLost(f'Lost connection to {self._feed_url}')
                 self.on_connection_error(exception)
+                self.release()
                 return
