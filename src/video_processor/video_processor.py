@@ -52,7 +52,16 @@ class VideoProcessor:
 
     # * Setups
     def setup_callbacks(self, on_object_detection=None, on_error=None):
-        """ Setup the callbacks for the video processor """
+        """ 
+        Setup the callbacks for the video processor
+        
+        Parameters
+        ----------
+        on_object_detection : function
+            The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
+        on_error : function
+            The function to call when an error occurs. The function must have the following signature: function(camera_id, exception)
+        """
         self.on_object_detection = on_object_detection
         self.on_error = on_error
 

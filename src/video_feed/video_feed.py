@@ -11,8 +11,6 @@ class VideoFeed:
     
     Attributes
     ----------
-    id : str
-        Id of the video feed
     status : bool
         True if the lastest frame is valid
     frame : numpy.ndarray
@@ -37,7 +35,7 @@ class VideoFeed:
     pop_lastest_frame()
         Pop the lastest frame
     """
-    def __init__(self, id, feed_url):
+    def __init__(self, feed_url):
         """
         Parameters
         ----------
@@ -48,7 +46,6 @@ class VideoFeed:
         on_error : function
             Function to be called when the video feed receive an error
         """
-        self.id = id
         self.status = None
         self.frame = None
         self.is_running = False
@@ -145,3 +142,4 @@ class VideoFeed:
                     self.on_connection_error(exception)
                 self.release()
                 return
+        self.release()
