@@ -21,6 +21,9 @@ class VideoFeed:
         Height of the video feed
     fps : int
         Frames per second of the video feed
+    on_connection_error : function
+        Function to be called when the video feed receive an error. 
+        The function must accept a exception (VideoFeedConnectionLost, VideoFeedCouldNotConntect) as parameter.
         
     Methods
     -------
@@ -39,12 +42,14 @@ class VideoFeed:
         self.status = None
         self.frame = None
         
-        self._video_capture = None
-        self._feed_url = feed_url
-        
         self.width = None
         self.height = None
         self.fps = None
+        
+        self.on_connection_error = None
+        
+        self._video_capture = None
+        self._feed_url = feed_url
         
         self._thread = Thread(target=self.__loop, args=())
         self._thread.daemon = True
@@ -84,7 +89,9 @@ class VideoFeed:
         try:
             self._video_capture = cv2.VideoCapture(self._feed_url)
         except Exception as e:
-            raise VideoFeedCouldNotConntect(f'Could not connect to {self._feed_url}')
+            exception = VideoFeedCouldNotConntect(f'Could not connect to {self._feed_url}')
+            self.on_connection_error(exception)
+            return
         
         self.width = int(self._video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
         self.height = int(self._video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -94,4 +101,6 @@ class VideoFeed:
             try:
                 self.status, self.frame = self._video_capture.read()
             except Exception as e:
-                raise VideoFeedConnectionLost(f'Lost connection to {self._feed_url}')
+                exception = VideoFeedConnectionLost(f'Lost connection to {self._feed_url}')
+                self.on_connection_error(exception)
+                return
