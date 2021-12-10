@@ -4,6 +4,7 @@ from src.video_processor import VideoProcessor
 from src.video_feed.video_feed import VideoFeed
 from src.deep_neural_network.deep_neural_network import DeepNeuralNetwork
 from src.websocket import WebSocketClient
+from src.configs.environment import HSU_WEBSOCKET_URL
 
 from time import sleep
 
@@ -25,28 +26,32 @@ class VideoProcessingUnit:
     DELAY_TO_RETRY_WEBSCOKET_CONNECTION = 30
     
     def __init__(self):
-        self._websocket = None
-        while self._websocket == None:
+        self._websocket = WebSocketClient()
+        while True:
             try:
-                self._websocket = WebSocketClient('http://0.0.0.0:1544')
+                self._websocket.connect(HSU_WEBSOCKET_URL)
                 logging.info('Connected to websocket')
+                break
             except:
                 delay = VideoProcessingUnit.DELAY_TO_RETRY_WEBSCOKET_CONNECTION
                 logging.info(f'Trying to connect to websocket again in {delay} seconds...')
                 sleep(delay)
-                
+        
+        self._video_feeds = []        
         self._setup_websocket_callbacks()
-        self._video_feeds = []
+        self._websocket.request_configs()
 
 
-    # * Setups | Generates
+    # * Setups
     def _setup_websocket_callbacks(self):
         """ Sets up the websocket client """
         self._websocket.on_video_feeds_update = self._update_video_feed_list
         self._websocket.on_add_video_feed = self._add_video_feed
         self._websocket.on_remove_video_feed = self._remove_video_feed
+        # TODO: Handle disconect event
         
-        
+    
+    # * Generators
     def _generate_deep_neural_network(self):
         """ Generates a deep neural network """
         return DeepNeuralNetwork(
@@ -54,9 +59,46 @@ class VideoProcessingUnit:
             weights_path=YOLO_WEIGHTS_PATH, 
             classes_path=YOLO_CLASSES_PATH
         )
+        
+        
+    def _generate_video_feed(self, id, url):
+        """ 
+        Generates a video feed 
+        
+        Parameters
+        ----------
+        id : str
+            The id of the camera
+        url : str
+            The url of the video feed
+        """
+        return VideoFeed(
+            id=id,
+            feed_url=url,
+            on_connection_error=self._on_video_feed_connection_error,
+        )
 
 
-    # * Websocekt Callbacks
+    def _generate_video_processor(self, id, url):
+        """ 
+        Generates a video processor
+        
+        Parameters
+        ----------
+        id : str
+            The id of the camera
+        url : str
+            The url of the video feed
+        """
+        return VideoProcessor(
+            id=id,
+            video_feed=self._generate_video_feed(id, url),
+            dnn=self._generate_deep_neural_network(),
+            on_object_detection=self._on_detection_callback,
+        )
+
+
+    # * Websocket Callbacks
     def _update_video_feed_list(self, video_feed_list):
         """ 
         Updates the list of video feeds to be processed 
@@ -84,22 +126,10 @@ class VideoProcessingUnit:
         id = video_feed['id'] # TODO: Handler nullable id
         url = video_feed['feed_url'] # TODO: Handler nullable feed_url
         
-        feed = VideoFeed(
-            id=id,
-            feed_url=url, 
-            on_connection_error=self._on_video_feed_connection_error
-        )
-        
-        video_processor = VideoProcessor(
-            id=id,
-            video_feed=feed,
-            dnn=self._generate_deep_neural_network(),
-            on_object_detection=self._on_detection_callback
-        )
-        
         logging.info(f'Adding video feed {id} with url {url}')
+        video_processor = self._generate_video_processor(id, url)
+        logging.info(f'Starting video feed {id} with url {url}')
         video_processor.start()
-        logging.info(f'Started video feed {id} with url {url}')
         self._video_feeds.append(video_processor)
         
         
@@ -151,14 +181,7 @@ class VideoProcessingUnit:
     
     
     # * Starts
-    def _start_video_processors(self):
-        """ Starts all video feeds processing """
-        for video_feed in self._video_feeds:
-            video_feed.start()
-    
-    
     def start(self):
         """ Starts video processing unit aplication """
-        logging.error('Starting video processing unit')
-        self._start_video_processors()
+        logging.info('Starting video processing unit')
         asyncio.get_event_loop().run_forever()

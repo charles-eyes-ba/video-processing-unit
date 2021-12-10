@@ -30,13 +30,7 @@ class WebSocketClient:
     send_detections(id, classes)
         Send detections to server
     """
-    def __init__(self, url):
-        """
-        Parameters
-        ----------
-        url : str
-            The url of the websocket server
-        """
+    def __init__(self):
         self.on_video_feeds_update = None
         self.on_add_video_feed = None
         self.on_remove_video_feed = None
@@ -50,9 +44,15 @@ class WebSocketClient:
         self._socketio.register_namespace(self.detection_namespace)
         self._socketio.register_namespace(self.config_namespace)
 
-        self._socketio.connect(url)
-        self.config_namespace.emit(ConfigNamespace.REQUEST_UNIT_CONFIGURATION)
 
+    def connect(self, url):
+        """
+        Parameters
+        ----------
+        url : str
+            The url of the websocket server
+        """
+        self._socketio.connect(url)
 
     # * Setups Namespaces
     def _generate_root_namespace(self):
