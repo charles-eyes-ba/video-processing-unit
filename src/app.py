@@ -82,13 +82,19 @@ class VideoProcessingUnit:
         """
         id = video_feed['id']
         url = video_feed['feed_url']
+        
+        feed = VideoFeed( # TODO: How to handle the video feed callbacks?
+            url=url, 
+            on_connection_error=None
+        )
+        
         video_processor = VideoProcessor(
             id=id,
-            video_feed=VideoFeed(url),
+            video_feed=feed,
             dnn=self._generate_deep_neural_network(),
-
             on_object_detection=self._on_detection_callback
         )
+        
         logging.info(f'Adding video feed {id} with url {url}')
         video_processor.start()
         logging.info(f'Started video feed {id} with url {url}')
@@ -123,6 +129,10 @@ class VideoProcessingUnit:
             The list of classes detected
         """
         self._websocket.send_detections(id, classes)
+    
+    
+    # * Video Feeds Callbacks
+    
     
     
     # * Starts

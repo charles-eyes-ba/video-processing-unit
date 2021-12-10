@@ -32,7 +32,7 @@ class VideoFeed:
     pop_lastest_frame()
         Pop the lastest frame
     """
-    def __init__(self, feed_url):
+    def __init__(self, feed_url, on_connection_error=None):
         """
         Parameters
         ----------
@@ -46,7 +46,7 @@ class VideoFeed:
         self.height = None
         self.fps = None
         
-        self.on_connection_error = None
+        self.on_connection_error = on_connection_error
         
         self._video_capture = None
         self._feed_url = feed_url
