@@ -29,6 +29,8 @@ class VideoProcessor:
             The Deep Neural Network used to detect objects
         delay : int
             The delay between frames detection
+        on_object_detection : function
+            The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
         """
         self.id = id
         self._video_feed = video_feed
@@ -36,10 +38,10 @@ class VideoProcessor:
         self._delay = delay
         self._last_detections_classes = []
 
+        self.on_object_detection = on_object_detection
+
         self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
-
-        self.on_object_detection = on_object_detection
 
 
     def start(self):
@@ -58,6 +60,7 @@ class VideoProcessor:
                 hasNewDetections = self._last_detections_classes != classes
                 if hasNewDetections:
                     self._last_detections_classes = classes
-                    self.on_object_detection(self.id, classes)
+                    if self.on_object_detection is not None:
+                        self.on_object_detection(self.id, classes)
 
             sleep(self._delay)

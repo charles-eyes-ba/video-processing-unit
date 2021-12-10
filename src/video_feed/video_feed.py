@@ -99,7 +99,8 @@ class VideoFeed:
             self._video_capture = cv2.VideoCapture(self._feed_url)
         except Exception as e:
             exception = VideoFeedCouldNotConntect(f'Could not connect to {self._feed_url}')
-            self.on_connection_error(exception)
+            if self.on_connection_error is not None:
+                self.on_connection_error(exception)
             self.release()
             return
         
@@ -112,6 +113,7 @@ class VideoFeed:
                 self.status, self.frame = self._video_capture.read()
             except Exception as e:
                 exception = VideoFeedConnectionLost(f'Lost connection to {self._feed_url}')
-                self.on_connection_error(exception)
+                if self.on_connection_error is not None:
+                    self.on_connection_error(exception)
                 self.release()
                 return
