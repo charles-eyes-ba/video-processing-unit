@@ -1,39 +1,10 @@
 from threading import Thread
 from time import sleep
 
-class VideoProcessor:
-    """ 
-    Class that handles the video feed and the detection of the objects
+from .interface import VideoProcessor
 
-    Attributes
-    ----------
-    id : str
-        The id of the video processar (camera id)
-    is_running : bool
-        True if the video processor is running
-    on_object_detection : function
-        The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
-    on_error : function
-        The function to call when an error occurs. The function must have the following signature: function(camera_id, exception)
-        
-    Methods
-    -------
-    start()
-        Start the video processor
-    """
+class VideoProcessorImpl(VideoProcessor):
     def __init__(self, id, video_feed, dnn, delay=5):
-        """
-        Parameters
-        ----------
-        id : str
-            The id of the camera
-        video_feed : VideoFeed
-            The video feed of the camera
-        dnn : DNN
-            The Deep Neural Network used to detect objects
-        delay : int
-            The delay between frames detection
-        """
         self.id = id
         self._dnn = dnn
         self._delay = delay
@@ -52,30 +23,18 @@ class VideoProcessor:
 
     # * Setups
     def setup_callbacks(self, on_object_detection=None, on_error=None):
-        """ 
-        Setup the callbacks for the video processor
-        
-        Parameters
-        ----------
-        on_object_detection : function
-            The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
-        on_error : function
-            The function to call when an error occurs. The function must have the following signature: function(camera_id, exception)
-        """
         self.on_object_detection = on_object_detection
         self.on_error = on_error
 
 
     # * Methods
     def start(self):
-        """ Start the video processor """
         self.is_running = True
         self._video_feed.start()
         self._thread.start()
         
         
     def stop(self):
-        """ Stop the video processor """
         self.is_running = False
         self._video_feed.stop()
 
