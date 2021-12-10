@@ -1,9 +1,8 @@
 from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
-from src.factory import dnn_factory
+from src.factory import dnn_factory, video_feed_factory
 
 from src.video_processor import VideoProcessor
-from src.video_feed import VideoFeed
 from src.websocket import WebSocketClient
 from src.configs.environment import HSU_WEBSOCKET_URL
 
@@ -71,7 +70,7 @@ class VideoProcessingUnit:
             weights_path=YOLO_WEIGHTS_PATH, 
             classes_path=YOLO_CLASSES_PATH
         )
-        video_feed = VideoFeed(feed_url=url)
+        video_feed = video_feed_factory.create_video_feed(url)
         return VideoProcessor(id, video_feed, dnn)
 
 

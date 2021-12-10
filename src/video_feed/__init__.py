@@ -1,1 +1,1 @@
-from .video_feed import VideoFeed
+from .interface import VideoFeed
