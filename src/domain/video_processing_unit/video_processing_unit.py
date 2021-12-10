@@ -3,6 +3,7 @@ from src.common.environment import HSU_WEBSOCKET_URL
 
 from src.factory import dnn_factory, video_feed_factory, video_processor_factory
 from src.external.websocket import WebSocketClient
+from .exceptions import CameraParamsNotFoundException
 
 from time import sleep
 
@@ -101,8 +102,17 @@ class VideoProcessingUnit:
         video_feed : VideoFeed
             The video feed to be added
         """
-        id = video_feed['id'] # TODO: Handler nullable id
-        url = video_feed['feed_url'] # TODO: Handler nullable feed_url
+        try:
+            id = video_feed['id']
+        except:
+            self._on_error_callback('None', CameraParamsNotFoundException('Not found id'))
+            return
+        
+        try:
+            url = video_feed['feed_url']
+        except:
+            self._on_error_callback('None', CameraParamsNotFoundException(f'Not found feed_url in {id}'))
+            return
         
         logging.info(f'Adding video feed {id} with url {url}')
         video_processor = self._generate_video_processor(id, url)
