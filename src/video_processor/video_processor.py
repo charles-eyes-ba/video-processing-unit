@@ -17,7 +17,7 @@ class VideoProcessor:
     start()
         Start the video processor
     """
-    def __init__(self, id, video_feed, dnn, delay=5):
+    def __init__(self, id, video_feed, dnn, delay=5, on_object_detection=None):
         """
         Parameters
         ----------
@@ -39,7 +39,7 @@ class VideoProcessor:
         self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
 
-        self.on_object_detection = None
+        self.on_object_detection = on_object_detection
 
 
     def start(self):

@@ -28,11 +28,12 @@ class VideoProcessingUnit:
         self._websocket = None
         while self._websocket == None:
             try:
-                self._websocket = WebSocketClient('http://0.0.0.0:5000')
+                self._websocket = WebSocketClient('http://0.0.0.0:1544')
                 logging.info('Connected to websocket')
             except:
-                logging.info('Trying to connect to websocket again in 30 seconds...')
-                sleep(VideoProcessingUnit.DELAY_TO_RETRY_WEBSCOKET_CONNECTION)
+                delay = VideoProcessingUnit.DELAY_TO_RETRY_WEBSCOKET_CONNECTION
+                logging.info(f'Trying to connect to websocket again in {delay} seconds...')
+                sleep(delay)
                 
         self._setup_websocket_callbacks()
         self._video_feeds = []
@@ -55,7 +56,7 @@ class VideoProcessingUnit:
         self._websocket.on_remove_video_feed = self._remove_vide_feed
 
 
-    # * Handle videos feed list
+    # * Websocekt Callbacks
     def _update_video_feed_list(self, video_feed_list):
         """ 
         Updates the list of video feeds to be processed 
@@ -85,7 +86,8 @@ class VideoProcessingUnit:
             id=id,
             video_feed=VideoFeed(url),
             dnn=self._generate_deep_neural_network(),
-            websocket=self._websocket
+
+            on_object_detection=self._on_detection_callback
         )
         logging.info(f'Adding video feed {id} with url {url}')
         video_processor.start()
@@ -106,6 +108,21 @@ class VideoProcessingUnit:
             if video.id == video_feed_id:
                 self._video_feeds.remove(video)
                 break
+    
+    
+    # * Video Processor Callbacks
+    def _on_detection_callback(self, id, classes):
+        """ 
+        Callback for when a detection is made for a video feed
+        
+        Parameters
+        ----------
+        id : str
+            The id of the video feed
+        classes : list
+            The list of classes detected
+        """
+        self._websocket.send_detections(id, classes)
     
     
     # * Starts
