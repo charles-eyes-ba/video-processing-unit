@@ -53,7 +53,7 @@ class VideoProcessingUnit:
         """ Sets up the websocket client """
         self._websocket.on_video_feeds_update = self._update_video_feed_list
         self._websocket.on_add_video_feed = self._add_video_feed
-        self._websocket.on_remove_video_feed = self._remove_vide_feed
+        self._websocket.on_remove_video_feed = self._remove_video_feed
 
 
     # * Websocekt Callbacks
@@ -66,6 +66,7 @@ class VideoProcessingUnit:
         video_feed_list : list
             The list of video feeds to be processed (replace all current video feeds)
         """
+        logging.info('Updating all video feed list')
         self._video_feeds = []
         for video_feed in video_feed_list:
             self._add_video_feed(video_feed)
@@ -83,9 +84,10 @@ class VideoProcessingUnit:
         id = video_feed['id']
         url = video_feed['feed_url']
         
-        feed = VideoFeed( # TODO: How to handle the video feed callbacks?
-            url=url, 
-            on_connection_error=None
+        feed = VideoFeed(
+            id=id,
+            feed_url=url, 
+            on_connection_error=self._on_video_feed_connection_error
         )
         
         video_processor = VideoProcessor(
@@ -101,7 +103,7 @@ class VideoProcessingUnit:
         self._video_feeds.append(video_processor)
         
         
-    def _remove_vide_feed(self, video_feed_id): # TODO: Delete video feed thread
+    def _remove_video_feed(self, video_feed_id): # TODO: Release thread
         """ 
         Removes a video feed from the list of video feeds to be processed 
         
@@ -112,6 +114,7 @@ class VideoProcessingUnit:
         """
         for video in self._video_feeds:
             if video.id == video_feed_id:
+                logging.info(f'Removing {video_feed_id} video feed')
                 self._video_feeds.remove(video)
                 break
     
@@ -132,7 +135,19 @@ class VideoProcessingUnit:
     
     
     # * Video Feeds Callbacks
-    
+    def _on_video_feed_connection_error(self, id, exception):
+        """
+        Callback for when a video feed connection error occurs
+        
+        Parameters
+        ----------
+        id : str
+            The id of the video feed
+        exception : Exception
+            The exception that occurred
+        """
+        logging.error(f'Video feed {id} connection error: {exception}')
+        self._remove_video_feed(id)
     
     
     # * Starts
@@ -144,5 +159,6 @@ class VideoProcessingUnit:
     
     def start(self):
         """ Starts video processing unit aplication """
+        logging.error('Starting video processing unit')
         self._start_video_processors()
         asyncio.get_event_loop().run_forever()

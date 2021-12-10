@@ -30,7 +30,7 @@ class DeepNeuralNetwork:
         InvalidDeepNeuralNetworkFilesException
             If one of the files to load deep neural network is invalid
         """
-        self._threshold = 0.6
+        self._threshold = 0.55
         self._threshold_NMS = 0.3
         self._blob_size = (416, 416)
 

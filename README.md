@@ -31,20 +31,22 @@ $ python main.py
 - Show the video feed with boxes
 
 ```python
+from src.deep_neural_network import DeepNeuralNetwork
+from src.configs.dnn_paths import YOLO_CLASSES_PATH, YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH
+import cv2
+
+cams = [cv2.VideoCapture(<URL>)]
+dnn = DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
+
 while True:
-    overview = ''
-    start_time = datetime.now()
+    for index, camera in enumerate(cams):
+        ret, frame = camera.read()
 
-    for camera in [camera_1, camera_2, camera_3, camera_4]:
-        frame = camera.pop_lastest_frame()
-
-        if frame is not None:
-            boxes, scores, classes = yolo.predict(frame)
-            overview += f'Camera: {camera.id} {classes}\n'
-
-    overview += f'Time to process: {datetime.now() - start_time}\n'
-    overview += f'Stated time: {start_time}\n'
-    print(overview)
+        if not ret:
+            continue
+        
+        boxes, scores, classes = dnn.predict(frame)
+        dnn.show_img_with_boxes(str(index), frame, boxes, scores, classes, scale=2)
             
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

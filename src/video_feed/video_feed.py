@@ -11,6 +11,8 @@ class VideoFeed:
     
     Attributes
     ----------
+    id : str
+        Id of the video feed
     status : bool
         True if the lastest frame is valid
     frame : numpy.ndarray
@@ -23,7 +25,8 @@ class VideoFeed:
         Frames per second of the video feed
     on_connection_error : function
         Function to be called when the video feed receive an error. 
-        The function must accept a exception (VideoFeedConnectionLost, VideoFeedCouldNotConntect) as parameter.
+        The function must have the following signature: function(camera_id, exception). 
+        Exception is a VideoFeedCouldNotConntect or VideoFeedConnectionLost.
         
     Methods
     -------
@@ -32,13 +35,16 @@ class VideoFeed:
     pop_lastest_frame()
         Pop the lastest frame
     """
-    def __init__(self, feed_url, on_connection_error=None):
+    def __init__(self, id, feed_url, on_connection_error=None):
         """
         Parameters
         ----------
+        id : str
+            Id of the video feed
         feed_url : str or int
             URL (str) or code (int) to access remote video or local camera
         """
+        self.id = id
         self.status = None
         self.frame = None
         
