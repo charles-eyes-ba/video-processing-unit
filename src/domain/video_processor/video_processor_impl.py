@@ -14,8 +14,8 @@ class VideoProcessorImpl(VideoProcessor):
         self._video_feed = video_feed
         self._video_feed.setup_callbacks(on_error=self._on_video_feed_error)
 
-        self.on_object_detection = None
-        self.on_error = None
+        self._on_object_detection = None
+        self._on_error = None
 
         self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
@@ -23,8 +23,8 @@ class VideoProcessorImpl(VideoProcessor):
 
     # * Setups
     def setup_callbacks(self, on_object_detection=None, on_error=None):
-        self.on_object_detection = on_object_detection
-        self.on_error = on_error
+        self._on_object_detection = on_object_detection
+        self._on_error = on_error
 
 
     # * Methods

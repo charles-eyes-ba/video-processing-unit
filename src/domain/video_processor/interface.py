@@ -6,19 +6,13 @@ class VideoProcessor:
     
     @abstract_attribute
     def id(self):
+        """ The id of the video processar (camera id) """
         raise NotImplementedError('id must be defined')
 
     @abstract_attribute
     def is_running(self):
+        """ True if the video processor is running"""
         raise NotImplementedError('is_running must be defined')
-
-    @abstract_attribute
-    def on_object_detection(self):
-        raise NotImplementedError('on_object_detection must be defined')
-
-    @abstract_attribute
-    def on_error(self):
-        raise NotImplementedError('on_error must be defined')        
     
     
     @abstractmethod
