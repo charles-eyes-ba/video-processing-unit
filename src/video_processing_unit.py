@@ -1,7 +1,7 @@
 from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
 from src.video_processor import VideoProcessor
-from src.video_feed.video_feed import VideoFeed
+from src.video_feed import VideoFeed
 from src.deep_neural_network.deep_neural_network import DeepNeuralNetwork
 from src.websocket import WebSocketClient
 from src.configs.environment import HSU_WEBSOCKET_URL
@@ -11,7 +11,7 @@ from time import sleep
 import logging
 import asyncio
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 class VideoProcessingUnit:
     """ 
@@ -45,9 +45,11 @@ class VideoProcessingUnit:
     # * Setups
     def _setup_websocket_callbacks(self):
         """ Sets up the websocket client """
-        self._websocket.on_video_feeds_update = self._update_video_feed_list
-        self._websocket.on_add_video_feed = self._add_video_feed
-        self._websocket.on_remove_video_feed = self._remove_video_feed
+        self._websocket.setup_callbacks(
+            on_video_feeds_update=self._update_video_feed_list, 
+            on_add_video_feed=self._add_video_feed, 
+            on_remove_video_feed=self._remove_video_feed
+        )
         # TODO: Handle disconect event
         
     
@@ -74,8 +76,7 @@ class VideoProcessingUnit:
         """
         return VideoFeed(
             id=id,
-            feed_url=url,
-            on_connection_error=self._on_video_feed_connection_error,
+            feed_url=url
         )
 
 
@@ -94,7 +95,6 @@ class VideoProcessingUnit:
             id=id,
             video_feed=self._generate_video_feed(id, url),
             dnn=self._generate_deep_neural_network(),
-            on_object_detection=self._on_detection_callback,
         )
 
 
@@ -108,8 +108,12 @@ class VideoProcessingUnit:
         video_feed_list : list
             The list of video feeds to be processed (replace all current video feeds)
         """
+        logging.info('Removing all video feed list')
+        for video_feed in self._video_feeds:
+            video_feed.stop()
+            
         logging.info('Updating all video feed list')
-        self._video_feeds = [] # TODO: Remove all video feeds and kill all threads
+        self._video_feeds = []
         for video_feed in video_feed_list:
             self._add_video_feed(video_feed)
 
@@ -128,6 +132,11 @@ class VideoProcessingUnit:
         
         logging.info(f'Adding video feed {id} with url {url}')
         video_processor = self._generate_video_processor(id, url)
+        video_processor.setup_callbacks(
+            on_object_detection=self._on_detection_callback,
+            on_error=self._on_error_callback
+        )
+        
         logging.info(f'Starting video feed {id} with url {url}')
         video_processor.start()
         self._video_feeds.append(video_processor)
@@ -145,39 +154,39 @@ class VideoProcessingUnit:
         for video in self._video_feeds:
             if video.id == video_feed_id:
                 logging.info(f'Removing {video_feed_id} video feed')
-                self._video_feeds.remove(video) # TODO: Kill video feed thread and video processor thread
+                video.stop()
+                self._video_feeds.remove(video)
                 break
     
     
     # * Video Processor Callbacks
     def _on_detection_callback(self, id, classes):
         """ 
-        Callback for when a detection is made for a video feed
+        Callback for when a detection is made for a video processor
         
         Parameters
         ----------
         id : str
-            The id of the video feed
+            The id of the video processor
         classes : list
             The list of classes detected
         """
+        logging.debug(f'Detection in {id} | Classes: {classes}')
         self._websocket.send_detections(id, classes)
     
     
-    # * Video Feeds Callbacks
-    def _on_video_feed_connection_error(self, id, exception):
-        """
-        Callback for when a video feed connection error occurs
+    def _on_error_callback(self, id, exception):
+        """ 
+        Callback for when an error is made for a video processor
         
         Parameters
         ----------
         id : str
-            The id of the video feed
+            The id of the video processor
         exception : Exception
-            The exception that occurred
+            The exception that was thrown
         """
-        logging.error(f'Video feed {id} connection error: {exception}')
-        self._remove_video_feed(id)
+        logging.debug(f'Error in video feed {id}')
     
     
     # * Starts

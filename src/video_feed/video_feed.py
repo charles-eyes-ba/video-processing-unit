@@ -25,7 +25,7 @@ class VideoFeed:
         Frames per second of the video feed
     is_running : bool
         True if the video feed is running
-    on_connection_error : function
+    on_error : function
         Function to be called when the video feed receive an error. 
         The function must have the following signature: function(camera_id, exception). 
         Exception is a VideoFeedCouldNotConntect or VideoFeedConnectionLost.
@@ -37,7 +37,7 @@ class VideoFeed:
     pop_lastest_frame()
         Pop the lastest frame
     """
-    def __init__(self, id, feed_url, on_connection_error=None):
+    def __init__(self, id, feed_url):
         """
         Parameters
         ----------
@@ -45,7 +45,7 @@ class VideoFeed:
             Id of the video feed
         feed_url : str or int
             URL (str) or code (int) to access remote video or local camera
-        on_connection_error : function
+        on_error : function
             Function to be called when the video feed receive an error
         """
         self.id = id
@@ -57,22 +57,40 @@ class VideoFeed:
         self.height = None
         self.fps = None
         
-        self.on_connection_error = on_connection_error
+        self.on_connection_error = None
         
         self._video_capture = None
         self._feed_url = feed_url
         
         self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
+        
+        
+    # * Setups
+    def setup_callbacks(self, on_error=None):
+        """ 
+        Setup the callbacks 
+        
+        Parameters
+        ----------
+        on_error : function
+            Function to be called when the video feed receive an error
+        """
+        self.on_error = on_error
+        
+      
+    # * Methods  
+    def start(self):
+        """ Start the video feed """
+        self.is_running = True
         self._thread.start()
-        
-        
-    def release(self):
-        """ Release the video capture object """
-        self._video_capture.release()
+    
+    
+    def stop(self):
+        """ Stop the video feed """
         self.is_running = False
-
-
+    
+    
     def pop_lastest_frame(self):
         """ 
         Pop the lastest frame 
@@ -85,8 +103,15 @@ class VideoFeed:
         frame = deepcopy(self.frame)
         self.frame = None
         return frame
+    
+    
+    def release(self):
+        """ Release the video capture object """
+        self._video_capture.release()
+        self.is_running = False
 
 
+    # * Main loop
     def __loop(self):
         """ 
         Loop that updates the lastest frame.
@@ -98,8 +123,6 @@ class VideoFeed:
         VideoFeedConnectionLost
             If the video feed connection was lost. Message Format: Lost connection to {feed_url}
         """
-        self.is_running = True
-        
         try:
             self._video_capture = cv2.VideoCapture(self._feed_url)
         except Exception as e:
@@ -113,7 +136,7 @@ class VideoFeed:
         self.height = int(self._video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
         self.fps = int(self._video_capture.get(cv2.CAP_PROP_FPS))
         
-        while True:
+        while self.is_running:
             try:
                 self.status, self.frame = self._video_capture.read()
             except Exception as e:
