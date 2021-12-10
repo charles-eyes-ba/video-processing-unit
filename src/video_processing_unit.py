@@ -1,3 +1,4 @@
+from src import video_feed
 from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 
 from src.video_processor import VideoProcessor
@@ -37,7 +38,7 @@ class VideoProcessingUnit:
                 logging.info(f'Trying to connect to websocket again in {delay} seconds...')
                 sleep(delay)
         
-        self._video_feeds = []        
+        self._processors = []        
         self._setup_websocket_callbacks()
         self._websocket.request_configs()
 
@@ -54,32 +55,6 @@ class VideoProcessingUnit:
         
     
     # * Generators
-    def _generate_deep_neural_network(self):
-        """ Generates a deep neural network """
-        return DeepNeuralNetwork(
-            config_path=YOLO_CONFIG_PATH, 
-            weights_path=YOLO_WEIGHTS_PATH, 
-            classes_path=YOLO_CLASSES_PATH
-        )
-        
-        
-    def _generate_video_feed(self, id, url):
-        """ 
-        Generates a video feed 
-        
-        Parameters
-        ----------
-        id : str
-            The id of the camera
-        url : str
-            The url of the video feed
-        """
-        return VideoFeed(
-            id=id,
-            feed_url=url
-        )
-
-
     def _generate_video_processor(self, id, url):
         """ 
         Generates a video processor
@@ -91,11 +66,13 @@ class VideoProcessingUnit:
         url : str
             The url of the video feed
         """
-        return VideoProcessor(
-            id=id,
-            video_feed=self._generate_video_feed(id, url),
-            dnn=self._generate_deep_neural_network(),
+        dnn = DeepNeuralNetwork(
+            config_path=YOLO_CONFIG_PATH, 
+            weights_path=YOLO_WEIGHTS_PATH, 
+            classes_path=YOLO_CLASSES_PATH
         )
+        video_feed = VideoFeed(feed_url=url)
+        return VideoProcessor(id, video_feed, dnn)
 
 
     # * Websocket Callbacks
@@ -109,11 +86,11 @@ class VideoProcessingUnit:
             The list of video feeds to be processed (replace all current video feeds)
         """
         logging.info('Removing all video feed list')
-        for video_feed in self._video_feeds:
-            video_feed.stop()
+        for processor in self._processors:
+            processor.stop()
             
         logging.info('Updating all video feed list')
-        self._video_feeds = []
+        self._processors = []
         for video_feed in video_feed_list:
             self._add_video_feed(video_feed)
 
@@ -139,7 +116,7 @@ class VideoProcessingUnit:
         
         logging.info(f'Starting video feed {id} with url {url}')
         video_processor.start()
-        self._video_feeds.append(video_processor)
+        self._processors.append(video_processor)
         
         
     def _remove_video_feed(self, video_feed_id):
@@ -151,11 +128,11 @@ class VideoProcessingUnit:
         video_feed_id : int
             The id of the video feed to be removed
         """
-        for video in self._video_feeds:
-            if video.id == video_feed_id:
+        for processor in self._processors:
+            if processor.id == video_feed_id:
                 logging.info(f'Removing {video_feed_id} video feed')
-                video.stop()
-                self._video_feeds.remove(video)
+                processor.stop()
+                self._processors.remove(processor)
                 break
     
     
@@ -187,6 +164,7 @@ class VideoProcessingUnit:
             The exception that was thrown
         """
         logging.debug(f'Error in video feed {id}')
+        # TODO: Send error to websocket
     
     
     # * Starts
