@@ -23,6 +23,8 @@ class VideoFeed:
         Height of the video feed
     fps : int
         Frames per second of the video feed
+    is_running : bool
+        True if the video feed is running
     on_connection_error : function
         Function to be called when the video feed receive an error. 
         The function must have the following signature: function(camera_id, exception). 
@@ -49,6 +51,7 @@ class VideoFeed:
         self.id = id
         self.status = None
         self.frame = None
+        self.is_running = False
         
         self.width = None
         self.height = None
@@ -59,7 +62,7 @@ class VideoFeed:
         self._video_capture = None
         self._feed_url = feed_url
         
-        self._thread = Thread(target=self.__loop, args=())
+        self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
         self._thread.start()
         
@@ -67,7 +70,7 @@ class VideoFeed:
     def release(self):
         """ Release the video capture object """
         self._video_capture.release()
-        # TODO: kill _thread
+        self.is_running = False
 
 
     def pop_lastest_frame(self):
@@ -95,6 +98,8 @@ class VideoFeed:
         VideoFeedConnectionLost
             If the video feed connection was lost. Message Format: Lost connection to {feed_url}
         """
+        self.is_running = True
+        
         try:
             self._video_capture = cv2.VideoCapture(self._feed_url)
         except Exception as e:

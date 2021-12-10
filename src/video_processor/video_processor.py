@@ -52,6 +52,9 @@ class VideoProcessor:
     def __loop(self):
         """ Main loop of the video processor """
         while True:
+            if not self._video_feed.is_running:
+                return
+            
             frame = self._video_feed.pop_lastest_frame()
 
             if frame is not None:
