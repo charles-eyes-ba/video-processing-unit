@@ -1,10 +1,8 @@
-from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
+from src.common.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
+from src.common.environment import HSU_WEBSOCKET_URL
 
 from src.factory import dnn_factory, video_feed_factory, video_processor_factory
-
-
-from src.websocket import WebSocketClient
-from src.configs.environment import HSU_WEBSOCKET_URL
+from src.external.websocket import WebSocketClient
 
 from time import sleep
 
