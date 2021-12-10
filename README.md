@@ -26,3 +26,28 @@ To start the VPU you must install dependencies and run. You can do this with fol
 $ pip install -r requirements.txt
 $ python main.py
 ```
+
+## Debugging
+- Show the video feed with boxes
+
+```python
+from src.deep_neural_network import DeepNeuralNetwork
+from src.configs.dnn_paths import YOLO_CLASSES_PATH, YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH
+import cv2
+
+cams = [cv2.VideoCapture(<URL>)]
+dnn = DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
+
+while True:
+    for index, camera in enumerate(cams):
+        ret, frame = camera.read()
+
+        if not ret:
+            continue
+        
+        boxes, scores, classes = dnn.predict(frame)
+        dnn.show_img_with_boxes(str(index), frame, boxes, scores, classes, scale=2)
+            
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+```
