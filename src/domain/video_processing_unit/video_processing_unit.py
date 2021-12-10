@@ -1,11 +1,9 @@
-from src import video_feed
-from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
+from src.common.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
+from src.common.environment import HSU_WEBSOCKET_URL
 
-from src.video_processor import VideoProcessor
-from src.video_feed import VideoFeed
-from src.deep_neural_network.deep_neural_network import DeepNeuralNetwork
-from src.websocket import WebSocketClient
-from src.configs.environment import HSU_WEBSOCKET_URL
+from src.factory import dnn_factory, video_feed_factory, video_processor_factory
+from src.external.websocket import WebSocketClient
+from .exceptions import CameraParamsNotFoundException
 
 from time import sleep
 
@@ -66,13 +64,13 @@ class VideoProcessingUnit:
         url : str
             The url of the video feed
         """
-        dnn = DeepNeuralNetwork(
+        dnn = dnn_factory.create_dnn(
             config_path=YOLO_CONFIG_PATH, 
             weights_path=YOLO_WEIGHTS_PATH, 
             classes_path=YOLO_CLASSES_PATH
         )
-        video_feed = VideoFeed(feed_url=url)
-        return VideoProcessor(id, video_feed, dnn)
+        video_feed = video_feed_factory.create_video_feed(url)
+        return video_processor_factory.create_video_processor(id, video_feed, dnn)
 
 
     # * Websocket Callbacks
@@ -104,8 +102,17 @@ class VideoProcessingUnit:
         video_feed : VideoFeed
             The video feed to be added
         """
-        id = video_feed['id'] # TODO: Handler nullable id
-        url = video_feed['feed_url'] # TODO: Handler nullable feed_url
+        try:
+            id = video_feed['id']
+        except:
+            self._on_error_callback('None', CameraParamsNotFoundException('Not found id'))
+            return
+        
+        try:
+            url = video_feed['feed_url']
+        except:
+            self._on_error_callback('None', CameraParamsNotFoundException(f'Not found feed_url in {id}'))
+            return
         
         logging.info(f'Adding video feed {id} with url {url}')
         video_processor = self._generate_video_processor(id, url)
