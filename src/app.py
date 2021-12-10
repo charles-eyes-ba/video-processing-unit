@@ -40,6 +40,13 @@ class VideoProcessingUnit:
 
 
     # * Setups | Generates
+    def _setup_websocket_callbacks(self):
+        """ Sets up the websocket client """
+        self._websocket.on_video_feeds_update = self._update_video_feed_list
+        self._websocket.on_add_video_feed = self._add_video_feed
+        self._websocket.on_remove_video_feed = self._remove_video_feed
+        
+        
     def _generate_deep_neural_network(self):
         """ Generates a deep neural network """
         return DeepNeuralNetwork(
@@ -47,13 +54,6 @@ class VideoProcessingUnit:
             weights_path=YOLO_WEIGHTS_PATH, 
             classes_path=YOLO_CLASSES_PATH
         )
-
-
-    def _setup_websocket_callbacks(self):
-        """ Sets up the websocket client """
-        self._websocket.on_video_feeds_update = self._update_video_feed_list
-        self._websocket.on_add_video_feed = self._add_video_feed
-        self._websocket.on_remove_video_feed = self._remove_video_feed
 
 
     # * Websocekt Callbacks
@@ -67,7 +67,7 @@ class VideoProcessingUnit:
             The list of video feeds to be processed (replace all current video feeds)
         """
         logging.info('Updating all video feed list')
-        self._video_feeds = []
+        self._video_feeds = [] # TODO: Remove all video feeds and kill all threads
         for video_feed in video_feed_list:
             self._add_video_feed(video_feed)
 
@@ -81,8 +81,8 @@ class VideoProcessingUnit:
         video_feed : VideoFeed
             The video feed to be added
         """
-        id = video_feed['id']
-        url = video_feed['feed_url']
+        id = video_feed['id'] # TODO: Handler nullable id
+        url = video_feed['feed_url'] # TODO: Handler nullable feed_url
         
         feed = VideoFeed(
             id=id,
@@ -103,7 +103,7 @@ class VideoProcessingUnit:
         self._video_feeds.append(video_processor)
         
         
-    def _remove_video_feed(self, video_feed_id): # TODO: Release thread
+    def _remove_video_feed(self, video_feed_id):
         """ 
         Removes a video feed from the list of video feeds to be processed 
         
@@ -115,7 +115,7 @@ class VideoProcessingUnit:
         for video in self._video_feeds:
             if video.id == video_feed_id:
                 logging.info(f'Removing {video_feed_id} video feed')
-                self._video_feeds.remove(video)
+                self._video_feeds.remove(video) # TODO: Kill video feed thread and video processor thread
                 break
     
     
