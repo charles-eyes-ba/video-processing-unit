@@ -2,11 +2,10 @@ from threading import Thread
 from copy import deepcopy
 
 from .exceptions import VideoFeedConnectionLost, VideoFeedCouldNotConntect
-from .interface import VideoFeed
 
 import cv2
 
-class VideoFeedOpenCV(VideoFeed):
+class VideoFeed:
     """
     Class that wraps a video capture object and provides a lastest frame. It starts a thread that updates the lastest frame.
     
@@ -38,7 +37,7 @@ class VideoFeedOpenCV(VideoFeed):
     pop_lastest_frame()
         Pop the lastest frame
     """
-    def __init__(self, id: str, feed_url: str):
+    def __init__(self, id, feed_url):
         """
         Parameters
         ----------
@@ -65,10 +64,10 @@ class VideoFeedOpenCV(VideoFeed):
         
         self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
-        self._thread.start()
         
         
-    def setup_callbacks(self, on_error: function):
+    # * Setups
+    def setup_callbacks(self, on_error):
         """ 
         Setup the callbacks 
         
@@ -79,7 +78,13 @@ class VideoFeedOpenCV(VideoFeed):
         """
         self.on_error = on_error
         
-        
+      
+    # * Methods  
+    def start(self):
+        """ Start the video feed """
+        self._thread.start()
+    
+    
     def pop_lastest_frame(self):
         """ 
         Pop the lastest frame 
@@ -100,6 +105,7 @@ class VideoFeedOpenCV(VideoFeed):
         self.is_running = False
 
 
+    # * Main loop
     def __loop(self):
         """ 
         Loop that updates the lastest frame.
