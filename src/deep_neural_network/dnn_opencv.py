@@ -20,6 +20,38 @@ class DNNOpenCV(DeepNeuralNetwork):
         self._output_layers = self.__get_output_layers()
         
         
+    def predict(self, image):
+        image = self._read_image(image) if type(image) == str else image
+        height, width = image.shape[:2]
+        output_results = self._predict_boxes(image)
+        return self._filter_boxes(output_results, width, height)
+        
+        
+    def show_img_with_boxes(self, title, image, boxes, scores, classes, scale=None):
+        THICKESS = 2
+        
+        image = self._read_image(image) if type(image) == str else image
+        for index, _ in enumerate(boxes):
+            (x, y, width, height) = boxes[index]
+            
+            class_name = classes[index]
+            score = scores[index]
+            color = [int(c) for c in self._classes_colors[class_name]]
+            text = f'{class_name}: {score:.2f}'
+
+            background_box = numpy.full((image.shape), (0,0,0), dtype=numpy.uint8)
+            cv2.putText(background_box, text, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), THICKESS)
+            
+            bx, by, bw, bh = cv2.boundingRect(background_box[:,:,2])
+            cv2.rectangle(image, (x,y), (x+width, y+height), color, THICKESS)
+            cv2.rectangle(image, (bx,by), (bx+bw, by+bh), color, -1)
+            cv2.rectangle(image, (bx,by), (bx+bw, by+bh), color, 3)
+            cv2.putText(image, text, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
+            
+        image = cv2.resize(image, dsize=None,fx=scale,fy=scale) if scale else image
+        cv2.imshow(title, image)
+      
+        
     def __get_classes_colors(self):
         """ 
         Get classes box colors 
@@ -134,35 +166,3 @@ class DNNOpenCV(DeepNeuralNetwork):
             filtered_classes.append(self._classes[classes_ids[index]])
             
         return filtered_boxes, filtered_scores, filtered_classes
-    
-    
-    def predict(self, image):
-        image = self._read_image(image) if type(image) == str else image
-        height, width = image.shape[:2]
-        output_results = self._predict_boxes(image)
-        return self._filter_boxes(output_results, width, height)
-        
-        
-    def show_img_with_boxes(self, title, image, boxes, scores, classes, scale=None):
-        THICKESS = 2
-        
-        image = self._read_image(image) if type(image) == str else image
-        for index, _ in enumerate(boxes):
-            (x, y, width, height) = boxes[index]
-            
-            class_name = classes[index]
-            score = scores[index]
-            color = [int(c) for c in self._classes_colors[class_name]]
-            text = f'{class_name}: {score:.2f}'
-
-            background_box = numpy.full((image.shape), (0,0,0), dtype=numpy.uint8)
-            cv2.putText(background_box, text, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), THICKESS)
-            
-            bx, by, bw, bh = cv2.boundingRect(background_box[:,:,2])
-            cv2.rectangle(image, (x,y), (x+width, y+height), color, THICKESS)
-            cv2.rectangle(image, (bx,by), (bx+bw, by+bh), color, -1)
-            cv2.rectangle(image, (bx,by), (bx+bw, by+bh), color, 3)
-            cv2.putText(image, text, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,0,0), 2)
-            
-        image = cv2.resize(image, dsize=None,fx=scale,fy=scale) if scale else image
-        cv2.imshow(title, image)
