@@ -49,7 +49,7 @@ class VideoProcessor:
 
 
     # * Setups
-    def setup_callbacks(self, on_object_detection, on_error):
+    def setup_callbacks(self, on_object_detection=None, on_error=None):
         """ Setup the callbacks for the video processor """
         self.on_object_detection = on_object_detection
         self.on_error = on_error

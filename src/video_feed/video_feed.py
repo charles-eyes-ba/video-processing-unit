@@ -67,7 +67,7 @@ class VideoFeed:
         
         
     # * Setups
-    def setup_callbacks(self, on_error):
+    def setup_callbacks(self, on_error=None):
         """ 
         Setup the callbacks 
         

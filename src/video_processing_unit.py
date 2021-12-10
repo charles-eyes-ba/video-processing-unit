@@ -45,9 +45,11 @@ class VideoProcessingUnit:
     # * Setups
     def _setup_websocket_callbacks(self):
         """ Sets up the websocket client """
-        self._websocket.on_video_feeds_update = self._update_video_feed_list
-        self._websocket.on_add_video_feed = self._add_video_feed
-        self._websocket.on_remove_video_feed = self._remove_video_feed
+        self._websocket.setup_callbacks(
+            on_video_feeds_update=self._update_video_feed_list, 
+            on_add_video_feed=self._add_video_feed, 
+            on_remove_video_feed=self._remove_video_feed
+        )
         # TODO: Handle disconect event
         
     

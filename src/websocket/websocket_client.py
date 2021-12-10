@@ -45,16 +45,25 @@ class WebSocketClient:
         self._socketio.register_namespace(self.config_namespace)
 
 
-    def connect(self, url):
-        """
+    # * Setups
+    def setup_callbacks(self, on_video_feeds_update=None, on_add_video_feed=None, on_remove_video_feed=None):
+        """ 
+        Setup the callbacks 
+        
         Parameters
         ----------
-        url : str
-            The url of the websocket server
+        on_video_feeds_update : function
+            Function that is called when the all video feeds are updated
+        on_add_video_feed : function
+            Function that is called when a new video feed is added
+        on_remove_video_feed : function
+            Function that is called when a video feed is removed
         """
-        self._socketio.connect(url)
-
-    # * Setups Namespaces
+        self.on_video_feeds_update = on_video_feeds_update
+        self.on_add_video_feed = on_add_video_feed
+        self.on_remove_video_feed = on_remove_video_feed
+    
+    
     def _generate_root_namespace(self):
         """ Generate the root namespace """
         return RootNamespace()
@@ -112,6 +121,17 @@ class WebSocketClient:
         """
         if self.on_remove_video_feed is not None:
             self.on_remove_video_feed(video_feed_id)
+        
+        
+    # * Methods
+    def connect(self, url):
+        """
+        Parameters
+        ----------
+        url : str
+            The url of the websocket server
+        """
+        self._socketio.connect(url)
         
 
     # * Send Methods
