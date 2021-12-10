@@ -36,16 +36,6 @@ class VideoFeed(ABC):
         """ True if the video feed is running """
         raise NotImplementedError('VideoFeed is an abstract class')
 
-
-    @abstract_attribute
-    def on_error():
-        """
-        Function to be called when the video feed receive an error. 
-        The function must have the following signature: function(camera_id, exception). 
-        Exception is a VideoFeedCouldNotConntect or VideoFeedConnectionLost.
-        """
-        raise NotImplementedError('VideoFeed is an abstract class')
-
     
     @abstractmethod
     def __init__(self, feed_url):
@@ -70,7 +60,9 @@ class VideoFeed(ABC):
         Parameters
         ----------
         on_error : function
-            Function to be called when the video feed receive an error
+            Function to be called when the video feed receive an error. 
+            The function must have the following signature: function(camera_id, exception). 
+            Exception is a VideoFeedCouldNotConntect or VideoFeedConnectionLost.
         """
         raise NotImplementedError('VideoFeed.setup_callbacks is an abstract class')
         

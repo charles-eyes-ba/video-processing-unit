@@ -16,7 +16,7 @@ class VideoFeedOpenCV(VideoFeed):
         self.height = None
         self.fps = None
         
-        self.on_error = None
+        self._on_error = None
         
         self._video_capture = None
         self._feed_url = feed_url
@@ -27,7 +27,7 @@ class VideoFeedOpenCV(VideoFeed):
         
     # * Setups
     def setup_callbacks(self, on_error=None):
-        self.on_error = on_error
+        self._on_error = on_error
         
       
     # * Methods  
@@ -67,8 +67,8 @@ class VideoFeedOpenCV(VideoFeed):
             self._video_capture = cv2.VideoCapture(self._feed_url)
         except Exception as e:
             exception = VideoFeedCouldNotConntect(f'Could not connect to {self._feed_url}')
-            if self.on_connection_error is not None:
-                self.on_connection_error(exception)
+            if self._on_error is not None:
+                self._on_error(exception)
             self.release()
             return
         
@@ -81,8 +81,8 @@ class VideoFeedOpenCV(VideoFeed):
                 self.status, self.frame = self._video_capture.read()
             except Exception as e:
                 exception = VideoFeedConnectionLost(f'Lost connection to {self._feed_url}')
-                if self.on_connection_error is not None:
-                    self.on_connection_error(exception)
+                if self._on_error is not None:
+                    self._on_error(exception)
                 self.release()
                 return
         self.release()
