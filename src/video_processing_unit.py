@@ -1,9 +1,9 @@
-from src import video_feed
 from src.configs.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
+
+from src.factory import dnn_factory
 
 from src.video_processor import VideoProcessor
 from src.video_feed import VideoFeed
-from src.deep_neural_network.deep_neural_network import DeepNeuralNetwork
 from src.websocket import WebSocketClient
 from src.configs.environment import HSU_WEBSOCKET_URL
 
@@ -66,7 +66,7 @@ class VideoProcessingUnit:
         url : str
             The url of the video feed
         """
-        dnn = DeepNeuralNetwork(
+        dnn = dnn_factory.create_dnn(
             config_path=YOLO_CONFIG_PATH, 
             weights_path=YOLO_WEIGHTS_PATH, 
             classes_path=YOLO_CLASSES_PATH

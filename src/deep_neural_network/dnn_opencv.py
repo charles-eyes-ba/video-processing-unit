@@ -1,35 +1,11 @@
 import cv2
 import numpy
 
+from .interface import DeepNeuralNetwork
 from .exceptions import InvalidDeepNeuralNetworkFilesException
 
-class DeepNeuralNetwork:
-    """
-    Class that handles the detection of objects in an image
-    
-    Methods
-    -------
-    predict(image)
-        Predict objects in image
-    show_img_with_boxes(title, image, boxes, scores, classes, scale=None)
-        Show image with boxes
-    """
+class DNNOpenCV(DeepNeuralNetwork):
     def __init__(self, config_path, weights_path, classes_path):
-        """
-        Parameters
-        ----------
-        config_path : str
-            Path to load DNN config file
-        weights_path : str
-            Path to load DNN weights file
-        classes_path : str
-            Path to load DNN classes names file
-            
-        Raises
-        ------
-        InvalidDeepNeuralNetworkFilesException
-            If one of the files to load deep neural network is invalid
-        """
         self._threshold = 0.55
         self._threshold_NMS = 0.3
         self._blob_size = (416, 416)
@@ -161,19 +137,6 @@ class DeepNeuralNetwork:
     
     
     def predict(self, image):
-        """ 
-        Predict objects in image 
-        
-        Parameters
-        ----------
-        image : numpy.ndarray or str
-            Image path to load with OpenCV or the image itself
-            
-        Returns
-        -------
-        tuple
-            Tuple with all detections filtered (boxes, scores and classes)
-        """
         image = self._read_image(image) if type(image) == str else image
         height, width = image.shape[:2]
         output_results = self._predict_boxes(image)
@@ -181,20 +144,6 @@ class DeepNeuralNetwork:
         
         
     def show_img_with_boxes(self, title, image, boxes, scores, classes, scale=None):
-        """ 
-        Show image with boxes
-        
-        Parameters
-        ----------
-        image : numpy.ndarray or str
-            Image path to load with OpenCV or the image itself
-        boxes : list
-            List of boxes to show. Boxes are in the format [x, y, width, height]
-        scores : list
-            List of scores for each box
-        classes : list
-            List of classes for each box
-        """
         THICKESS = 2
         
         image = self._read_image(image) if type(image) == str else image
