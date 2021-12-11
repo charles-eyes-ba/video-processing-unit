@@ -29,3 +29,9 @@ class VideoCapture(ABC):
             If the connection to the source was lost
         """
         raise NotImplementedError('read() not implemented')
+    
+    
+    @abstractmethod
+    def release(self):
+        """ Releases the connection to the source """
+        raise NotImplementedError('release() not implemented')

@@ -29,7 +29,7 @@ class VideoFeed(ABC):
         ----------
         on_error : function
             Function to be called when the video feed receive an error. 
-            The function must have the following signature: function(camera_id, exception). 
+            The function must have the following signature: function(exception). 
             Exception is a VideoFeedCouldNotConntect or VideoFeedConnectionLost.
         """
         raise NotImplementedError('setup_callbacks() not implemented')

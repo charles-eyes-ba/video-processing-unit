@@ -10,6 +10,7 @@ class VideoCaptureOpenCV(VideoCapture):
         if self._cap is None or not self._cap.isOpened():
             raise VideoCaptureCouldNotConnect(f'Could not connect to video source: {self.__url}')
         self._cap.setExceptionMode(True)
+    
         
     def read(self):
         try:
@@ -17,3 +18,7 @@ class VideoCaptureOpenCV(VideoCapture):
         except:
             raise VideoCaptureConnectionLost(f'Connection to video source lost: {self.__url}')
         return frame
+    
+    
+    def release(self):
+        self._cap.release()
