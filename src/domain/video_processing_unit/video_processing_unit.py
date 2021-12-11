@@ -1,6 +1,6 @@
 from src.common.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 from src.common.environment import HSU_WEBSOCKET_URL
-from src.factory import dnn_factory, video_capture_factory, video_processor_factory, frame_collector_factory
+from src.factory import dnn_factory, video_capture_factory, frame_collector_factory, detector_factory
 from src.external.websocket import WebSocketClient
 from .exceptions import CameraParamsNotFoundException
 
@@ -73,7 +73,7 @@ class VideoProcessingUnit:
             )
             video_capture = video_capture_factory.create_video_capture(url)
             video_feed = frame_collector_factory.create_frame_collector(video_capture)
-            return video_processor_factory.create_video_processor(id, video_feed, dnn)        
+            return detector_factory.create_detector(id, video_feed, dnn)        
         except Exception as e:
             self._on_error_callback(id, e)
             

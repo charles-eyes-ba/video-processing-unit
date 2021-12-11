@@ -1,9 +1,9 @@
 from threading import Thread
 from time import sleep
 
-from .interface import VideoProcessor
+from .interface import Detector
 
-class VideoProcessorImpl(VideoProcessor):
+class DetectorImpl(Detector):
     def __init__(self, id, frame_collector, dnn, delay=5):
         self.id = id
         self._dnn = dnn

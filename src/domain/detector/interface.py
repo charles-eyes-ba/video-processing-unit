@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from src.common.abstract_attribute import abstract_attribute
 
-class VideoProcessor:
+class Detector(ABC):
     """ Class that handles the video feed and the detection of the objects """
     
     @abstract_attribute
