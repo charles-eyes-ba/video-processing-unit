@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class VideoCapture(ABC):
-    """ Abstract class to get video frames from a source """
+    """ Class to get video frames from a source """
     
     @abstractmethod
     def __init__(self, url):
