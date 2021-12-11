@@ -1,14 +1,11 @@
 from src.common.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 from src.common.environment import HSU_WEBSOCKET_URL
-from src.factory import dnn_factory, video_capture_factory, frame_collector_factory, detector_factory, websocket_factory
 from .exceptions import CameraParamsNotFoundException
 
 from time import sleep
 
 import logging
 import asyncio
-
-logging.basicConfig(level=logging.DEBUG)
 
 # TODO: Create utils to call callbacks only if exist (duplicated every where)
 
@@ -24,8 +21,11 @@ class VideoProcessingUnit:
     
     DELAY_TO_RETRY_WEBSCOKET_CONNECTION = 30
     
-    def __init__(self):
-        self._websocket = websocket_factory.create_websocket()
+    def __init__(self, websocket, create_detector):
+        self._detectors = []
+        self._create_detector = create_detector
+        self._websocket = websocket
+        
         while True:
             try:
                 self._websocket.connect(HSU_WEBSOCKET_URL)
@@ -35,8 +35,7 @@ class VideoProcessingUnit:
                 delay = VideoProcessingUnit.DELAY_TO_RETRY_WEBSCOKET_CONNECTION
                 logging.info(f'Trying to connect to websocket again in {delay} seconds...')
                 sleep(delay)
-        
-        self._processors = []        
+
         self._setup_websocket_callbacks()
         self._websocket.request_configs()
 
@@ -50,31 +49,6 @@ class VideoProcessingUnit:
             on_remove_video_feed=self._remove_video_feed
         )
         # TODO: Handle disconect event
-        
-    
-    # * Generators
-    def _generate_video_processor(self, id, url):
-        """ 
-        Generates a video processor
-        
-        Parameters
-        ----------
-        id : str
-            The id of the camera
-        url : str
-            The url of the video feed
-        """
-        try:
-            dnn = dnn_factory.create_dnn(
-                config_path=YOLO_CONFIG_PATH, 
-                weights_path=YOLO_WEIGHTS_PATH, 
-                classes_path=YOLO_CLASSES_PATH
-            )
-            video_capture = video_capture_factory.create_video_capture(url)
-            video_feed = frame_collector_factory.create_frame_collector(video_capture)
-            return detector_factory.create_detector(id, video_feed, dnn)        
-        except Exception as e:
-            self._on_error_callback(id, e)
             
 
     # * Websocket Callbacks
@@ -88,11 +62,11 @@ class VideoProcessingUnit:
             The list of video feeds to be processed (replace all current video feeds)
         """
         logging.info('Removing all video feed list')
-        for processor in self._processors:
-            processor.stop()
+        for detector in self._detectors:
+            detector.stop()
             
         logging.info('Updating all video feed list')
-        self._processors = []
+        self._detectors = []
         for video_feed in video_feed_list:
             self._add_video_feed(video_feed)
 
@@ -119,15 +93,25 @@ class VideoProcessingUnit:
             return
         
         logging.info(f'Adding video feed {id} with url {url}')
-        video_processor = self._generate_video_processor(id, url)
-        video_processor.setup_callbacks(
+        try:
+            detector = self._create_detector(
+                id=id,
+                url=url,
+                config_path=YOLO_CONFIG_PATH, 
+                weights_path=YOLO_WEIGHTS_PATH, 
+                classes_path=YOLO_CLASSES_PATH
+            )    
+        except Exception as e:
+            self._on_error_callback(id, e)
+            return
+        
+        detector.setup_callbacks(
             on_object_detection=self._on_detection_callback,
             on_error=self._on_error_callback
         )
-        
         logging.info(f'Starting video feed {id} with url {url}')
-        video_processor.start()
-        self._processors.append(video_processor)
+        detector.start()
+        self._detectors.append(detector)
         
         
     def _remove_video_feed(self, video_feed_id):
@@ -139,11 +123,11 @@ class VideoProcessingUnit:
         video_feed_id : int
             The id of the video feed to be removed
         """
-        for processor in self._processors:
-            if processor.id == video_feed_id:
+        for detector in self._detectors:
+            if detector.id == video_feed_id:
                 logging.info(f'Removing {video_feed_id} video feed')
-                processor.stop()
-                self._processors.remove(processor)
+                detector.stop()
+                self._detectors.remove(detector)
                 break
     
     
