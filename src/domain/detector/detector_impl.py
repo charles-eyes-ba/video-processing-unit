@@ -42,12 +42,10 @@ class DetectorImpl(Detector):
     # * Video Feed callbacks
     def _on_frame_collector_error(self, exception):
         """ 
-        Callback for the video feed error 
+        Callback for the video capture error
         
         Parameters
         ----------
-        id : str
-            The id of the camera
         exception : Exception
             The exception that occurred
         """
@@ -57,7 +55,7 @@ class DetectorImpl(Detector):
 
     # * Main loop
     def __loop(self):
-        """ Main loop of the video processor """
+        """ Main loop of the detector """
         while self._is_running:
             frame = self._frame_collector.pop_lastest_frame()
 
