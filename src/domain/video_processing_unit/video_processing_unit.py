@@ -11,6 +11,8 @@ import asyncio
 
 logging.basicConfig(level=logging.DEBUG)
 
+# TODO: Create utils to call callbacks only if exist (duplicated every where)
+
 class VideoProcessingUnit:
     """ 
     Class that handles the video processing unit 

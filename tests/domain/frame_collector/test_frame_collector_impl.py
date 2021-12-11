@@ -15,7 +15,7 @@ class FrameCollectorImplTests(TestCase):
     def generate_frame(class_instance):
         second = datetime.now().second
         fake_image = numpy.ndarray([3, 3, 3])
-        value_to_fill = second if second % 2 == 0 else second + 1
+        value_to_fill = second if second % 2 == 0 else int(second / 2)
         fake_image.fill(value_to_fill)
         return fake_image
     
@@ -81,7 +81,7 @@ class FrameCollectorImplTests(TestCase):
         
         # Then
         second_reference = (second + delay) % 60
-        frame_value = second_reference if second_reference % 2 == 0 else second_reference + 1
+        frame_value = second_reference if second_reference % 2 == 0 else int(second_reference / 2)
         
         self.assertEqual(frame.max(), frame_value)
         
