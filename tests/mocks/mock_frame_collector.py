@@ -11,6 +11,10 @@ class MockFrameCollector(FrameCollector):
         self._pop_lastest_frame = pop_lastest_frame
         self._release = release
         
+        self.started = False
+        self.stopped = False
+        self.released = False
+        
         
     def setup_callbacks(self, on_error=None):
         if self._setup_callbacks is not None:
@@ -18,11 +22,13 @@ class MockFrameCollector(FrameCollector):
         
       
     def start(self):
+        self.started = True
         if self._start is not None:
             self._start()
     
     
     def stop(self):
+        self.stopped = True
         if self._stop is not None:
             self._stop()
     
@@ -33,5 +39,6 @@ class MockFrameCollector(FrameCollector):
     
     
     def release(self):
+        self.released = True
         if self._release is not None:
             self._release()

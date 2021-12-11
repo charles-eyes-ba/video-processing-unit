@@ -13,3 +13,7 @@ class MockDeepNeuralNetwork(DeepNeuralNetwork):
     def predict(self, image):
         if self._predict is not None:
             return self._predict(image)
+        
+        
+    def show_img_with_boxes(self, title, image, boxes, scores, classes, scale=None):
+        pass

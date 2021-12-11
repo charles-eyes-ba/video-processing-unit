@@ -9,7 +9,7 @@ class VideoProcessorImpl(VideoProcessor):
         self._dnn = dnn
         self._delay = delay
         self._last_detections_classes = []
-        self.is_running = False
+        self._is_running = False
         
         self._frame_collector = frame_collector
         self._frame_collector.setup_callbacks(on_error=self._on_frame_collector_error)
@@ -29,13 +29,13 @@ class VideoProcessorImpl(VideoProcessor):
 
     # * Methods
     def start(self):
-        self.is_running = True
+        self._is_running = True
         self._frame_collector.start()
         self._thread.start()
         
         
     def stop(self):
-        self.is_running = False
+        self._is_running = False
         self._frame_collector.stop()
 
 
@@ -51,14 +51,14 @@ class VideoProcessorImpl(VideoProcessor):
         exception : Exception
             The exception that occurred
         """
-        self.is_running = False
+        self._is_running = False
         self._on_error(id, exception)
     
 
     # * Main loop
     def __loop(self):
         """ Main loop of the video processor """
-        while self.is_running:
+        while self._is_running:
             frame = self._frame_collector.pop_lastest_frame()
 
             if frame is not None:
