@@ -2,24 +2,14 @@ from threading import Thread
 from copy import deepcopy
 
 from .interface import VideoFeed
-from .exceptions import VideoFeedConnectionLost, VideoFeedCouldNotConntect
-
-import cv2
 
 class VideoFeedOpenCV(VideoFeed):
-    def __init__(self, feed_url):
-        self.status = None
-        self.frame = None
-        self.is_running = False
-        
-        self.width = None
-        self.height = None
-        self.fps = None
+    def __init__(self, video_capture):
+        self._frame = None
+        self._is_running = False
+        self._video_capture = video_capture
         
         self._on_error = None
-        
-        self._video_capture = None
-        self._feed_url = feed_url
         
         self._thread = Thread(target=self.__loop)
         self._thread.daemon = True
@@ -32,23 +22,23 @@ class VideoFeedOpenCV(VideoFeed):
       
     # * Methods  
     def start(self):
-        self.is_running = True
+        self._is_running = True
         self._thread.start()
     
     
     def stop(self):
-        self.is_running = False
+        self._is_running = False
     
     
     def pop_lastest_frame(self):
-        frame = deepcopy(self.frame)
-        self.frame = None
+        frame = deepcopy(self._frame)
+        self._frame = None
         return frame
     
     
     def release(self):
         self._video_capture.release()
-        self.is_running = False
+        self._is_running = False
 
 
     # * Main loop
@@ -63,26 +53,11 @@ class VideoFeedOpenCV(VideoFeed):
         VideoFeedConnectionLost
             If the video feed connection was lost. Message Format: Lost connection to {feed_url}
         """
-        try:
-            self._video_capture = cv2.VideoCapture(self._feed_url)
-        except Exception as e:
-            exception = VideoFeedCouldNotConntect(f'Could not connect to {self._feed_url}')
-            if self._on_error is not None:
-                self._on_error(exception)
-            self.release()
-            return
-        
-        self.width = int(self._video_capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.height = int(self._video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.fps = int(self._video_capture.get(cv2.CAP_PROP_FPS))
-        
-        while self.is_running:
+        while self._is_running:
             try:
-                self.status, self.frame = self._video_capture.read()
+                self._frame = self._video_capture.read()
             except Exception as e:
-                exception = VideoFeedConnectionLost(f'Lost connection to {self._feed_url}')
                 if self._on_error is not None:
-                    self._on_error(exception)
-                self.release()
-                return
+                    self._on_error(e)
+                break
         self.release()
