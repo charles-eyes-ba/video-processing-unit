@@ -1,7 +1,6 @@
 from src.common.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 from src.common.environment import HSU_WEBSOCKET_URL
-
-from src.factory import dnn_factory, video_feed_factory, video_processor_factory
+from src.factory import dnn_factory, video_capture_factory, video_feed_factory, video_processor_factory
 from src.external.websocket import WebSocketClient
 from .exceptions import CameraParamsNotFoundException
 
@@ -64,14 +63,18 @@ class VideoProcessingUnit:
         url : str
             The url of the video feed
         """
-        dnn = dnn_factory.create_dnn(
-            config_path=YOLO_CONFIG_PATH, 
-            weights_path=YOLO_WEIGHTS_PATH, 
-            classes_path=YOLO_CLASSES_PATH
-        )
-        video_feed = video_feed_factory.create_video_feed(url)
-        return video_processor_factory.create_video_processor(id, video_feed, dnn)
-
+        try:
+            dnn = dnn_factory.create_dnn(
+                config_path=YOLO_CONFIG_PATH, 
+                weights_path=YOLO_WEIGHTS_PATH, 
+                classes_path=YOLO_CLASSES_PATH
+            )
+            video_capture = video_capture_factory.create_video_capture(url)
+            video_feed = video_feed_factory.create_video_feed(video_capture)
+            return video_processor_factory.create_video_processor(id, video_feed, dnn)        
+        except Exception as e:
+            self._on_error_callback(id, e)
+            
 
     # * Websocket Callbacks
     def _update_video_feed_list(self, video_feed_list):

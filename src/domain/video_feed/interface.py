@@ -5,51 +5,19 @@ class VideoFeed(ABC):
     """
     Class that wraps a video capture object and provides a lastest frame. It starts a thread that updates the lastest frame.
     """
-    
-    @abstract_attribute
-    def status():
-        """ True if the lastest frame is valid """
-        raise NotImplementedError('VideoFeed is an abstract class')
-
-    @abstract_attribute
-    def frame():
-        """ Lastest frame """
-        raise NotImplementedError('VideoFeed is an abstract class')
-
-    @abstract_attribute
-    def width():
-        """ Width of the video feed """
-        raise NotImplementedError('VideoFeed is an abstract class')
-
-    @abstract_attribute
-    def height():
-        """ Height of the video feed """
-        raise NotImplementedError('VideoFeed is an abstract class')
-
-    @abstract_attribute
-    def fps():
-        """ Frames per second of the video feed """
-        raise NotImplementedError('VideoFeed is an abstract class')
-
-    @abstract_attribute
-    def is_running():
-        """ True if the video feed is running """
-        raise NotImplementedError('VideoFeed is an abstract class')
-
-    
     @abstractmethod
-    def __init__(self, feed_url):
+    def __init__(self, video_capture):
         """
         Parameters
         ----------
         id : str
             Id of the video feed
-        feed_url : str or int
-            URL (str) or code (int) to access remote video or local camera
+        video_capture : VideoCapture
+            Video capture object
         on_error : function
             Function to be called when the video feed receive an error
         """
-        raise NotImplementedError('VideoFeed is an abstract class')
+        raise NotImplementedError('__init__() not implemented')
         
         
     @abstractmethod
@@ -64,19 +32,19 @@ class VideoFeed(ABC):
             The function must have the following signature: function(camera_id, exception). 
             Exception is a VideoFeedCouldNotConntect or VideoFeedConnectionLost.
         """
-        raise NotImplementedError('VideoFeed.setup_callbacks is an abstract class')
+        raise NotImplementedError('setup_callbacks() not implemented')
         
       
     @abstractmethod
     def start(self):
         """ Start the video feed """
-        raise NotImplementedError('VideoFeed.start is an abstract class')
+        raise NotImplementedError('start() not implemented')
     
     
     @abstractmethod
     def stop(self):
         """ Stop the video feed """
-        raise NotImplementedError('VideoFeed.stop is an abstract class')
+        raise NotImplementedError('stop() not implemented')
     
     
     @abstractmethod
@@ -89,10 +57,10 @@ class VideoFeed(ABC):
         numpy.ndarray
             Lastest frame
         """
-        raise NotImplementedError('VideoFeed.pop_lastest_frame is an abstract class')
+        raise NotImplementedError('pop_lastest_frame() not implemented')
     
     
     @abstractmethod
     def release(self):
         """ Release the video capture object """
-        raise NotImplementedError('VideoFeed.release is an abstract class')
+        raise NotImplementedError('release() not implemented')
