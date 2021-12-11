@@ -9,7 +9,7 @@ from src.external.video_capture.exceptions import VideoCaptureConnectionLost
 
 import numpy
 
-class VideoFeedOpenCVTests(TestCase):
+class FrameCollectorImplTests(TestCase):
     
     # * Useful Functions to Mock
     def generate_frame(class_instance):
