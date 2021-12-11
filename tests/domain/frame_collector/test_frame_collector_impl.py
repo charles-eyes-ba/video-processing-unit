@@ -28,56 +28,56 @@ class FrameCollectorImplTests(TestCase):
     def test_setup_callbacks(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = FrameCollectorImpl(video_capture)
+        frame_collector = FrameCollectorImpl(video_capture)
         
         # When
-        video_feed.setup_callbacks(on_error=lambda: None)
+        frame_collector.setup_callbacks(on_error=lambda: None)
         
         # Then
-        self.assertIsNotNone(video_feed._on_error)
+        self.assertIsNotNone(frame_collector._on_error)
         
     
     def test_start(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = FrameCollectorImpl(video_capture)
+        frame_collector = FrameCollectorImpl(video_capture)
         
         # When
-        video_feed.start()
+        frame_collector.start()
         
         # Then
         sleep(1)
-        self.assertTrue(video_feed._is_running)
-        self.assertTrue(video_feed._thread.is_alive())
-        self.assertTrue(video_feed._thread.daemon)
+        self.assertTrue(frame_collector._is_running)
+        self.assertTrue(frame_collector._thread.is_alive())
+        self.assertTrue(frame_collector._thread.daemon)
         
     
     def test_stop(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = FrameCollectorImpl(video_capture)
-        video_feed.start()
+        frame_collector = FrameCollectorImpl(video_capture)
+        frame_collector.start()
         
         # When
-        video_feed.stop()
+        frame_collector.stop()
         
         # Then
         sleep(1)
-        self.assertFalse(video_feed._is_running)
-        self.assertFalse(video_feed._thread.is_alive())
+        self.assertFalse(frame_collector._is_running)
+        self.assertFalse(frame_collector._thread.is_alive())
         
         
     def test_pop_lastest_frame(self):
         # Given
         video_capture = MockVideoCapture('', read=self.generate_frame)
-        video_feed = FrameCollectorImpl(video_capture)
+        frame_collector = FrameCollectorImpl(video_capture)
         second = datetime.now().second
-        video_feed.start()
+        frame_collector.start()
         delay = 5
         
         # When
         sleep(delay)
-        frame = video_feed.pop_lastest_frame()
+        frame = frame_collector.pop_lastest_frame()
         
         # Then
         second_reference = (second + delay) % 60
@@ -89,13 +89,13 @@ class FrameCollectorImplTests(TestCase):
     def test_release(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = FrameCollectorImpl(video_capture)
+        frame_collector = FrameCollectorImpl(video_capture)
         
         # When
-        video_feed.release()
+        frame_collector.release()
         
         # Then
-        self.assertFalse(video_feed._is_running)
+        self.assertFalse(frame_collector._is_running)
         self.assertTrue(video_capture.released)
         
         
@@ -103,15 +103,15 @@ class FrameCollectorImplTests(TestCase):
         # Given
         mock = Mock()
         video_capture = MockVideoCapture('', read=self.throw_exception)
-        video_feed = FrameCollectorImpl(video_capture)
-        video_feed.setup_callbacks(on_error=mock)
+        frame_collector = FrameCollectorImpl(video_capture)
+        frame_collector.setup_callbacks(on_error=mock)
         
         # When
-        video_feed.start()
+        frame_collector.start()
         sleep(1)
         
         # Then
-        self.assertFalse(video_feed._is_running)
+        self.assertFalse(frame_collector._is_running)
         self.assertTrue(video_capture.released)
         self.assertIsInstance(mock.call_args.args[0], VideoCaptureConnectionLost)
         self.assertEqual(mock.call_args.args[0].message, 'Test Exception')
