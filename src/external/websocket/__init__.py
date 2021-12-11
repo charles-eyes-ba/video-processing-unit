@@ -1,1 +1,1 @@
-from .websocket_client import WebSocketClient
+from .interface import WebSocket

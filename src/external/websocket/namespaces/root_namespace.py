@@ -10,6 +10,14 @@ class RootNamespace(ClientNamespace):
         self.on_disconnect_callback = None
         self.on_reconnect_callback = None
     
+    
+    def setup_callbacks(self, on_connect=None, on_connect_error=None, on_disconnect=None, on_reconnect=None):
+        self.on_connect_callback = on_connect
+        self.on_connect_error_callback = on_connect_error
+        self.on_disconnect_callback = on_disconnect
+        self.on_reconnect_callback = on_reconnect
+    
+    
     def on_connect(self):
         """ Callback for when the connection is established """
         if self.on_connect_callback != None:

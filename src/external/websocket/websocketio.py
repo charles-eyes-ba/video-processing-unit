@@ -1,35 +1,12 @@
 import socketio
 
+from .interface import WebSocket
 from .namespaces.root_namespace import RootNamespace
 from .namespaces.detection_namespace import DetectionNamespace
 from .namespaces.config_namespace import ConfigNamespace
 
-class WebSocketClient:
-    """ 
-    Class that handles the websocket connection 
-
-    Attributes
-    ----------
-    on_video_feeds_update : function
-        Function that is called when the all video feeds are updated
-    on_add_video_feed : function
-        Function that is called when a new video feed is added
-    on_remove_video_feed : function
-        Function that is called when a video feed is removed
-    root_namespace : RootNamespace
-        The root namespace. Can be used to send messages in websocket with root namespace 
-    detection_namespace : DetectionNamespace
-        The detection namespace. Can be used to send messages in websocket with detection namespace
-    config_namespace : ConfigNamespace
-        The config namespace. Can be used to send messages in websocket with config namespace
+class WebSocketIO(WebSocket):
     
-    Methods
-    -------
-    request_configs()
-        Request configs from server
-    send_detections(id, classes)
-        Send detections to server
-    """
     def __init__(self):
         self.on_video_feeds_update = None
         self.on_add_video_feed = None
@@ -47,23 +24,26 @@ class WebSocketClient:
 
     # * Setups
     def setup_callbacks(self, on_video_feeds_update=None, on_add_video_feed=None, on_remove_video_feed=None):
-        """ 
-        Setup the callbacks 
-        
-        Parameters
-        ----------
-        on_video_feeds_update : function
-            Function that is called when the all video feeds are updated
-        on_add_video_feed : function
-            Function that is called when a new video feed is added
-        on_remove_video_feed : function
-            Function that is called when a video feed is removed
-        """
         self.on_video_feeds_update = on_video_feeds_update
         self.on_add_video_feed = on_add_video_feed
         self.on_remove_video_feed = on_remove_video_feed
     
     
+    # * Methods
+    def connect(self, url):
+        self._socketio.connect(url)
+        
+
+    # * Send Methods
+    def request_configs(self):
+        self.config_namespace.emit(ConfigNamespace.REQUEST_UNIT_CONFIGURATION)
+
+
+    def send_detections(self, id, classes):
+        self.detection_namespace.emit(DetectionNamespace.DETECT, { 'id': id, 'detections': classes })
+    
+    
+    # * Generate Namespace
     def _generate_root_namespace(self):
         """ Generate the root namespace """
         return RootNamespace()
@@ -77,9 +57,11 @@ class WebSocketClient:
     def _generate_config_namespace(self):
         """ Generate the config namespace """
         config_namespace = ConfigNamespace()
-        config_namespace.on_request_unit_configuration = self._on_request_unit_configuration
-        config_namespace.on_add_camera = self._on_add_camera
-        config_namespace.on_remove_camera = self._on_remove_camera
+        config_namespace.setup_callbacks(
+            on_request_unit_configuration=self._on_request_unit_configuration,
+            on_add_camera=self._on_add_camera,
+            on_remove_camera=self._on_remove_camera
+        )
         return config_namespace
     
 
@@ -121,34 +103,3 @@ class WebSocketClient:
         """
         if self.on_remove_video_feed is not None:
             self.on_remove_video_feed(video_feed_id)
-        
-        
-    # * Methods
-    def connect(self, url):
-        """
-        Parameters
-        ----------
-        url : str
-            The url of the websocket server
-        """
-        self._socketio.connect(url)
-        
-
-    # * Send Methods
-    def request_configs(self):
-        """ Request configs from server """
-        self.config_namespace.emit(ConfigNamespace.REQUEST_UNIT_CONFIGURATION)
-
-
-    def send_detections(self, id, classes):
-        """ 
-        Send detections to server 
-        
-        Parameters
-        ----------
-        id : str
-            The id of the video feed
-        classes : list
-            The classes name detected in the video feed
-        """
-        self.detection_namespace.emit(DetectionNamespace.DETECT, { 'id': id, 'detections': classes })

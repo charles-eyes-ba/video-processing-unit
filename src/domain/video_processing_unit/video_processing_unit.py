@@ -1,7 +1,6 @@
 from src.common.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 from src.common.environment import HSU_WEBSOCKET_URL
-from src.factory import dnn_factory, video_capture_factory, frame_collector_factory, detector_factory
-from src.external.websocket import WebSocketClient
+from src.factory import dnn_factory, video_capture_factory, frame_collector_factory, detector_factory, websocket_factory
 from .exceptions import CameraParamsNotFoundException
 
 from time import sleep
@@ -26,7 +25,7 @@ class VideoProcessingUnit:
     DELAY_TO_RETRY_WEBSCOKET_CONNECTION = 30
     
     def __init__(self):
-        self._websocket = WebSocketClient()
+        self._websocket = websocket_factory.create_websocket()
         while True:
             try:
                 self._websocket.connect(HSU_WEBSOCKET_URL)
