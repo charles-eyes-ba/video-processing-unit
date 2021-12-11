@@ -1,18 +1,18 @@
 from threading import Thread
 from time import sleep
 
-from .interface import VideoProcessor
+from .interface import Detector
 
-class VideoProcessorImpl(VideoProcessor):
-    def __init__(self, id, video_feed, dnn, delay=5):
+class DetectorImpl(Detector):
+    def __init__(self, id, frame_collector, dnn, delay=5):
         self.id = id
         self._dnn = dnn
         self._delay = delay
         self._last_detections_classes = []
-        self.is_running = False
+        self._is_running = False
         
-        self._video_feed = video_feed
-        self._video_feed.setup_callbacks(on_error=self._on_video_feed_error)
+        self._frame_collector = frame_collector
+        self._frame_collector.setup_callbacks(on_error=self._on_frame_collector_error)
 
         self._on_object_detection = None
         self._on_error = None
@@ -29,18 +29,18 @@ class VideoProcessorImpl(VideoProcessor):
 
     # * Methods
     def start(self):
-        self.is_running = True
-        self._video_feed.start()
+        self._is_running = True
+        self._frame_collector.start()
         self._thread.start()
         
         
     def stop(self):
-        self.is_running = False
-        self._video_feed.stop()
+        self._is_running = False
+        self._frame_collector.stop()
 
 
     # * Video Feed callbacks
-    def _on_video_feed_error(self, id, exception):
+    def _on_frame_collector_error(self, exception):
         """ 
         Callback for the video feed error 
         
@@ -51,15 +51,15 @@ class VideoProcessorImpl(VideoProcessor):
         exception : Exception
             The exception that occurred
         """
-        self.is_running = False
-        self._on_error(id, exception)
+        self.stop()
+        self._on_error(self.id, exception)
     
 
     # * Main loop
     def __loop(self):
         """ Main loop of the video processor """
-        while self.is_running:
-            frame = self._video_feed.pop_lastest_frame()
+        while self._is_running:
+            frame = self._frame_collector.pop_lastest_frame()
 
             if frame is not None:
                 boxes, scores, classes = self._dnn.predict(frame)

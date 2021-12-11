@@ -1,22 +1,17 @@
 from abc import ABC, abstractmethod
 from src.common.abstract_attribute import abstract_attribute
 
-class VideoProcessor:
+class Detector(ABC):
     """ Class that handles the video feed and the detection of the objects """
     
     @abstract_attribute
     def id(self):
         """ The id of the video processar (camera id) """
         raise NotImplementedError('id must be defined')
-
-    @abstract_attribute
-    def is_running(self):
-        """ True if the video processor is running"""
-        raise NotImplementedError('is_running must be defined')
     
     
     @abstractmethod
-    def __init__(self, id, video_feed, dnn, delay=5):
+    def __init__(self, id, frame_collector, dnn, delay=5):
         raise NotImplementedError('__init__() not implemented')
 
 
