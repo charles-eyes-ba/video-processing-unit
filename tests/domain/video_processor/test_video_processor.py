@@ -6,6 +6,7 @@ from datetime import datetime
 from tests.mocks.mock_frame_collector import MockFrameCollector
 from tests.mocks.mock_dnn import MockDeepNeuralNetwork
 from src.domain.video_processor.video_processor_impl import VideoProcessorImpl
+from src.external.video_capture.exceptions import VideoCaptureConnectionLost
 
 import numpy
 
@@ -137,4 +138,26 @@ class VideoProcessorTests(TestCase):
     
     
     def test_exception_frame_collector(self):
-        self.assertTrue(False)
+        # Given
+        mock_object_detection = Mock()
+        mock_error = Mock()
+        dnn = MockDeepNeuralNetwork('', '', '', predict=self.predict)
+        frame_collector = MockFrameCollector(None, pop_lastest_frame=self.pop_lastest_frame)
+        video_processor = VideoProcessorImpl('id', frame_collector, dnn, delay=0.5)
+        video_processor.setup_callbacks(on_object_detection=mock_object_detection, on_error=mock_error)
+        
+        # When
+        video_processor.start()
+        sleep(2)
+        video_processor._on_frame_collector_error(VideoCaptureConnectionLost('Test Exception'))
+        sleep(1)
+        
+        # Then
+        mock_object_detection.assert_called()
+        mock_error.assert_called()
+        self.assertEqual(mock_error.call_args.args[0], 'id')
+        self.assertIsInstance(mock_error.call_args.args[1], VideoCaptureConnectionLost)
+        self.assertEqual(mock_error.call_args.args[1].message, 'Test Exception')
+        self.assertTrue(frame_collector.stopped)
+        self.assertFalse(video_processor._is_running)
+        self.assertFalse(video_processor._thread.is_alive())

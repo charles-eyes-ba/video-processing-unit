@@ -40,7 +40,7 @@ class VideoProcessorImpl(VideoProcessor):
 
 
     # * Video Feed callbacks
-    def _on_frame_collector_error(self, id, exception):
+    def _on_frame_collector_error(self, exception):
         """ 
         Callback for the video feed error 
         
@@ -51,8 +51,8 @@ class VideoProcessorImpl(VideoProcessor):
         exception : Exception
             The exception that occurred
         """
-        self._is_running = False
-        self._on_error(id, exception)
+        self.stop()
+        self._on_error(self.id, exception)
     
 
     # * Main loop
