@@ -1,10 +1,11 @@
 from src.domain.frame_collector import FrameCollector
 
+import numpy
+
 class MockFrameCollector(FrameCollector):
     
-    def __init__(self, video_capture, __init__=None, setup_callbacks=None, start=None, stop=None, pop_lastest_frame=None, release=None):
+    def __init__(self, video_capture, setup_callbacks=None, start=None, stop=None, pop_lastest_frame=None, release=None):
         self._video_capture = video_capture
-        self._init = __init__
         self._setup_callbacks = setup_callbacks
         self._start = start
         self._stop = stop
@@ -14,6 +15,8 @@ class MockFrameCollector(FrameCollector):
         self.started = False
         self.stopped = False
         self.released = False
+        
+        self.__pop_lastest_frame_counter = 0
         
         
     def setup_callbacks(self, on_error=None):
@@ -36,6 +39,11 @@ class MockFrameCollector(FrameCollector):
     def pop_lastest_frame(self):
         if self._pop_lastest_frame is not None:
             return self._pop_lastest_frame()
+        else:
+            fake_frame = numpy.ndarray([3, 3, 3])
+            fake_frame.fill(self.__pop_lastest_frame_counter)
+            self.__pop_lastest_frame_counter += 1
+            return fake_frame
     
     
     def release(self):
