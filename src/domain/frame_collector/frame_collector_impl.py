@@ -1,9 +1,9 @@
 from threading import Thread
 from copy import deepcopy
 
-from .interface import VideoFeed
+from .interface import FrameCollector
 
-class VideoFeedOpenCV(VideoFeed):
+class FrameCollectorImpl(FrameCollector):
     def __init__(self, video_capture):
         self._frame = None
         self._is_running = False

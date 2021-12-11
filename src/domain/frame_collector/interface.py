@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from src.common.abstract_attribute import abstract_attribute
 
-class VideoFeed(ABC):
+class FrameCollector(ABC):
     """
     Class that wraps a video capture object and provides a lastest frame. It starts a thread that updates the lastest frame.
     """

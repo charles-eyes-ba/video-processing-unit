@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime
 
 from tests.mocks.mock_video_capture import MockVideoCapture
-from src.domain.video_feed.video_feed_opencv import VideoFeedOpenCV
+from src.domain.frame_collector.frame_collector_impl import FrameCollectorImpl
 from src.external.video_capture.exceptions import VideoCaptureConnectionLost
 
 import numpy
@@ -28,7 +28,7 @@ class VideoFeedOpenCVTests(TestCase):
     def test_setup_callbacks(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = VideoFeedOpenCV(video_capture)
+        video_feed = FrameCollectorImpl(video_capture)
         
         # When
         video_feed.setup_callbacks(on_error=lambda: None)
@@ -40,7 +40,7 @@ class VideoFeedOpenCVTests(TestCase):
     def test_start(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = VideoFeedOpenCV(video_capture)
+        video_feed = FrameCollectorImpl(video_capture)
         
         # When
         video_feed.start()
@@ -55,7 +55,7 @@ class VideoFeedOpenCVTests(TestCase):
     def test_stop(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = VideoFeedOpenCV(video_capture)
+        video_feed = FrameCollectorImpl(video_capture)
         video_feed.start()
         
         # When
@@ -70,7 +70,7 @@ class VideoFeedOpenCVTests(TestCase):
     def test_pop_lastest_frame(self):
         # Given
         video_capture = MockVideoCapture('', read=self.generate_frame)
-        video_feed = VideoFeedOpenCV(video_capture)
+        video_feed = FrameCollectorImpl(video_capture)
         second = datetime.now().second
         video_feed.start()
         delay = 5
@@ -89,7 +89,7 @@ class VideoFeedOpenCVTests(TestCase):
     def test_release(self):
         # Given
         video_capture = MockVideoCapture('')
-        video_feed = VideoFeedOpenCV(video_capture)
+        video_feed = FrameCollectorImpl(video_capture)
         
         # When
         video_feed.release()
@@ -103,7 +103,7 @@ class VideoFeedOpenCVTests(TestCase):
         # Given
         mock = Mock()
         video_capture = MockVideoCapture('', read=self.throw_exception)
-        video_feed = VideoFeedOpenCV(video_capture)
+        video_feed = FrameCollectorImpl(video_capture)
         video_feed.setup_callbacks(on_error=mock)
         
         # When
