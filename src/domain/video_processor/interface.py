@@ -16,7 +16,7 @@ class VideoProcessor:
     
     
     @abstractmethod
-    def __init__(self, id, video_feed, dnn, delay=5):
+    def __init__(self, id, frame_collector, dnn, delay=5):
         raise NotImplementedError('__init__() not implemented')
 
 
