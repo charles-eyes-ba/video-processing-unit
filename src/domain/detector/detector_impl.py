@@ -1,6 +1,7 @@
 from threading import Thread
 from time import sleep
 
+from src.common.call import call
 from .interface import Detector
 
 class DetectorImpl(Detector):
@@ -65,7 +66,6 @@ class DetectorImpl(Detector):
                 hasNewDetections = self._last_detections_classes != classes
                 if hasNewDetections:
                     self._last_detections_classes = classes
-                    if self._on_object_detection is not None:
-                        self._on_object_detection(self.id, classes)
+                    call(self._on_object_detection, self.id, classes)
 
             sleep(self._delay)

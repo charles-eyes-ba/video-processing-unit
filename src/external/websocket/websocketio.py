@@ -1,5 +1,6 @@
 import socketio
 
+from src.common.call import call
 from .interface import WebSocket
 from .namespaces.root_namespace import RootNamespace
 from .namespaces.detection_namespace import DetectionNamespace
@@ -75,8 +76,7 @@ class WebSocketIO(WebSocket):
         config : dict
             All video feeds configs
         """
-        if self.on_video_feeds_update is not None:
-            self.on_video_feeds_update(config['cameras'])
+        call(self.on_video_feeds_update, config['cameras'])
             
             
     def _on_add_camera(self, video_feed):
@@ -88,8 +88,7 @@ class WebSocketIO(WebSocket):
         video_feed : dict
             The video feed to add
         """
-        if self.on_add_video_feed is not None:
-            self.on_add_video_feed(video_feed)
+        call(self.on_add_video_feed, video_feed)
             
             
     def _on_remove_camera(self, video_feed_id):
@@ -101,5 +100,4 @@ class WebSocketIO(WebSocket):
         video_feed_id : str
             The id of the video feed to remove
         """
-        if self.on_remove_video_feed is not None:
-            self.on_remove_video_feed(video_feed_id)
+        call(self.on_remove_video_feed, video_feed_id)
