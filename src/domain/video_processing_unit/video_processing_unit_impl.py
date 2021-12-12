@@ -1,45 +1,35 @@
 from src.common.dnn_paths import YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH
 from src.common.environment import HSU_WEBSOCKET_URL
 from .exceptions import CameraParamsNotFoundException
+from .interface import VideoProcessingUnit
 
 from time import sleep
 
 import logging
 import asyncio
 
-class VideoProcessingUnit:
-    """ 
-    Class that handles the video processing unit 
-    
-    Methods
-    -------
-    start()
-        Starts the video processing unit
-    """
-    
-    DELAY_TO_RETRY_WEBSCOKET_CONNECTION = 30
-    
+class VideoProcessingUnitImpl(VideoProcessingUnit):
     def __init__(self, websocket, create_detector):
         self._detectors = []
         self._create_detector = create_detector
         self._websocket = websocket
         
+        delay_to_retry = 30
         while True:
             try:
                 self._websocket.connect(HSU_WEBSOCKET_URL)
                 logging.info('Connected to websocket')
                 break
             except:
-                delay = VideoProcessingUnit.DELAY_TO_RETRY_WEBSCOKET_CONNECTION
-                logging.info(f'Trying to connect to websocket again in {delay} seconds...')
-                sleep(delay)
+                logging.info(f'Trying to connect to websocket again in {delay_to_retry} seconds...')
+                sleep(delay_to_retry)
 
-        self._setup_websocket_callbacks()
+        self.__setup_websocket_callbacks()
         self._websocket.request_configs()
 
 
     # * Setups
-    def _setup_websocket_callbacks(self):
+    def __setup_websocket_callbacks(self):
         """ Sets up the websocket client """
         self._websocket.setup_callbacks(
             on_video_feeds_update=self._update_video_feed_list, 
@@ -59,7 +49,7 @@ class VideoProcessingUnit:
         video_feed_list : list
             The list of video feeds to be processed (replace all current video feeds)
         """
-        logging.info('Removing all video feed list')
+        logging.info('Cleaning all video feed list')
         for detector in self._detectors:
             detector.stop()
             
@@ -80,18 +70,14 @@ class VideoProcessingUnit:
         """
         try:
             id = video_feed['id']
-        except:
-            self._on_error_callback('None', CameraParamsNotFoundException('Not found id'))
-            return
-        
-        try:
             url = video_feed['feed_url']
-        except:
-            self._on_error_callback('None', CameraParamsNotFoundException(f'Not found feed_url in {id}'))
+        except KeyError as e:
+            key_empty = e.args[0]
+            self._on_error_callback('None', CameraParamsNotFoundException(f'Not found {key_empty}'))
             return
         
-        logging.info(f'Adding video feed {id} with url {url}')
         try:
+            logging.info(f'Adding video feed {id} with url {url}')
             detector = self._create_detector(
                 id=id,
                 url=url,
@@ -156,7 +142,7 @@ class VideoProcessingUnit:
         exception : Exception
             The exception that was thrown
         """
-        logging.debug(f'Error in video feed {id}')
+        logging.error(f'Error in video feed {id}')
         # TODO: Send error to websocket
     
     
