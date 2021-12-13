@@ -28,5 +28,5 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GIT_TOKEN }}@github.com/charles-eyes-ba/video-processing-unit.git
           git checkout "${GITHUB_REF:11}"
           git add imgs/badge-coverage.svg
-          git commit -m "[GithubActions] Update coverage badge"
+          git commit -m "[GithubActions] Update coverage badge" || echo "No changes to commit"
           git push
