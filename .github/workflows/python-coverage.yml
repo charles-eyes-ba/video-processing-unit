@@ -22,7 +22,7 @@ jobs:
       - name: Run tests with unittest
         run: |
           coverage run --source=src/domain --omit='*/interface.py' -m unittest
-          coverage-badge -o imgs/badge-coverage.svg
+          coverage-badge -fo imgs/badge-coverage.svg
       - name: Commit report
         run: |
           git config --global user.name 'Breno Aquino GithubActions'
