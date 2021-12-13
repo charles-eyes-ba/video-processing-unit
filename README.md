@@ -75,12 +75,12 @@ $ python .
 - Show the video feed with boxes
 
 ```python
-from src.deep_neural_network import DeepNeuralNetwork
-from src.configs.dnn_paths import YOLO_CLASSES_PATH, YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH
+import src.factory.dnn_factory as dnn_factory
+from src.common.dnn_paths import YOLO_CLASSES_PATH, YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH
 import cv2
 
-cams = [cv2.VideoCapture(<URL>)]
-dnn = DeepNeuralNetwork(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
+cams = [cv2.VideoCapture(0)]
+dnn = dnn_factory.create_dnn(YOLO_CONFIG_PATH, YOLO_WEIGHTS_PATH, YOLO_CLASSES_PATH)
 
 while True:
     for index, camera in enumerate(cams):
