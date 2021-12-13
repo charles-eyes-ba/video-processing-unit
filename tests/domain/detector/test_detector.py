@@ -17,7 +17,7 @@ class DeteectorTests(TestCase):
         # Given
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
-        detector = DetectorImpl('id', frame_collector, dnn, delay=1)
+        detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
         
         # When
         detector.setup_callbacks(on_object_detection=lambda x, y: None, on_error=lambda x, y: None)
@@ -31,7 +31,7 @@ class DeteectorTests(TestCase):
         # Given
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
-        detector = DetectorImpl('id', frame_collector, dnn, delay=1)
+        detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
         
         # When
         detector.start()
@@ -48,7 +48,7 @@ class DeteectorTests(TestCase):
         # Given
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
-        detector = DetectorImpl('id', frame_collector, dnn, delay=1)
+        detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
         
         # When
         detector.stop()
@@ -56,6 +56,24 @@ class DeteectorTests(TestCase):
         # Then
         sleep(1)
         self.assertTrue(frame_collector.stopped)
+        self.assertFalse(detector._is_running)
+        self.assertFalse(detector._thread.is_alive())
+        
+        
+    def test_detector_pause(self):
+        # Given
+        dnn = MockDeepNeuralNetwork('', '', '')
+        frame_collector = MockFrameCollector(None)
+        detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
+        detector.start()
+        
+        # When
+        detector.pause()
+        
+        # Then
+        sleep(1)
+        self.assertFalse(frame_collector.stopped)
+        self.assertTrue(frame_collector.started)
         self.assertFalse(detector._is_running)
         self.assertFalse(detector._thread.is_alive())
         
@@ -88,7 +106,7 @@ class DeteectorTests(TestCase):
         mock_error = Mock()
         dnn = MockDeepNeuralNetwork('', '', '', predict=lambda x: ([], [], []))
         frame_collector = MockFrameCollector(None)
-        detector = DetectorImpl('id', frame_collector, dnn, delay=0.2)
+        detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
         detector.setup_callbacks(on_object_detection=mock_object_detection, on_error=mock_error)
         
         # When
@@ -126,7 +144,7 @@ class DeteectorTests(TestCase):
         mock_error = Mock()
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
-        detector = DetectorImpl('id', frame_collector, dnn, delay=0.5)
+        detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
         detector.setup_callbacks(on_object_detection=mock_object_detection, on_error=mock_error)
         
         # When

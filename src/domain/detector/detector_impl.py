@@ -38,6 +38,10 @@ class DetectorImpl(Detector):
     def stop(self):
         self._is_running = False
         self._frame_collector.stop()
+        
+        
+    def pause(self):
+        self._is_running = False
 
 
     # * Video Feed callbacks
