@@ -10,6 +10,7 @@ class MockDetector(Detector):
         
         self.started = False
         self.stopped = False
+        self.paused = False
 
 
     def setup_callbacks(self, on_object_detection=None, on_error=None):
@@ -23,3 +24,7 @@ class MockDetector(Detector):
     
     def stop(self):
         self.stopped = True
+        
+        
+    def pause(self):
+        self.paused = True

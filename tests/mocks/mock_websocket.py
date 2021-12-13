@@ -23,7 +23,16 @@ class MockWebSocket(WebSocket):
         self.sent_error_params = None
 
 
-    def setup_callbacks(self, on_video_feeds_update=None, on_add_video_feed=None, on_remove_video_feed=None):
+    def setup_callbacks(self, 
+                        on_connect=None, 
+                        on_connect_error=None, 
+                        on_disconnect=None, 
+                        on_video_feeds_update=None, 
+                        on_add_video_feed=None, 
+                        on_remove_video_feed=None):
+        self.on_connect = on_connect
+        self.on_connect_error = on_connect_error
+        self.on_disconnect = on_disconnect
         self._on_video_feeds_update = on_video_feeds_update
         self._on_add_video_feed = on_add_video_feed
         self._on_remove_video_feed = on_remove_video_feed

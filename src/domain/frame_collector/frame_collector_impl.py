@@ -11,9 +11,7 @@ class FrameCollectorImpl(FrameCollector):
         self._video_capture = video_capture
         
         self._on_error = None
-        
-        self._thread = Thread(target=self.__loop)
-        self._thread.daemon = True
+        self._thread = None
         
         
     # * Setups
@@ -23,7 +21,12 @@ class FrameCollectorImpl(FrameCollector):
       
     # * Methods  
     def start(self):
+        if self._thread is not None and self._thread.is_alive():
+            return
+        
         self._is_running = True
+        self._thread = Thread(target=self.__loop)
+        self._thread.daemon = True
         self._thread.start()
     
     

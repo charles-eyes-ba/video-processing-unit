@@ -17,9 +17,7 @@ class DetectorImpl(Detector):
 
         self._on_object_detection = None
         self._on_error = None
-
-        self._thread = Thread(target=self.__loop)
-        self._thread.daemon = True
+        self._thread = None
 
 
     # * Setups
@@ -30,14 +28,23 @@ class DetectorImpl(Detector):
 
     # * Methods
     def start(self):
-        self._is_running = True
         self._frame_collector.start()
+        
+        if self._thread is not None and self._thread.is_alive():
+            return
+        self._is_running = True
+        self._thread = Thread(target=self.__loop)
+        self._thread.daemon = True
         self._thread.start()
         
         
     def stop(self):
         self._is_running = False
         self._frame_collector.stop()
+        
+        
+    def pause(self):
+        self._is_running = False
 
 
     # * Video Feed callbacks
