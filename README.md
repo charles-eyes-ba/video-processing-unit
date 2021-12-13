@@ -47,7 +47,13 @@ It is recommended that a virtual environment be used for the project. If you wan
 $ python -m venv .venv
 ```
 
-And to install dependencies:
+And to start virtual environment:
+
+```shell
+$ source .venv/bin/activate
+```
+
+To install dependencies:
 
 ```shell
 $ pip install -r requirements.txt
