@@ -45,7 +45,7 @@ class WebSocketIO(WebSocket):
     
     
     def send_error(self, id, error):
-        raise NotImplementedError('send_error() must be implemented')
+        self.detection_namespace.emit(DetectionNamespace.ERROR, { 'id': id, 'error': error.message })
     
     
     # * Generate Namespace
