@@ -37,7 +37,7 @@ This diagram represents a bit of the architecture of how the VPU was built. It h
 The Project was divided into 4 main modules: common, domain, external and factory. Each of them has a well-defined purpose, but the only one covered by unit testing is the domain (removing interfaces). A brief explanation of each module:
 
 - __Common__: This module has several usefuls and constants (like paths) that can be used in other modules.
-- __Domain__: This module implements the main components mentioned. It has all the business rules of the application and is not responsible for integrating with frameworks (ex: opencv and socketio).
+- __Domain__: This module implements the main components mentioned. It has all the business rules of the application and is not responsible for integrating with frameworks (ex: _OpenCV_ and _SocketIO_).
 - __External__: This module implements wrappers of some frameworks. For example: here is the video capture to integrate with _OpenCV_ and be able to read the frames provided by an ip camera.
 - __Factory__: This module provides a factory to get an instance of an implementation of the interfaces declared in the project.
 
