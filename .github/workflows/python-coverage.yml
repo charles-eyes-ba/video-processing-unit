@@ -1,12 +1,8 @@
 name: Unit Tests
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
   push:
     branches:
-      - main
+      - coverage
 jobs:
   coverage:
     runs-on: ubuntu-latest
