@@ -3,9 +3,10 @@ from src.external.video_capture import VideoCapture
 class MockVideoCapture(VideoCapture):
     
     def __init__(self, url, read=None, release=None):
-        self.released = False
+        self.url = url
         self._read = read
         self._release = release
+        self.released = False
         
         
     def read(self):

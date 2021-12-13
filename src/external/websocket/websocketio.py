@@ -44,6 +44,10 @@ class WebSocketIO(WebSocket):
         self.detection_namespace.emit(DetectionNamespace.DETECT, { 'id': id, 'detections': classes })
     
     
+    def send_error(self, id, error):
+        raise NotImplementedError('send_error() must be implemented')
+    
+    
     # * Generate Namespace
     def _generate_root_namespace(self):
         """ Generate the root namespace """

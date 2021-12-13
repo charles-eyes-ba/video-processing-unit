@@ -40,25 +40,6 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
             
 
     # * Websocket Callbacks
-    def _update_video_feed_list(self, video_feed_list):
-        """ 
-        Updates the list of video feeds to be processed 
-        
-        Parameters
-        ----------
-        video_feed_list : list
-            The list of video feeds to be processed (replace all current video feeds)
-        """
-        logging.info('Cleaning all video feed list')
-        for detector in self._detectors:
-            detector.stop()
-            
-        logging.info('Updating all video feed list')
-        self._detectors = []
-        for video_feed in video_feed_list:
-            self._add_video_feed(video_feed)
-
-
     def _add_video_feed(self, video_feed):
         """ 
         Adds a video feed to the list of video feeds to be processed 
@@ -74,6 +55,10 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
         except KeyError as e:
             key_empty = e.args[0]
             self._on_error_callback('None', CameraParamsNotFoundException(f'Not found {key_empty}'))
+            return
+        
+        if any(detector.id == id for detector in self._detectors):
+            logging.info(f'Video feed {id} already exists')
             return
         
         try:
@@ -115,6 +100,25 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
                 break
     
     
+    def _update_video_feed_list(self, video_feed_list):
+        """ 
+        Updates the list of video feeds to be processed 
+        
+        Parameters
+        ----------
+        video_feed_list : list
+            The list of video feeds to be processed (replace all current video feeds)
+        """
+        logging.info('Cleaning all video feed list')
+        for detector in self._detectors:
+            detector.stop()
+            
+        logging.info('Updating all video feed list')
+        self._detectors = []
+        for video_feed in video_feed_list:
+            self._add_video_feed(video_feed)
+    
+    
     # * Video Processor Callbacks
     def _on_detection_callback(self, id, classes):
         """ 
@@ -143,7 +147,7 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
             The exception that was thrown
         """
         logging.error(f'Error in video feed {id}')
-        # TODO: Send error to websocket
+        self._websocket.send_error(id, exception)
     
     
     # * Starts

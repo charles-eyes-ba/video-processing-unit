@@ -86,3 +86,16 @@ class WebSocket(ABC):
             The classes name detected in the video feed
         """
         raise NotImplementedError('send_detections() must be implemented')
+    
+    def send_error(self, id, error):
+        """ 
+        Send error to server 
+        
+        Parameters
+        ----------
+        id : str
+            The id of the video feed
+        error : str
+            The error message
+        """
+        raise NotImplementedError('send_error() must be implemented')
