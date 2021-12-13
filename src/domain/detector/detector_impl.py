@@ -30,7 +30,7 @@ class DetectorImpl(Detector):
     def start(self):
         self._frame_collector.start()
         
-        if self._thread.is_alive():
+        if self._thread is not None and self._thread.is_alive():
             return
         self._is_running = True
         self._thread = Thread(target=self.__loop)
@@ -71,7 +71,7 @@ class DetectorImpl(Detector):
                 boxes, scores, classes = self._dnn.predict(frame)
 
                 hasNewDetections = self._last_detections_classes != classes
-                if hasNewDetections or True:
+                if hasNewDetections:
                     self._last_detections_classes = classes
                     call(self._on_object_detection, self.id, classes)
 

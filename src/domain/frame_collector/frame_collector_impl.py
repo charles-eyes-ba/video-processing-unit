@@ -21,7 +21,7 @@ class FrameCollectorImpl(FrameCollector):
       
     # * Methods  
     def start(self):
-        if self._thread.is_alive():
+        if self._thread is not None and self._thread.is_alive():
             return
         
         self._is_running = True
