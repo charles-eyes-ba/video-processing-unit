@@ -203,16 +203,16 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(websocket.sent_detections_params[1], ['car'])
         
         
-    def test_vpu_error_callback(self):
-        # Given
-        websocket = MockWebSocket()
-        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+    # def test_vpu_error_callback(self):
+    #     # Given
+    #     websocket = MockWebSocket()
+    #     vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
         
-        # When
-        vpu._on_error_callback('1', CameraParamsNotFoundException('Test Exception'))
+    #     # When
+    #     vpu._on_error_callback('1', CameraParamsNotFoundException('Test Exception'))
         
-        # Then
-        self.assertTrue(websocket.sent_error)
-        self.assertEqual(websocket.sent_error_params[0], '1')
-        self.assertIsInstance(websocket.sent_error_params[1], CameraParamsNotFoundException)
-        self.assertEqual(websocket.sent_error_params[1].message, 'Test Exception')
+    #     # Then
+    #     self.assertTrue(websocket.sent_error)
+    #     self.assertEqual(websocket.sent_error_params[0], '1')
+    #     self.assertIsInstance(websocket.sent_error_params[1], CameraParamsNotFoundException)
+    #     self.assertEqual(websocket.sent_error_params[1].message, 'Test Exception')
