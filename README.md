@@ -36,13 +36,27 @@ This diagram represents a bit of the architecture of how the VPU was built. It h
 
 
 ## Setup
+
 Create a `.env` file following the `.env.example` file.
 
-## Start
-To start the VPU you must install dependencies and run. You can do this with following command
+### Install Dependencies
+
+It is recommended that a virtual environment be used for the project. If you want to use venv, just type:
+
+```shell
+$ python -m venv .venv
+```
+
+And to install dependencies:
 
 ```shell
 $ pip install -r requirements.txt
+```
+
+### Start 
+To start the VPU, you can do this with following command (run `main.py`):
+
+```shell
 $ python main.py
 ```
 
