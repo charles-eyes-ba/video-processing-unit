@@ -14,4 +14,3 @@ if __name__ == '__main__':
     websocket = websocket_factory.create_websocket()
     vpu = vpu_factory.create_vpu(websocket, create_detector)
     vpu.start()
-    

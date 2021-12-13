@@ -60,10 +60,10 @@ $ pip install -r requirements.txt
 ```
 
 ### Start 
-To start the VPU, you can do this with following command (run `main.py`):
+To start the VPU, you can do this with following command (run `__main__.py`):
 
 ```shell
-$ python main.py
+$ python .
 ```
 
 ## Debugging
