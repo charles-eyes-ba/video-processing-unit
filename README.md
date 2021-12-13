@@ -2,11 +2,30 @@
 
 The Video Processing Unit (A.k.a VPU) is the module that run the classification algorithms on the video feeds.
 
-## Application Architecture 
+## Architecture 
+
+### Application
+
+The VPU is a module that among several that represent the Home Security application. The diagram below represents the components that directly interact with the VPU in the application's macro architecture.
+
 <br/>
 <p align="center">
-  <img src="imgs/vpu.arch.png">
+  <img src="imgs/HS.png">
 </p>
+
+
+### Project
+
+This diagram represents a bit of the architecture of how the VPU was built. It has 3 main components, these being: Video Capture, Detector and the Video Processing Unit (VPU).
+
+<br/>
+<p align="center">
+  <img src="imgs/VPU.png">
+</p>
+
+- __Video Capture__: This component ensures that the most recent frame of a video feed is always available. For each video feed it is created.
+- __Detector__: This component obtains the most recent frame made available by video capture and detects the objects present in the frame. This process keeps repeating itself with a delay. For each prediction it informs the VPU that there have been new detections.
+- __Video Processing Unit__: This component manages several detectors, one for each video feed provided. The detections or errors will be transferred to the Home Security Unit (HSU). This is where detectors are created or removed. All this communication with the HSU is done via Websocket.
 
 ## Main Dependencies
 
@@ -17,13 +36,27 @@ The Video Processing Unit (A.k.a VPU) is the module that run the classification 
 
 
 ## Setup
+
 Create a `.env` file following the `.env.example` file.
 
-## Start
-To start the VPU you must install dependencies and run. You can do this with following command
+### Install Dependencies
+
+It is recommended that a virtual environment be used for the project. If you want to use venv, just type:
+
+```shell
+$ python -m venv .venv
+```
+
+And to install dependencies:
 
 ```shell
 $ pip install -r requirements.txt
+```
+
+### Start 
+To start the VPU, you can do this with following command (run `main.py`):
+
+```shell
 $ python main.py
 ```
 
