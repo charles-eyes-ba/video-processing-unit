@@ -8,6 +8,9 @@ from src.domain.frame_collector.frame_collector_impl import FrameCollectorImpl
 from src.external.video_capture.exceptions import VideoCaptureConnectionLost
 
 import numpy
+import logging
+
+logging.disable()
 
 class FrameCollectorImplTests(TestCase):
     
@@ -25,7 +28,7 @@ class FrameCollectorImplTests(TestCase):
     
     
     # * Tests
-    def test_setup_callbacks(self):
+    def test_frame_collector_setup_callbacks(self):
         # Given
         video_capture = MockVideoCapture('')
         frame_collector = FrameCollectorImpl(video_capture)
@@ -37,7 +40,7 @@ class FrameCollectorImplTests(TestCase):
         self.assertIsNotNone(frame_collector._on_error)
         
     
-    def test_start(self):
+    def test_frame_collector_start(self):
         # Given
         video_capture = MockVideoCapture('')
         frame_collector = FrameCollectorImpl(video_capture)
@@ -52,7 +55,7 @@ class FrameCollectorImplTests(TestCase):
         self.assertTrue(frame_collector._thread.daemon)
         
     
-    def test_stop(self):
+    def test_frame_collector_stop(self):
         # Given
         video_capture = MockVideoCapture('')
         frame_collector = FrameCollectorImpl(video_capture)
@@ -67,7 +70,7 @@ class FrameCollectorImplTests(TestCase):
         self.assertFalse(frame_collector._thread.is_alive())
         
         
-    def test_pop_lastest_frame(self):
+    def test_frame_collector_pop_lastest_frame(self):
         # Given
         video_capture = MockVideoCapture('', read=self.generate_frame)
         frame_collector = FrameCollectorImpl(video_capture)
@@ -86,7 +89,7 @@ class FrameCollectorImplTests(TestCase):
         self.assertEqual(frame.max(), frame_value)
         
         
-    def test_release(self):
+    def test_frame_collector_release(self):
         # Given
         video_capture = MockVideoCapture('')
         frame_collector = FrameCollectorImpl(video_capture)
@@ -99,7 +102,7 @@ class FrameCollectorImplTests(TestCase):
         self.assertTrue(video_capture.released)
         
         
-    def test_exception_conection_lost(self):
+    def test_frame_collector_exception_conection_lost(self):
         # Given
         mock = Mock()
         video_capture = MockVideoCapture('', read=self.throw_exception)
