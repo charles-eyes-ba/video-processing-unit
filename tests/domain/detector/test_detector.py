@@ -49,6 +49,7 @@ class DeteectorTests(TestCase):
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
         detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
+        detector.start()
         
         # When
         detector.stop()
