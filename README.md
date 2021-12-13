@@ -2,11 +2,26 @@
 
 The Video Processing Unit (A.k.a VPU) is the module that run the classification algorithms on the video feeds.
 
-## Application Architecture 
+## Architecture 
+
+### Application
+
+The VPU is a module that among several that represent the Home Security application. The diagram below represents the components that directly interact with the VPU in the application's macro architecture
+
+
+
+### Project
+
+This diagram represents a bit of the architecture of how the VPU was built. It has 3 main components, these being: Video Capture, Detector and the Video Processing Unit (VPU).
+
 <br/>
 <p align="center">
-  <img src="imgs/vpu.arch.png">
+  <img src="imgs/VPU.png">
 </p>
+
+- __Video Capture__: This component ensures that the most recent frame of a video feed is always available. For each video feed it is created.
+- __Detector__: This component obtains the most recent frame made available by video capture and detects the objects present in the frame. This process keeps repeating itself with a delay. For each prediction it informs the VPU that there have been new detections.
+- __Video Processing Unit__: This component manages several detectors, one for each video feed provided. The detections or errors will be transferred to the Home Security Unit (HSU). This is where detectors are created or removed. All this communication with the HSU is done via Websocket.
 
 ## Main Dependencies
 
