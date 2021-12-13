@@ -1,6 +1,7 @@
 from threading import Thread
 from time import sleep
 
+from src.common.call import call
 from .interface import Detector
 
 class DetectorImpl(Detector):
@@ -42,12 +43,10 @@ class DetectorImpl(Detector):
     # * Video Feed callbacks
     def _on_frame_collector_error(self, exception):
         """ 
-        Callback for the video feed error 
+        Callback for the video capture error
         
         Parameters
         ----------
-        id : str
-            The id of the camera
         exception : Exception
             The exception that occurred
         """
@@ -57,7 +56,7 @@ class DetectorImpl(Detector):
 
     # * Main loop
     def __loop(self):
-        """ Main loop of the video processor """
+        """ Main loop of the detector """
         while self._is_running:
             frame = self._frame_collector.pop_lastest_frame()
 
@@ -67,7 +66,6 @@ class DetectorImpl(Detector):
                 hasNewDetections = self._last_detections_classes != classes
                 if hasNewDetections:
                     self._last_detections_classes = classes
-                    if self._on_object_detection is not None:
-                        self._on_object_detection(self.id, classes)
+                    call(self._on_object_detection, self.id, classes)
 
             sleep(self._delay)

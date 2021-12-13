@@ -1,6 +1,7 @@
 from threading import Thread
 from copy import deepcopy
 
+from src.common.call import call
 from .interface import FrameCollector
 
 class FrameCollectorImpl(FrameCollector):
@@ -57,7 +58,6 @@ class FrameCollectorImpl(FrameCollector):
             try:
                 self._frame = self._video_capture.read()
             except Exception as e:
-                if self._on_error is not None:
-                    self._on_error(e)
+                call(self._on_error, e)
                 break
         self.release()

@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 from src.common.abstract_attribute import abstract_attribute
 
 class Detector(ABC):
-    """ Class that handles the video feed and the detection of the objects """
+    """ Class that make detections in a image. """
     
     @abstract_attribute
     def id(self):
-        """ The id of the video processar (camera id) """
+        """ The id of the detector (camera id) """
         raise NotImplementedError('id must be defined')
     
     
@@ -18,7 +18,7 @@ class Detector(ABC):
     @abstractmethod
     def setup_callbacks(self, on_object_detection=None, on_error=None):
         """
-        Setup the callbacks for the video processor
+        Setup the callbacks
         
         Parameters
         ----------
@@ -32,11 +32,11 @@ class Detector(ABC):
 
     @abstractmethod
     def start(self):
-        """ Start the video processor """
+        """ Start the detector """
         raise NotImplementedError('start() not implemented')
         
     
     @abstractmethod
     def stop(self):
-        """ Stop the video processor """
+        """ Stop the detector """
         raise NotImplementedError('stop() not implemented')

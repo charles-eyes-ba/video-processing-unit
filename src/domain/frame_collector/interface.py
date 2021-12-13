@@ -1,20 +1,15 @@
 from abc import ABC, abstractmethod
 
 class FrameCollector(ABC):
-    """
-    Class that wraps a video capture object and provides a lastest frame. It starts a thread that updates the lastest frame.
-    """
+    """ Class that wraps a video capture object and provides a lastest frame """
+    
     @abstractmethod
     def __init__(self, video_capture):
         """
         Parameters
         ----------
-        id : str
-            Id of the video feed
         video_capture : VideoCapture
             Video capture object
-        on_error : function
-            Function to be called when the video feed receive an error
         """
         raise NotImplementedError('__init__() not implemented')
         
@@ -27,22 +22,21 @@ class FrameCollector(ABC):
         Parameters
         ----------
         on_error : function
-            Function to be called when the video feed receive an error. 
-            The function must have the following signature: function(exception). 
-            Exception is a VideoFeedCouldNotConntect or VideoFeedConnectionLost.
+            Function to be called when the vide capture receive an error. 
+            The function must have the following signature: function(exception).
         """
         raise NotImplementedError('setup_callbacks() not implemented')
         
       
     @abstractmethod
     def start(self):
-        """ Start the video feed """
+        """ Start the frame collector """
         raise NotImplementedError('start() not implemented')
     
     
     @abstractmethod
     def stop(self):
-        """ Stop the video feed """
+        """ Stop the frame collector """
         raise NotImplementedError('stop() not implemented')
     
     
@@ -61,5 +55,5 @@ class FrameCollector(ABC):
     
     @abstractmethod
     def release(self):
-        """ Release the video capture object """
+        """ Release the video capture and frame collector """
         raise NotImplementedError('release() not implemented')
