@@ -186,11 +186,32 @@ class VideoProcessingUnitTests(TestCase):
         
         
     def test_detection_callback(self):
-        self.assertFalse(True)
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        
+        # When
+        vpu._on_detection_callback('1', ['car'])
+        
+        # Then
+        self.assertTrue(websocket.sent_detections, '1')
+        self.assertEqual(websocket.sent_detections_params[0], '1')
+        self.assertEqual(websocket.sent_detections_params[1], ['car'])
         
         
     def test_error_callback(self):
-        self.assertFalse(True)
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        
+        # When
+        vpu._on_error_callback('1', CameraParamsNotFoundException('Test Exception'))
+        
+        # Then
+        self.assertTrue(websocket.sent_error)
+        self.assertEqual(websocket.sent_error_params[0], '1')
+        self.assertIsInstance(websocket.sent_error_params[1], CameraParamsNotFoundException)
+        self.assertEqual(websocket.sent_error_params[1].message, 'Test Exception')
         
         
     def test_start(self):
