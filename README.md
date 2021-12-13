@@ -1,4 +1,9 @@
 # Video Processing Unit - VPU
+[![Unit Tests](https://github.com/charles-eyes-ba/video-processing-unit/actions/workflows/python-test.yml/badge.svg)](https://github.com/charles-eyes-ba/video-processing-unit/actions/workflows/python-test.yml)
+[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-360)
+![Coverage](imgs/badge-coverage.svg)
+
+
 
 The Video Processing Unit (A.k.a VPU) is the module that run the classification algorithms on the video feeds.
 
