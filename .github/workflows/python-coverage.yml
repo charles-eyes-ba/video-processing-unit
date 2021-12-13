@@ -2,7 +2,7 @@ name: Coverage
 on:
   push:
     branches:
-      - coverage
+      - main
 jobs:
   coverage:
     runs-on: ubuntu-latest
