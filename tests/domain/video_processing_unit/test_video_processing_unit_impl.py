@@ -136,11 +136,53 @@ class VideoProcessingUnitTests(TestCase):
     
     
     def test_update_video_feed_list_with_empty_list(self):
-        self.assertFalse(True)
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        video_feeds = [
+            { 'id': '1', 'feed_url': 'https://google.com' },
+            { 'id': '2', 'feed_url': 'https://charles.com' },
+        ]
+        
+        # When
+        vpu._update_video_feed_list(video_feeds)
+        
+        # Then
+        self.assertEqual(len(vpu._detectors), 2)
+        self.assertEqual(vpu._detectors[0].id, '1')
+        self.assertEqual(vpu._detectors[0]._frame_collector._video_capture.url, 'https://google.com')
+        self.assertIsNotNone(vpu._detectors[0]._on_object_detection)
+        self.assertIsNotNone(vpu._detectors[0]._on_error)
+        self.assertEqual(vpu._detectors[1].id, '2')
+        self.assertEqual(vpu._detectors[1]._frame_collector._video_capture.url, 'https://charles.com')
+        self.assertIsNotNone(vpu._detectors[1]._on_object_detection)
+        self.assertIsNotNone(vpu._detectors[1]._on_error)
         
         
     def test_update_video_feed_list_with_non_empty_list(self):
-        self.assertFalse(True)
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        video_feed = { 'id': '1', 'feed_url': 'https://google.com' }
+        vpu._add_video_feed(video_feed)
+        video_feeds = [
+            { 'id': '1', 'feed_url': 'https://google.com' },
+            { 'id': '2', 'feed_url': 'https://charles.com' },
+        ]
+        
+        # When
+        vpu._update_video_feed_list(video_feeds)
+        
+        # Then
+        self.assertEqual(len(vpu._detectors), 2)
+        self.assertEqual(vpu._detectors[0].id, '1')
+        self.assertEqual(vpu._detectors[0]._frame_collector._video_capture.url, 'https://google.com')
+        self.assertIsNotNone(vpu._detectors[0]._on_object_detection)
+        self.assertIsNotNone(vpu._detectors[0]._on_error)
+        self.assertEqual(vpu._detectors[1].id, '2')
+        self.assertEqual(vpu._detectors[1]._frame_collector._video_capture.url, 'https://charles.com')
+        self.assertIsNotNone(vpu._detectors[1]._on_object_detection)
+        self.assertIsNotNone(vpu._detectors[1]._on_error)
         
         
     def test_detection_callback(self):
