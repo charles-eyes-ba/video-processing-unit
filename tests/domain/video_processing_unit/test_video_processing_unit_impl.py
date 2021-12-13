@@ -108,11 +108,31 @@ class VideoProcessingUnitTests(TestCase):
         
     
     def test_remove_video_feed(self):
-        self.assertFalse(True)
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        video_feed = { 'id': '1', 'feed_url': 'https://google.com' }
+        vpu._add_video_feed(video_feed)
+        
+        # When
+        vpu._remove_video_feed('1')
+        
+        # Then
+        self.assertEqual(len(vpu._detectors), 0)
     
     
     def test_remove_video_feed_without_id_in_list(self):
-        self.assertFalse(True)
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        video_feed = { 'id': '1', 'feed_url': 'https://google.com' }
+        vpu._add_video_feed(video_feed)
+        
+        # When
+        vpu._remove_video_feed('2')
+        
+        # Then
+        self.assertEqual(len(vpu._detectors), 1)
     
     
     def test_update_video_feed_list_with_empty_list(self):
