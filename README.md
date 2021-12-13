@@ -6,8 +6,12 @@ The Video Processing Unit (A.k.a VPU) is the module that run the classification 
 
 ### Application
 
-The VPU is a module that among several that represent the Home Security application. The diagram below represents the components that directly interact with the VPU in the application's macro architecture
+The VPU is a module that among several that represent the Home Security application. The diagram below represents the components that directly interact with the VPU in the application's macro architecture.
 
+<br/>
+<p align="center">
+  <img src="imgs/HS.png">
+</p>
 
 
 ### Project
