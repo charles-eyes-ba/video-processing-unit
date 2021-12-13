@@ -9,6 +9,8 @@ from tests.mocks.mock_frame_collector import MockFrameCollector
 from tests.mocks.mock_detector import MockDetector
 from tests.mocks.mock_websocket import MockWebSocket
 
+import asyncio
+
 class VideoProcessingUnitTests(TestCase):
     
     # * Useful Functions to Mock
@@ -212,7 +214,3 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(websocket.sent_error_params[0], '1')
         self.assertIsInstance(websocket.sent_error_params[1], CameraParamsNotFoundException)
         self.assertEqual(websocket.sent_error_params[1].message, 'Test Exception')
-        
-        
-    def test_start(self):
-        self.assertFalse(True)
