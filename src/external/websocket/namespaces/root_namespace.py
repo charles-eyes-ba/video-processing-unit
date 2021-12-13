@@ -12,7 +12,7 @@ class RootNamespace(ClientNamespace):
         self.on_reconnect_callback = None
     
     
-    def setup_callbacks(self, on_connect=None, on_connect_error=None, on_disconnect=None, on_reconnect=None):
+    def setup_callbacks(self, on_connect=None, on_connect_error=None, on_disconnect=None):
         """
         Setup the callbacks
         
@@ -30,7 +30,6 @@ class RootNamespace(ClientNamespace):
         self.on_connect_callback = on_connect
         self.on_connect_error_callback = on_connect_error
         self.on_disconnect_callback = on_disconnect
-        self.on_reconnect_callback = on_reconnect
     
     
     def on_connect(self):
@@ -46,8 +45,3 @@ class RootNamespace(ClientNamespace):
     def on_disconnect(self):
         """ Callback for when the connection is closed """
         call(self.on_disconnect_callback)
-        
-
-    def on_reconnect(self):
-        """ Callback for when the connection is re-established """
-        call(self.on_reconnect_callback)

@@ -30,8 +30,9 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
 
     # * Setups
     def __setup_websocket_callbacks(self):
-        """ Sets up the websocket client """
         self._websocket.setup_callbacks(
+            on_connect=self._on_connect,
+            on_disconnect=self._on_disconnect,
             on_video_feeds_update=self._update_video_feed_list, 
             on_add_video_feed=self._add_video_feed, 
             on_remove_video_feed=self._remove_video_feed
@@ -40,15 +41,19 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
             
 
     # * Websocket Callbacks
+    def _on_connect(self):
+        logging.info('Restarting all detectors')
+        for detector in self._detectors:
+            detector.start()
+            
+            
+    def _on_disconnect(self):
+        logging.info('Pausing all detectors')
+        for detector in self._detectors:
+            detector.pause()
+    
+    
     def _add_video_feed(self, video_feed):
-        """ 
-        Adds a video feed to the list of video feeds to be processed 
-        
-        Parameters
-        ----------
-        video_feed : VideoFeed
-            The video feed to be added
-        """
         try:
             id = video_feed['id']
             url = video_feed['feed_url']
@@ -84,14 +89,6 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
         
         
     def _remove_video_feed(self, video_feed_id):
-        """ 
-        Removes a video feed from the list of video feeds to be processed 
-        
-        Parameters
-        ----------
-        video_feed_id : int
-            The id of the video feed to be removed
-        """
         for detector in self._detectors:
             if detector.id == video_feed_id:
                 logging.info(f'Removing {video_feed_id} video feed')
@@ -101,14 +98,6 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
     
     
     def _update_video_feed_list(self, video_feed_list):
-        """ 
-        Updates the list of video feeds to be processed 
-        
-        Parameters
-        ----------
-        video_feed_list : list
-            The list of video feeds to be processed (replace all current video feeds)
-        """
         logging.info('Cleaning all video feed list')
         for detector in self._detectors:
             detector.stop()
@@ -121,37 +110,16 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
     
     # * Video Processor Callbacks
     def _on_detection_callback(self, id, classes):
-        """ 
-        Callback for when a detection is made for a video processor
-        
-        Parameters
-        ----------
-        id : str
-            The id of the video processor
-        classes : list
-            The list of classes detected
-        """
         logging.debug(f'Detection in {id} | Classes: {classes}')
         self._websocket.send_detections(id, classes)
     
     
     def _on_error_callback(self, id, exception):
-        """ 
-        Callback for when an error is made for a video processor
-        
-        Parameters
-        ----------
-        id : str
-            The id of the video processor
-        exception : Exception
-            The exception that was thrown
-        """
         logging.error(f'Error in video feed {id}')
         self._websocket.send_error(id, exception)
     
     
     # * Starts
     def start(self):
-        """ Starts video processing unit aplication """
         logging.info('Starting video processing unit')
         asyncio.get_event_loop().run_forever()

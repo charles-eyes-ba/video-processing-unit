@@ -4,46 +4,25 @@ from src.common.abstract_attribute import abstract_attribute
 class WebSocket(ABC):
     """ Class that handles the websocket connection """
 
-    # * Attributes
-    @abstract_attribute
-    def on_video_feeds_update(self):
-        """ Function that is called when the all video feeds are updated """
-        raise NotImplementedError('on_video_feeds_update must be defined')
-
-    @abstract_attribute
-    def on_add_video_feed(self):
-        """ Function that is called when a new video feed is added """
-        raise NotImplementedError('on_add_video_feed must be defined')
-
-    @abstract_attribute
-    def on_remove_video_feed(self):
-        """ Function that is called when a video feed is removed """
-        raise NotImplementedError('on_remove_video_feed must be defined')
-
-    @abstract_attribute
-    def root_namespace(self):
-        """ The root namespace. Can be used to send messages in websocket with root namespace  """
-        raise NotImplementedError('root_namespace must be defined')
-
-    @abstract_attribute
-    def detection_namespace(self):
-        """ The detection namespace. Can be used to send messages in websocket with detection namespace """
-        raise NotImplementedError('detection_namespace must be defined')
-
-    @abstract_attribute
-    def config_namespace(self):
-        """ The config namespace. Can be used to send messages in websocket with config namespace """
-        raise NotImplementedError('config_namespace must be defined')
-
-
-    # * Methods
     @abstractmethod
-    def setup_callbacks(self, on_video_feeds_update=None, on_add_video_feed=None, on_remove_video_feed=None):
+    def setup_callbacks(self, 
+                        on_connect=None, 
+                        on_connect_error=None, 
+                        on_disconnect=None, 
+                        on_video_feeds_update=None, 
+                        on_add_video_feed=None, 
+                        on_remove_video_feed=None):
         """ 
         Setup the callbacks 
         
         Parameters
         ----------
+        on_connect : function
+            Function that is called when the connection is established
+        on_connect_error : function
+            Function that is called when the connection fails
+        on_disconnect : function
+            Function that is called when the connection is lost
         on_video_feeds_update : function
             Function that is called when the all video feeds are updated
         on_add_video_feed : function

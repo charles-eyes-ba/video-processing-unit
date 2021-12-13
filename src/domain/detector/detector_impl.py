@@ -17,9 +17,7 @@ class DetectorImpl(Detector):
 
         self._on_object_detection = None
         self._on_error = None
-
-        self._thread = Thread(target=self.__loop)
-        self._thread.daemon = True
+        self._thread = None
 
 
     # * Setups
@@ -30,8 +28,13 @@ class DetectorImpl(Detector):
 
     # * Methods
     def start(self):
-        self._is_running = True
         self._frame_collector.start()
+        
+        if self._thread.is_alive():
+            return
+        self._is_running = True
+        self._thread = Thread(target=self.__loop)
+        self._thread.daemon = True
         self._thread.start()
         
         
@@ -68,7 +71,7 @@ class DetectorImpl(Detector):
                 boxes, scores, classes = self._dnn.predict(frame)
 
                 hasNewDetections = self._last_detections_classes != classes
-                if hasNewDetections:
+                if hasNewDetections or True:
                     self._last_detections_classes = classes
                     call(self._on_object_detection, self.id, classes)
 

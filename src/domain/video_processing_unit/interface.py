@@ -5,6 +5,18 @@ class VideoProcessingUnit(ABC):
     @abstractmethod
     def __init__(self, websocket, create_detector):
         raise NotImplementedError('__init__() not implemented')
+    
+    
+    @abstractmethod
+    def _on_connect(self):
+        """ Callback for when the connection is established """
+        raise NotImplementedError('_on_connect() not implemented')
+    
+    
+    @abstractmethod
+    def _on_disconnect(self):
+        """ Callback for when the connection is closed """
+        raise NotImplementedError('_on_disconnect() not implemented')
             
 
     @abstractmethod
