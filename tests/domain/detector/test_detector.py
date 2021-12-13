@@ -43,6 +43,24 @@ class DeteectorTests(TestCase):
         self.assertTrue(detector._thread.is_alive())
         self.assertTrue(detector._thread.daemon)
         
+        
+    def test_detector_double_start(self):
+        # Given
+        dnn = MockDeepNeuralNetwork('', '', '')
+        frame_collector = MockFrameCollector(None)
+        detector = DetectorImpl('id', frame_collector, dnn, delay=0.1)
+        detector.start()
+        
+        # When
+        detector.start()
+        
+        # Then
+        sleep(1)
+        self.assertTrue(frame_collector.started)
+        self.assertTrue(detector._is_running)
+        self.assertTrue(detector._thread.is_alive())
+        self.assertTrue(detector._thread.daemon)
+        
     
     def test_detector_stop(self):
         # Given

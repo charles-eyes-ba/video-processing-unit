@@ -55,6 +55,22 @@ class FrameCollectorImplTests(TestCase):
         self.assertTrue(frame_collector._thread.daemon)
         
     
+    def test_frame_collector_double_start(self):
+        # Given
+        video_capture = MockVideoCapture('')
+        frame_collector = FrameCollectorImpl(video_capture)
+        frame_collector.start()
+        
+        # When
+        frame_collector.start()
+        
+        # Then
+        sleep(1)
+        self.assertTrue(frame_collector._is_running)
+        self.assertTrue(frame_collector._thread.is_alive())
+        self.assertTrue(frame_collector._thread.daemon)
+    
+    
     def test_frame_collector_stop(self):
         # Given
         video_capture = MockVideoCapture('')
