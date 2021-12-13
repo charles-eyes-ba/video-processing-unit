@@ -9,6 +9,10 @@ from tests.mocks.mock_frame_collector import MockFrameCollector
 from tests.mocks.mock_detector import MockDetector
 from tests.mocks.mock_websocket import MockWebSocket
 
+import logging
+
+logging.disable()
+
 class VideoProcessingUnitTests(TestCase):
     
     # * Useful Functions to Mock
@@ -20,7 +24,7 @@ class VideoProcessingUnitTests(TestCase):
     
     
     # * Tests
-    def test_add_video_feed(self):
+    def test_vpu_add_video_feed(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -37,7 +41,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertIsNotNone(vpu._detectors[0]._on_error)
     
     
-    def test_add_video_same_id_in_list(self):
+    def test_vpu_add_video_same_id_in_list(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -54,7 +58,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(vpu._detectors[0]._frame_collector._video_capture.url, 'https://google.com')
     
     
-    def test_add_video_feed_without_id(self):
+    def test_vpu_add_video_feed_without_id(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -71,7 +75,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(websocket.sent_error_params[1].message, 'Not found id')
         
         
-    def test_add_video_feed_without_url(self):
+    def test_vpu_add_video_feed_without_url(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -88,7 +92,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(websocket.sent_error_params[1].message, 'Not found feed_url')
         
         
-    def test_add_video_feed_with_error_in_create_detector(self):
+    def test_vpu_add_video_feed_with_error_in_create_detector(self):
         # Given
         def throw_exception_creation(id, url, config_path,  weights_path,  classes_path):
             raise InvalidDeepNeuralNetworkFilesException('Test Exception')
@@ -107,7 +111,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(websocket.sent_error_params[1].message, 'Test Exception')
         
     
-    def test_remove_video_feed(self):
+    def test_vpu_remove_video_feed(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -121,7 +125,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(len(vpu._detectors), 0)
     
     
-    def test_remove_video_feed_without_id_in_list(self):
+    def test_vpu_remove_video_feed_without_id_in_list(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -135,7 +139,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(len(vpu._detectors), 1)
     
     
-    def test_update_video_feed_list_with_empty_list(self):
+    def test_vpu_update_video_feed_list_with_empty_list(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -159,7 +163,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertIsNotNone(vpu._detectors[1]._on_error)
         
         
-    def test_update_video_feed_list_with_non_empty_list(self):
+    def test_vpu_update_video_feed_list_with_non_empty_list(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -185,7 +189,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertIsNotNone(vpu._detectors[1]._on_error)
         
         
-    def test_detection_callback(self):
+    def test_vpu_detection_callback(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
@@ -199,7 +203,7 @@ class VideoProcessingUnitTests(TestCase):
         self.assertEqual(websocket.sent_detections_params[1], ['car'])
         
         
-    def test_error_callback(self):
+    def test_vpu_error_callback(self):
         # Given
         websocket = MockWebSocket()
         vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)

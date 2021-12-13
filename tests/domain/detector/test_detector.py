@@ -7,9 +7,13 @@ from tests.mocks.mock_dnn import MockDeepNeuralNetwork
 from src.domain.detector.detector_impl import DetectorImpl
 from src.external.video_capture.exceptions import VideoCaptureConnectionLost
 
+import logging
+
+logging.disable()
+
 class DeteectorTests(TestCase):
     
-    def test_setup_callbacks(self):
+    def test_detector_setup_callbacks(self):
         # Given
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
@@ -23,7 +27,7 @@ class DeteectorTests(TestCase):
         self.assertIsNotNone(detector._on_error)
         
         
-    def test_start(self):
+    def test_detector_start(self):
         # Given
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
@@ -40,7 +44,7 @@ class DeteectorTests(TestCase):
         self.assertTrue(detector._thread.daemon)
         
     
-    def test_stop(self):
+    def test_detector_stop(self):
         # Given
         dnn = MockDeepNeuralNetwork('', '', '')
         frame_collector = MockFrameCollector(None)
@@ -56,7 +60,7 @@ class DeteectorTests(TestCase):
         self.assertFalse(detector._thread.is_alive())
         
         
-    def test_dectection_object(self):
+    def test_detector_dectection_object(self):
         # Given
         mock_object_detection = Mock()
         mock_error = Mock()
@@ -78,7 +82,7 @@ class DeteectorTests(TestCase):
         self.assertEqual(mock_object_detection.call_args.args, ('id', [2]))
     
     
-    def test_empty_detection(self):
+    def test_detector_empty_detection(self):
         # Given
         mock_object_detection = Mock()
         mock_error = Mock()
@@ -97,7 +101,7 @@ class DeteectorTests(TestCase):
         mock_error.assert_not_called()
     
     
-    def test_frame_none(self):
+    def test_detector_frame_none(self):
         # Given
         mock_object_detection = Mock()
         mock_error = Mock()
@@ -116,7 +120,7 @@ class DeteectorTests(TestCase):
         mock_error.assert_not_called()    
     
     
-    def test_exception_frame_collector(self):
+    def test_detector_exception_frame_collector(self):
         # Given
         mock_object_detection = Mock()
         mock_error = Mock()
