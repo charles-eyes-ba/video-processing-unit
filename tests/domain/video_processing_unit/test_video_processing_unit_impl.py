@@ -24,6 +24,43 @@ class VideoProcessingUnitTests(TestCase):
     
     
     # * Tests
+    def test_vpu_connect(self):
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        vpu._detectors = [
+            self.generate_mock_detector('1', 'https://google.com', '', '', ''),
+            self.generate_mock_detector('2', 'https://charles.com', '', '', ''),
+        ]
+        
+        # When
+        vpu._on_connect()
+        
+        # Then
+        self.assertEqual(len(vpu._detectors), 2)
+        self.assertTrue(vpu._detectors[0].started)
+        self.assertTrue(vpu._detectors[1].started)
+        
+        
+    def test_vpu_disconnect(self):
+        # Given
+        websocket = MockWebSocket()
+        vpu = VideoProcessingUnitImpl(websocket, self.generate_mock_detector)
+        video_feeds = [
+            { 'id': '1', 'feed_url': 'https://google.com' },
+            { 'id': '2', 'feed_url': 'https://charles.com' },
+        ]
+        vpu._update_video_feed_list(video_feeds)
+        
+        # When
+        vpu._on_disconnect()
+        
+        # Then
+        self.assertEqual(len(vpu._detectors), 2)
+        self.assertTrue(vpu._detectors[0].paused)
+        self.assertTrue(vpu._detectors[1].paused)
+        
+    
     def test_vpu_add_video_feed(self):
         # Given
         websocket = MockWebSocket()
