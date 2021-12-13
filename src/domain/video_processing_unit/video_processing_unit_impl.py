@@ -37,7 +37,6 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
             on_add_video_feed=self._add_video_feed, 
             on_remove_video_feed=self._remove_video_feed
         )
-        # TODO: Handle disconect event
             
 
     # * Websocket Callbacks
