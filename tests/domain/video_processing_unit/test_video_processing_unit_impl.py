@@ -37,9 +37,7 @@ class VideoProcessingUnitTests(TestCase):
         vpu._on_connect()
         
         # Then
-        self.assertEqual(len(vpu._detectors), 2)
-        self.assertTrue(vpu._detectors[0].started)
-        self.assertTrue(vpu._detectors[1].started)
+        self.assertTrue(websocket.requested_config)
         
         
     def test_vpu_disconnect(self):
@@ -57,8 +55,8 @@ class VideoProcessingUnitTests(TestCase):
         
         # Then
         self.assertEqual(len(vpu._detectors), 2)
-        self.assertTrue(vpu._detectors[0].paused)
-        self.assertTrue(vpu._detectors[1].paused)
+        self.assertTrue(vpu._detectors[0].stopped)
+        self.assertTrue(vpu._detectors[1].stopped)
         
     
     def test_vpu_add_video_feed(self):
