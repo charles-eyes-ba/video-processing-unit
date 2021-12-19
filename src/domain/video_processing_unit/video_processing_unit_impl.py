@@ -13,8 +13,9 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
         self._detectors = []
         self._create_detector = create_detector
         self._websocket = websocket
+        self.__setup_websocket_callbacks()
         
-        delay_to_retry = 30
+        delay_to_retry = 5
         while True:
             try:
                 self._websocket.connect(HSU_WEBSOCKET_URL)
@@ -23,9 +24,6 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
             except:
                 logging.info(f'Trying to connect to websocket again in {delay_to_retry} seconds...')
                 sleep(delay_to_retry)
-
-        self.__setup_websocket_callbacks()
-        self._websocket.request_configs()
 
 
     # * Setups
@@ -41,15 +39,14 @@ class VideoProcessingUnitImpl(VideoProcessingUnit):
 
     # * Websocket Callbacks
     def _on_connect(self):
-        logging.info('Restarting all detectors')
-        for detector in self._detectors:
-            detector.start()
+        logging.info('Restarting VPU and getting updated video feed list')
+        self._websocket.request_configs()
             
             
     def _on_disconnect(self):
         logging.info('Pausing all detectors')
         for detector in self._detectors:
-            detector.pause()
+            detector.stop()
     
     
     def _add_video_feed(self, video_feed):
