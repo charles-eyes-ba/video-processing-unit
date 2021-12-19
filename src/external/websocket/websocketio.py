@@ -1,4 +1,5 @@
 import logging
+from numpy import exp
 import socketio
 
 from src.common.call import call
@@ -44,15 +45,24 @@ class WebSocketIO(WebSocket):
 
     # * Send Methods
     def request_configs(self):
-        self._root_namespace.emit(RootNamespace.UNIT_CONFIGURATION)
+        try:
+            self._root_namespace.emit(RootNamespace.UNIT_CONFIGURATION)
+        except:
+            logging.error('WS:Error requesting configs')
 
 
     def send_detections(self, id, classes):
-        self._root_namespace.emit(RootNamespace.DETECT, { 'id': id, 'classes': classes })
+        try:
+            self._root_namespace.emit(RootNamespace.DETECT, { 'id': id, 'classes': classes })
+        except:
+            logging.error('WS:Error sending detections')
     
     
     def send_error(self, id, error):
-        self._root_namespace.emit(RootNamespace.ERROR, { 'id': id, 'error': error.message })
+        try:
+            self._root_namespace.emit(RootNamespace.ERROR, { 'id': id, 'error': error.message })
+        except:
+            logging.error('WS:Error sending error')
     
     
     # * Generate Namespace
