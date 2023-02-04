@@ -1,4 +1,4 @@
-from src.external.deep_neural_network import DeepNeuralNetwork
+from src.domain.deep_neural_nerwork import DeepNeuralNetwork
 
 class MockDeepNeuralNetwork(DeepNeuralNetwork):
     

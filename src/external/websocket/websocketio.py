@@ -3,7 +3,7 @@ from numpy import exp
 import socketio
 
 from src.common.call import call
-from .interface import WebSocket
+from src.domain.websocket import WebSocket
 from .namespaces.root_namespace import RootNamespace
 
 class WebSocketIO(WebSocket):

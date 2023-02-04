@@ -1,4 +1,4 @@
-from .interface import VideoCapture
+from src.domain.video_capture import VideoCapture
 from .exceptions import VideoCaptureCouldNotConnect, VideoCaptureConnectionLost
 
 import cv2
