@@ -4,7 +4,7 @@ from src.factory import Factory
 import asyncio
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 # Components
 ai_engine = Factory.ai_engine()

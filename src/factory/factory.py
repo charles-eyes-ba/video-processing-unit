@@ -1,10 +1,10 @@
 from src.common.environment import DEEPSTACK_URL
 
 from src.domain.dependencies.ai_engine import AIEngine
-from src.dependencies.ai_engine.deepstack_engine import DeepStackEngine
+from src.integration.ai_engine.deepstack_engine import DeepStackEngine
 
 from src.domain.dependencies.video_capture import VideoCapture
-from src.dependencies.video_capture.opencv_video_capture import OpenCVVideoCapture
+from src.integration.video_capture.opencv_video_capture import OpenCVVideoCapture
 
 from src.domain.components.video_detector import VideoDetector
 from src.domain.components.video_detector.video_detector_impl import VideoDetectorImpl

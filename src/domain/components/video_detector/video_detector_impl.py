@@ -17,7 +17,7 @@ class VideoDetectorImpl(VideoDetector):
         ai_engine: AIEngine, 
         delay: int = 5
     ):
-        self._id = id
+        self.id = id
         self._video_capture = video_capture
         self._ai_engine = ai_engine
         self._delay = delay
@@ -30,7 +30,7 @@ class VideoDetectorImpl(VideoDetector):
         self._on_error = None
         
         self._video_capture.setup_callbacks(on_error=self._on_video_capture_error)
-        logging.info(':VideoDetectorImpl: initialized')
+        logging.debug(f'VideoDetectorImpl:{id}:initialized')
 
 
     # * Video Feed callbacks
@@ -44,7 +44,7 @@ class VideoDetectorImpl(VideoDetector):
             The exception that occurred
         """
         self.stop()
-        self._on_error(self._id, exception)
+        self._on_error(self.id, exception)
         
         
     # * Setups
@@ -67,16 +67,19 @@ class VideoDetectorImpl(VideoDetector):
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
         self._thread.start()
+        logging.debug(f'VideoDetectorImpl:{self.id}:started')
         
         
     def stop(self):
         self._is_running = False
         self._video_capture.stop()
+        logging.debug(f'VideoDetectorImpl:{self.id}:stopped')
         
         
     def pause(self):
         self._is_running = False
         self._video_capture.pause()
+        logging.debug(f'VideoDetectorImpl:{self.id}:paused')
     
 
     # * Main loop
@@ -91,6 +94,7 @@ class VideoDetectorImpl(VideoDetector):
                 hasNewDetections = self._last_detected_objects != objects
                 if hasNewDetections:
                     self._last_detected_objects = objects
-                    call(self._on_object_detection, self._id, objects)
+                    call(self._on_object_detection, self.id, objects)
+                    logging.debug(f'VideoDetectorImpl:{self.id}:_on_object_detection called')
 
             sleep(self._delay)
