@@ -7,7 +7,7 @@ from src.common.call import call
 
 from .interface import VideoDetector
 
-import logging
+from src.common.logger import logger
 
 class VideoDetectorImpl(VideoDetector):
     def __init__(
@@ -30,7 +30,7 @@ class VideoDetectorImpl(VideoDetector):
         self._on_error = None
         
         self._video_capture.setup_callbacks(on_error=self._on_video_capture_error)
-        logging.debug(f'VideoDetectorImpl:{id}:initialized')
+        logger.debug(f'VideoDetectorImpl:{id}:initialized')
 
 
     # * Video Feed callbacks
@@ -67,19 +67,19 @@ class VideoDetectorImpl(VideoDetector):
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
         self._thread.start()
-        logging.debug(f'VideoDetectorImpl:{self.id}:started')
+        logger.debug(f'VideoDetectorImpl:{self.id}:started')
         
         
     def stop(self):
         self._is_running = False
         self._video_capture.stop()
-        logging.debug(f'VideoDetectorImpl:{self.id}:stopped')
+        logger.debug(f'VideoDetectorImpl:{self.id}:stopped')
         
         
     def pause(self):
         self._is_running = False
         self._video_capture.pause()
-        logging.debug(f'VideoDetectorImpl:{self.id}:paused')
+        logger.debug(f'VideoDetectorImpl:{self.id}:paused')
     
 
     # * Main loop
@@ -95,6 +95,6 @@ class VideoDetectorImpl(VideoDetector):
                 if hasNewDetections:
                     self._last_detected_objects = objects
                     call(self._on_object_detection, self.id, objects)
-                    logging.debug(f'VideoDetectorImpl:{self.id}:_on_object_detection called')
+                    logger.debug(f'VideoDetectorImpl:{self.id}:_on_object_detection called')
 
             sleep(self._delay)

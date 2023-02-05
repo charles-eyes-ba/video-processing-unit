@@ -1,8 +1,8 @@
 from threading import Thread
 from copy import deepcopy
 import cv2
-import logging
 
+from src.common.logger import logger
 from src.domain.dependencies.video_capture import VideoCapture
 from src.common.call import call
 from .exceptions import VideoCaptureCouldNotConnect, VideoCaptureConnectionLost
@@ -15,7 +15,7 @@ class OpenCVVideoCapture(VideoCapture):
         self._is_running = False
         self._on_error = None
         self._thread = None
-        logging.debug(f'OpenCVVideoCapture:{self._url}:initialized')
+        logger.debug(f'OpenCVVideoCapture:{self._url}:initialized')
     
         
     # * Setups
@@ -37,18 +37,18 @@ class OpenCVVideoCapture(VideoCapture):
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
         self._thread.start()
-        logging.debug(f'OpenCVVideoCapture:{self._url}:started')
+        logger.debug(f'OpenCVVideoCapture:{self._url}:started')
         
         
     def stop(self):
         self._is_running = False
         self._release()
-        logging.debug(f'OpenCVVideoCapture:{self._url}:stopped')
+        logger.debug(f'OpenCVVideoCapture:{self._url}:stopped')
         
         
     def pause(self):
         self._is_running = False
-        logging.debug(f'OpenCVVideoCapture:{self._url}:paused')
+        logger.debug(f'OpenCVVideoCapture:{self._url}:paused')
         
         
     def lastest_frame(self):
@@ -83,7 +83,7 @@ class OpenCVVideoCapture(VideoCapture):
             try:
                 self._frame = self._read()
             except Exception as e:
-                logging.debug(f'OpenCVVideoCapture:{self._url}:error')
+                logger.debug(f'OpenCVVideoCapture:{self._url}:error')
                 call(self._on_error, e)
                 break
         self._release()

@@ -3,7 +3,7 @@ from numpy import ndarray
 from deepstack_sdk import ServerConfig, Detection, Enhance
 from src.domain.dependencies.ai_engine import AIEngine
 
-import logging
+from src.common.logger import logger
 
 class DeepStackEngine(AIEngine):
     def __init__(self, deepstack_url: str, threshold: float = 0.5):
@@ -12,7 +12,7 @@ class DeepStackEngine(AIEngine):
         self._deepstack_config = ServerConfig(deepstack_url)
         self._detection = Detection(self._deepstack_config)
         self._enhancer = Enhance(self._deepstack_config)
-        logging.debug('DeepStackEngine:initialized')
+        logger.debug('DeepStackEngine:initialized')
         
         
     def extract_objects(self, image: ndarray) -> list[str]:
@@ -25,5 +25,5 @@ class DeepStackEngine(AIEngine):
             if obj.confidence >= self._threshold:
                 objects.append(obj.label)
                 
-        logging.debug(f'DeepStackEngine:objects found {objects}')
+        logger.debug(f'DeepStackEngine:objects found {objects}')
         return objects

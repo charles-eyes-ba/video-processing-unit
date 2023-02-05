@@ -1,21 +1,38 @@
-from src.common.environment import CAM_URL
-from src.factory import Factory
+from src.common.logger import logger
+from src.common.environment import CAM_JARDIM_URL, CAM_QUINTAL_URL, CAM_RUA_DIREITA_URL, CAM_RUA_ESQUERDA_URL
+from src.domain.components.main_unit.main_unit_impl import MainUnitImpl
 
-import asyncio
 import logging
+import signal
 
-logging.basicConfig(level=logging.DEBUG)
+
+logger.setLevel(level=logging.DEBUG)
+
+# Video Feed
+class VideoFeed:
+    def __init__(self, url, id):
+        self.url = url
+        self.id = id
 
 # Components
-ai_engine = Factory.ai_engine()
-video_capture = Factory.video_capture(CAM_URL)
-video_detector = Factory.video_detector(CAM_URL, video_capture, ai_engine)
+vpu = MainUnitImpl()
+vpu.update_video_feed_list([
+    VideoFeed(
+        url=CAM_JARDIM_URL,
+        id="camera_jardim"
+    ),
+    VideoFeed(
+        url=CAM_QUINTAL_URL,
+        id="camera_quintal"
+    ),
+    VideoFeed(
+        url=CAM_RUA_DIREITA_URL,
+        id="camera_rua_direita"
+    ),
+    VideoFeed(
+        url=CAM_RUA_ESQUERDA_URL,
+        id="camera_rua_esquerda"
+    )
+])
 
-video_detector.setup_callbacks(
-    on_object_detection=lambda id, objects: print(id, objects),
-    on_error=lambda error: print(error)
-)
-video_detector.start()
-
-# Run 4Ever
-asyncio.get_event_loop().run_forever()
+signal.pause()

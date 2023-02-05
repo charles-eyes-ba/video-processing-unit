@@ -11,16 +11,20 @@ from src.domain.components.video_detector.video_detector_impl import VideoDetect
 
 class Factory:
     
+    # * AI Engine
+    __ai_engine_shared = DeepStackEngine(DEEPSTACK_URL)
     @staticmethod
     def ai_engine() -> AIEngine:
-        return DeepStackEngine(DEEPSTACK_URL)
+        return Factory.__ai_engine_shared
     
     
+    # * Video Capture
     @staticmethod
     def video_capture(url: str) -> VideoCapture:
         return OpenCVVideoCapture(url)
     
     
+    # * Video Detector
     @staticmethod
     def video_detector(id: str, video_capture: VideoCapture, ai_engine: AIEngine) -> VideoDetector:
         return VideoDetectorImpl(id, video_capture, ai_engine)
