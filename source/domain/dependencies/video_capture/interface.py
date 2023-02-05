@@ -25,6 +25,12 @@ class VideoCapture(ABC):
     
     
     @abstractmethod
+    def pause(self):
+        """ Pause the video capture """
+        raise NotImplementedError('pause() not implemented')
+    
+    
+    @abstractmethod
     def stop(self):
         """ Stop the video capture """
         raise NotImplementedError('stop() not implemented')
