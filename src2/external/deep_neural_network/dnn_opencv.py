@@ -1,7 +1,7 @@
 import cv2
 import numpy
 
-from src2.domain.deep_neural_nerwork import DeepNeuralNetwork
+from src2.domain._deep_neural_nerwork import DeepNeuralNetwork
 from .exceptions import InvalidDeepNeuralNetworkFilesException
 
 class DNNOpenCV(DeepNeuralNetwork):

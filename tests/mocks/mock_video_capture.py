@@ -1,4 +1,4 @@
-from src2.domain.video_capture import VideoCapture
+from src2.domain._video_capture import VideoCapture
 
 class MockVideoCapture(VideoCapture):
     

@@ -5,7 +5,7 @@ import logging
 
 from src.domain.dependencies.video_capture import VideoCapture
 from src.common.call import call
-from .exceptions import VideoCaptureConnectionLost
+from .exceptions import VideoCaptureCouldNotConnect, VideoCaptureConnectionLost
 
 class OpenCVVideoCapture(VideoCapture):
     def __init__(self, url: str):
@@ -30,6 +30,9 @@ class OpenCVVideoCapture(VideoCapture):
             return
         
         self._cap = cv2.VideoCapture(self._url)
+        if self._cap is None or not self._cap.isOpened():
+            raise VideoCaptureCouldNotConnect(f'Could not connect to video source: {self.__url}')
+        
         self._is_running = True
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True

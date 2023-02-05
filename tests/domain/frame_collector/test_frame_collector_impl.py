@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime
 
 from tests.mocks.mock_video_capture import MockVideoCapture
-from src2.domain.frame_collector.frame_collector_impl import FrameCollectorImpl
+from src2.domain._frame_collector.frame_collector_impl import FrameCollectorImpl
 from src2.external.video_capture.exceptions import VideoCaptureConnectionLost
 
 import numpy
