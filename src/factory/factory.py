@@ -6,6 +6,9 @@ from src.dependencies.ai_engine.deepstack_engine import DeepStackEngine
 from src.domain.dependencies.video_capture import VideoCapture
 from src.dependencies.video_capture.opencv_video_capture import OpenCVVideoCapture
 
+from src.domain.components.video_detector import VideoDetector
+from src.domain.components.video_detector.video_detector_impl import VideoDetectorImpl
+
 class Factory:
     
     @staticmethod
@@ -16,3 +19,8 @@ class Factory:
     @staticmethod
     def video_capture(url: str) -> VideoCapture:
         return OpenCVVideoCapture(url)
+    
+    
+    @staticmethod
+    def video_detector(id: str, video_capture: VideoCapture, ai_engine: AIEngine) -> VideoDetector:
+        return VideoDetectorImpl(id, video_capture, ai_engine)
