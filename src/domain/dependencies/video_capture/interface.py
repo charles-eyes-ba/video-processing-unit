@@ -5,7 +5,7 @@ class VideoCapture(ABC):
     """ Class to get video frames from a source """
     
     @abstractmethod
-    def setup_callbacks(self, on_error: function = None):
+    def setup_callbacks(self, on_error = None):
         """ 
         Setup the callbacks 
         
