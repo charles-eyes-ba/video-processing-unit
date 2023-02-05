@@ -1,16 +1,9 @@
-from src2.factory import vpu_factory, websocket_factory, video_capture_factory, frame_collector_factory, detector_factory, dnn_factory
+from src.factory import Factory
+import cv2
+
 import logging
+logging.basicConfig(level=logging.INFO)
 
-logging.basicConfig(level=logging.DEBUG)
-
-# Main
-def create_detector(id, url, config_path,  weights_path,  classes_path):
-    video_capture = video_capture_factory.create_video_capture(url)
-    frame_collector = frame_collector_factory.create_frame_collector(video_capture)
-    dnn = dnn_factory.create_dnn(config_path, weights_path, classes_path)
-    return detector_factory.create_detector(id, frame_collector, dnn)
-
-if __name__ == '__main__':
-    websocket = websocket_factory.create_websocket()
-    vpu = vpu_factory.create_vpu(websocket, create_detector)
-    vpu.start()
+image = cv2.imread("resources/images/cam.jpg")
+ai_engine = Factory.ai_engine()
+objs = ai_engine.extract_objects(image)

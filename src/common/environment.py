@@ -3,4 +3,4 @@ import os
 
 load_dotenv()
 
-HSU_WEBSOCKET_URL = os.getenv('HSU_WEBSOCKET_URL')
+DEEPSTACK_URL = os.getenv('DEEPSTACK_URL')
