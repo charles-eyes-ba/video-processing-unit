@@ -1,9 +1,9 @@
 from unittest import TestCase
 
-from src.external.deep_neural_network.exceptions import InvalidDeepNeuralNetworkFilesException
-from src.domain.video_processing_unit.exceptions import CameraParamsNotFoundException
+from src2.external.deep_neural_network.exceptions import InvalidDeepNeuralNetworkFilesException
+from src2.domain.video_processing_unit.exceptions import CameraParamsNotFoundException
 
-from src.domain.video_processing_unit.video_processing_unit_impl import VideoProcessingUnitImpl
+from src2.domain.video_processing_unit.video_processing_unit_impl import VideoProcessingUnitImpl
 from tests.mocks.mock_video_capture import MockVideoCapture
 from tests.mocks.mock_frame_collector import MockFrameCollector
 from tests.mocks.mock_detector import MockDetector

@@ -1,4 +1,4 @@
-from src.domain.frame_collector import FrameCollector
+from src2.domain.frame_collector import FrameCollector
 
 import numpy
 

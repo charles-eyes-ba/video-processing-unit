@@ -4,8 +4,8 @@ from time import sleep
 
 from tests.mocks.mock_frame_collector import MockFrameCollector
 from tests.mocks.mock_dnn import MockDeepNeuralNetwork
-from src.domain.detector.detector_impl import DetectorImpl
-from src.external.video_capture.exceptions import VideoCaptureConnectionLost
+from src2.domain.detector.detector_impl import DetectorImpl
+from src2.external.video_capture.exceptions import VideoCaptureConnectionLost
 
 import logging
 

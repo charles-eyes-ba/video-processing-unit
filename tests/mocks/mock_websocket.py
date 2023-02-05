@@ -1,4 +1,4 @@
-from src.domain.websocket import WebSocket
+from src2.domain.websocket import WebSocket
 
 class MockWebSocket(WebSocket):
     

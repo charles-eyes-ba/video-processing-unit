@@ -1,4 +1,4 @@
-from src.factory import vpu_factory, websocket_factory, video_capture_factory, frame_collector_factory, detector_factory, dnn_factory
+from src2.factory import vpu_factory, websocket_factory, video_capture_factory, frame_collector_factory, detector_factory, dnn_factory
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
