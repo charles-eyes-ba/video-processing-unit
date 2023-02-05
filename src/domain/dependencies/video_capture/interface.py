@@ -37,13 +37,13 @@ class VideoCapture(ABC):
     
     
     @abstractmethod
-    def pop_lastest_frame(self) -> ndarray:
+    def lastest_frame(self) -> ndarray:
         """ 
-        Pop the lastest frame 
+        Get the lastest frame 
         
         Returns
         -------
         numpy.ndarray
             Lastest frame
         """
-        raise NotImplementedError('pop_lastest_frame() not implemented')
+        raise NotImplementedError('lastest_frame() not implemented')

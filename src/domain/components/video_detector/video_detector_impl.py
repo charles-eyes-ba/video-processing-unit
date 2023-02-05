@@ -83,7 +83,7 @@ class VideoDetectorImpl(VideoDetector):
     def _loop(self):
         """ Main loop of the video detector """
         while self._is_running:
-            frame = self._video_capture.pop_lastest_frame()
+            frame = self._video_capture.lastest_frame()
 
             if frame is not None:
                 objects = self._ai_engine.extract_objects(frame)

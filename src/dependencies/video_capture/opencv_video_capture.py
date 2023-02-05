@@ -15,7 +15,7 @@ class OpenCVVideoCapture(VideoCapture):
         self._is_running = False
         self._on_error = None
         self._thread = None
-        logging.info(':OpenCVVideoCapture: initialized')
+        logging.info(f':OpenCVVideoCapture: initialized with {self._url}')
     
         
     # * Setups
@@ -31,7 +31,7 @@ class OpenCVVideoCapture(VideoCapture):
         
         self._cap = cv2.VideoCapture(self._url)
         if self._cap is None or not self._cap.isOpened():
-            raise VideoCaptureCouldNotConnect(f'Could not connect to video source: {self.__url}')
+            raise VideoCaptureCouldNotConnect(f'Could not connect to video source: {self._url}')
         
         self._is_running = True
         self._thread = Thread(target=self._loop)
@@ -48,10 +48,8 @@ class OpenCVVideoCapture(VideoCapture):
         self._is_running = False
         
         
-    def pop_lastest_frame(self):
-        frame = deepcopy(self._frame)
-        self._frame = None
-        return frame
+    def lastest_frame(self):
+        return deepcopy(self._frame)
         
         
     # * Utils

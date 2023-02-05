@@ -1,4 +1,4 @@
-from src2.domain.detector import Detector
+from src2.domain._detector import Detector
 
 class MockDetector(Detector):
     def __init__(self, id, frame_collector, dnn, delay=5):
