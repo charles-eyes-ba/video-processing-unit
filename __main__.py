@@ -2,7 +2,7 @@ from src.common.environment import CAM_URL
 from src.factory import Factory
 
 import cv2
-import asyncio
+import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -11,13 +11,12 @@ logging.basicConfig(level=logging.INFO)
 ai_engine = Factory.ai_engine()
 video_capture = Factory.video_capture(CAM_URL)
 
-# Test
 video_capture.start()
-image = cv2.imread("resources/images/cam.jpg")
+
+# Test
+time.sleep(2)
+
+image = video_capture.pop_lastest_frame()
+cv2.imwrite("resources/images/img_1.jpg", image)
+
 objs = ai_engine.extract_objects(image)
-
-img = video_capture.pop_lastest_frame()
-cv2.imwrite("resources/images/img.jpg", img)
-
-# # Run 4ever
-# asyncio.get_event_loop().run_forever()
