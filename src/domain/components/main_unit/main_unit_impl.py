@@ -7,6 +7,14 @@ from src.common.logger import logger
 
 class MainUnitImpl(MainUnit):
     
+    @property
+    def video_feed_ids(self) -> list[str]:
+        ids = []
+        for video_detector in self._video_detector_list:
+            ids.append(video_detector.id)
+        return ids
+    
+    
     def __init__(self):
         self._video_detector_list = []
         self._on_detection_callback = None

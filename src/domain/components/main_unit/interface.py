@@ -1,7 +1,14 @@
 from abc import ABC, abstractmethod
+from src.common.abstract_attribute import abstract_attribute
 
 class MainUnit(ABC):
     """ Class that handles the video processing unit """
+
+    @abstract_attribute
+    def video_feed_ids(self) -> list[str]:
+        """ The video feed id list """
+        raise NotImplementedError('video_feed_ids must be defined')
+
 
     @abstractmethod
     def setup_callbacks(self, on_detection = None, on_error = None):
