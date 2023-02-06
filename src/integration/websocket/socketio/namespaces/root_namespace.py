@@ -4,6 +4,7 @@ from src.common.call import call
 class RootNamespace(ClientNamespace):
     """ Class that handles the root namespace """
     
+    VIDEO_FEED_IDS = 'video_feed_ids'
     DETECT = 'detect'
     ERROR = 'error'
     

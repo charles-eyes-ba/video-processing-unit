@@ -39,14 +39,20 @@ class WebSocket(ABC):
     
     
     @abstractmethod
-    def send_current_video_feed_list(self, video_feeds: list[VideoFeed]):
+    def reconnect(self):
+        """ Try to reconnect """
+        raise NotImplementedError('reconnect() must be implemented')
+    
+    
+    @abstractmethod
+    def send_current_video_feed_list(self, video_feed_ids: list[str]):
         """ 
         Send the video feed list to server 
         
         Parameters
         ----------
-        video_feeds : list
-            The list with all video feeds
+        video_feed_ids : list
+            The list with all video feed ids
         """
         raise NotImplementedError('send_current_video_feed_list() must be implemented')
     

@@ -1,11 +1,10 @@
 from src.factory import Factory
-from .interface import MainUnit
 from src.models.video_feed import VideoFeed
 
 from src.common.logger import logger
 
 
-class MainUnitImpl(MainUnit):
+class MainUnitBasic:
     
     @property
     def video_feed_ids(self) -> list[str]:

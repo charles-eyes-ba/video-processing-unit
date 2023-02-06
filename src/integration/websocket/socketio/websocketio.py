@@ -73,9 +73,22 @@ class WebSocketIO(WebSocket):
         self._on_video_feeds_update_callback = on_video_feeds_update
         self._on_add_video_feed_callback = on_add_video_feed
         self._on_remove_video_feed_callback = on_remove_video_feed
+      
+      
+    # * Interface to Handle
+    def reconnect(self):
+        self._connect()
         
 
     # * Send Methods
+    def send_current_video_feed_list(self, video_feed_ids: list[str]):
+        try:
+            self._root_namespace.emit(RootNamespace.VIDEO_FEED_IDS, { 'ids': video_feed_ids })
+            logging.error(f'WebSocketIO:Detect message about {id} was sent')
+        except:
+            logging.error('WebSocketIO:Error sending detections')
+    
+    
     def send_detections(self, id, objects):
         try:
             self._root_namespace.emit(RootNamespace.DETECT, { 'id': id, 'objects': objects })
