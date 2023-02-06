@@ -12,6 +12,7 @@ class RootNamespace(ClientNamespace):
         self._on_connect_callback = None
         self._on_connect_error_callback = None
         self._on_disconnect_callback = None
+        self._on_request_current_video_feed_list_callback = None
         self._on_video_feed_list_update_callback = None
         self._on_add_video_feed_callback = None
         self._on_remove_video_feed_callback = None
@@ -22,6 +23,7 @@ class RootNamespace(ClientNamespace):
         on_connect = None, 
         on_connect_error = None, 
         on_disconnect = None, 
+        on_request_current_video_feed_list = None,
         on_video_feed_list_update = None, 
         on_add_video_feed = None, 
         on_remove_video_feed = None
@@ -49,6 +51,7 @@ class RootNamespace(ClientNamespace):
         self._on_connect_callback = on_connect
         self._on_connect_error_callback = on_connect_error
         self._on_disconnect_callback = on_disconnect
+        self._on_request_current_video_feed_list_callback = on_request_current_video_feed_list
         self._on_video_feed_list_update_callback = on_video_feed_list_update
         self._on_add_video_feed_callback = on_add_video_feed
         self._on_remove_video_feed_callback = on_remove_video_feed
@@ -71,6 +74,11 @@ class RootNamespace(ClientNamespace):
         
         
     # * Video Feeds
+    def on_request_current_video_feed_list(self):
+        """ Callback for when the server request the current video feed list """
+        call(self._on_request_current_video_feed_list_callback)
+    
+    
     def on_video_feed_list_update(self, data):
         """ Callback for the video_feed_list_update event """
         call(self._on_video_feed_list_update_callback, data)

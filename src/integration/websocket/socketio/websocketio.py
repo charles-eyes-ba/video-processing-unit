@@ -2,8 +2,8 @@ import logging
 import socketio
 from time import sleep
 
-from src2.common.call import call
-from src2.domain.websocket import WebSocket
+from src.common.call import call
+from src.domain.dependencies.websocket import WebSocket
 from .namespaces.root_namespace import RootNamespace
 
 class WebSocketIO(WebSocket):
@@ -13,6 +13,7 @@ class WebSocketIO(WebSocket):
         self._on_connect_callback = None
         self._on_connect_error_callback = None
         self._on_disconnect_callback = None
+        self._on_request_current_video_feed_list_callback = None
         self._on_video_feeds_update_callback = None
         self._on_add_video_feed_callback = None
         self._on_remove_video_feed_callback = None
@@ -34,6 +35,7 @@ class WebSocketIO(WebSocket):
             on_connect=self._on_connect, 
             on_connect_error=self._on_connect_error, 
             on_disconnect=self._on_disconnect, 
+            _on_request_current_video_feed_list=self._on_request_current_video_feed_list,
             on_video_feed_list_update=self._on_video_feed_list_update,
             on_add_video_feed=self._on_add_video_feed,
             on_remove_video_feed=self._on_remove_video_feed
@@ -59,6 +61,7 @@ class WebSocketIO(WebSocket):
         on_connect=None, 
         on_connect_error=None, 
         on_disconnect=None, 
+        on_request_current_video_feed_list=None,
         on_video_feeds_update=None, 
         on_add_video_feed=None, 
         on_remove_video_feed=None
@@ -66,6 +69,7 @@ class WebSocketIO(WebSocket):
         self._on_connect_callback = on_connect
         self._on_connect_error_callback = on_connect_error
         self._on_disconnect_callback = on_disconnect
+        self._on_request_current_video_feed_list_callback = on_request_current_video_feed_list
         self._on_video_feeds_update_callback = on_video_feeds_update
         self._on_add_video_feed_callback = on_add_video_feed
         self._on_remove_video_feed_callback = on_remove_video_feed
@@ -105,6 +109,12 @@ class WebSocketIO(WebSocket):
         """ On disconnect event """
         logging.debug('WebSocketIO:Disconnected event')
         call(self._on_disconnect_callback)
+        
+        
+    def _on_request_current_video_feed_list(self):
+        """ On request current video feed list event """
+        logging.debug('WebSocketIO:Disconnected event')
+        call(self._on_request_current_video_feed_list_callback)
         
     
     def _on_video_feed_list_update(self, config):
