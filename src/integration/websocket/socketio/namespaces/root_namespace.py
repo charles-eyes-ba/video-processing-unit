@@ -66,7 +66,7 @@ class RootNamespace(ClientNamespace):
 
     def on_connect_error(self, data):
         """ Callback for when the connection fails """
-        call(self._on_connect_error_callback, data)
+        call(self._on_connect_error_callback)
 
 
     def on_disconnect(self):

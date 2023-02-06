@@ -3,6 +3,8 @@ from src.domain.dependencies.websocket import WebSocket
 from src.models.video_feed import VideoFeed
 
 from src.common.logger import logger
+import time
+import signal
 
 
 class MainUnitWebSocket:
@@ -10,6 +12,7 @@ class MainUnitWebSocket:
     def __init__(self, websocket: WebSocket):
         self._main_unit = MainUnit()
         self._websocket = websocket
+        self._websocket_delay_retry = 5
         self._video_detector_list = []
         
         self._websocket.setup_callbacks(
@@ -21,41 +24,42 @@ class MainUnitWebSocket:
             on_add_video_feed=self._on_add_video_feed,
             on_remove_video_feed=self._on_remove_video_feed
         )
-        
-        logger.debug('MainUnitImpl:initialized')
+        logger.debug('MainUnitWebSocket:initialized')
+    
+    
+    # * Interfaces
+    def start(self):
+        self._websocket.connect()
+        signal.pause()
     
     
     # * WebSocket Deletage
     def _on_connect(self):
-        logger.debug('MainUnitWebSocket:connected')
+        logger.debug('MainUnitWebSocket:_on_connect')
     
     
-    def _on_connect_error(self, data):
-        logger.debug('MainUnitWebSocket:conection error')
+    def _on_connect_error(self):
+        logger.debug('MainUnitWebSocket:_on_connect_error')
+        logger.debug(f'MainUnitWebSocket:Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
+        time.sleep(self._websocket_delay_retry)
+        self._websocket.connect()
     
     
     def _on_disconnect(self):
-        logger.debug('MainUnitWebSocket:disconnected')
-        self._websocket.reconnect()
+        logger.debug('MainUnitWebSocket:_on_disconnect')
     
     
     def _on_request_current_video_feed_list(self):
-        ids = self._main_unit.video_feed_ids
-        self._websocket.send_current_video_feed_list(ids)
+        logger.debug('MainUnitWebSocket:_on_request_current_video_feed_list')
     
     
-    def _on_video_feeds_update(self, data):
-        pass
+    def _on_video_feeds_update(self, data: dict):
+        logger.debug("MainUnitWebSocket:_on_video_feeds_update", data)
     
     
     def _on_add_video_feed(self, data: dict):
-        if data.get('id') is None or data.get('url') is None:
-            return
-        video_feed = VideoFeed(id=data['id'], url=data['url'])
-        self._main_unit.add_video_feed(video_feed)
+        logger.debug("MainUnitWebSocket:_on_add_video_feed", data)
     
     
     def _on_remove_video_feed(self, data):
-        if data.get('id') is None:
-            return
-        self._main_unit.remove_video_feed(data['id'])
+        logger.debug("MainUnitWebSocket:_on_remove_video_feed", data)

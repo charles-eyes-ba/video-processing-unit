@@ -39,9 +39,9 @@ class WebSocket(ABC):
     
     
     @abstractmethod
-    def reconnect(self):
-        """ Try to reconnect """
-        raise NotImplementedError('reconnect() must be implemented')
+    def connect(self):
+        """ Try to connect """
+        raise NotImplementedError('connect() must be implemented')
     
     
     @abstractmethod

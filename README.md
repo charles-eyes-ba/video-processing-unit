@@ -74,11 +74,76 @@ $ pip install -r requirements.txt
 ```
 
 ### Start 
+
 To start the VPU, you can do this with following command (run `__main__.py`):
 
 ```shell
 $ python .
 ```
+
+### WebSocket Message
+
+- Send video feed ids:
+```json
+{
+  "ids": [
+    "camera_1",
+    "camera_2",
+    "camera_3",
+    "camera_4"
+  ]
+}
+```
+
+- Send detections:
+```json
+{
+  "id": "camera_1",
+  "objects": [
+    "car",
+    "car",
+    "person"
+  ]
+}
+```
+
+- Send error:
+```json
+{
+  "id": "camera_1",
+  "error": "Something went wrong"
+}
+```
+
+- Receive new video feed list:
+```json
+[
+  {
+    "id": "camera_1",
+    "url": "http://camera.1"
+  },
+  {
+    "id": "camera_2",
+    "url": "http://camera.2"
+  }
+]
+```
+
+- Receive to add video feed:
+```json
+{
+  "id": "camera_1",
+  "url": "http://camera.1"
+}
+```
+
+- Receive to remove video feed:
+```json
+{
+  "id": "camera_1"
+}
+```
+
 
 ## Debugging
 - Show the video feed with boxes
