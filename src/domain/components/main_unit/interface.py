@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 class MainUnit(ABC):
     """ Class that handles the video processing unit """
-    
+
     @abstractmethod
     def setup_callbacks(self, on_detection = None, on_error = None):
         """
@@ -16,8 +16,8 @@ class MainUnit(ABC):
             The function to call when an error occurs. The function must have the following signature: function(camera_id, exception)
         """
         raise NotImplementedError('setup_callbacks() not implemented')
-    
-    
+
+
     @abstractmethod
     def update_video_feed_list(self, video_feed_list):
         """ 
@@ -42,7 +42,7 @@ class MainUnit(ABC):
             The video feed to be added
         """
         raise NotImplementedError('add_video_feed() not implemented')
-        
+
 
     @abstractmethod
     def remove_video_feed(self, video_feed_id):

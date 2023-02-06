@@ -1,6 +1,7 @@
 from src.common.logger import logger
 from src.common.environment import CAM_JARDIM_URL, CAM_QUINTAL_URL, CAM_RUA_DIREITA_URL, CAM_RUA_ESQUERDA_URL
-from src.domain.components.main_unit.main_unit_impl import MainUnitImpl
+
+from src.domain.components.main_unit import MainUnit
 
 import logging
 import signal
@@ -15,7 +16,7 @@ class VideoFeed:
         self.id = id
 
 # Components
-vpu = MainUnitImpl()
+vpu = MainUnit()
 vpu.update_video_feed_list([
     VideoFeed(
         url=CAM_JARDIM_URL,
