@@ -1,16 +1,18 @@
 import time
 import signal
+from src.dependency_injector import DependencyInjector
 from src.domain.components.main_unit import MainUnit
-from src.domain.dependencies.websocket import WebSocket
 from src.models.video_feed import VideoFeed
 from src.common.logger import logger
+from src.common.check_keys import check_keys
 
 
 class MainUnitWebSocket:
     
-    def __init__(self, websocket: WebSocket):
+    def __init__(self, dependencies: DependencyInjector):
+        self._dependencies = dependencies
         self._main_unit = MainUnit()
-        self._websocket = websocket
+        self._websocket = self._dependencies.websocket()
         self._websocket_delay_retry = 5
         self._video_detector_list = []
         
@@ -56,15 +58,14 @@ class MainUnitWebSocket:
     
     
     def _on_add_video_feed(self, data: dict):
-        logger.debug(f'MainUnitWebSocket:_on_add_video_feed:{data}')
-        if data.get('id') is None or data.get('url') is None:
+        if not check_keys(dictionary=data, keys=['id', 'url']):
+            logger.error(f'MainUnitWebSocket:_on_add_video_feed:invalid data')
             return
-        video_feed = VideoFeed(data['id'], data['url'])
-        self._main_unit.add_video_feed(video_feed)
+        logger.debug(f'MainUnitWebSocket:_on_add_video_feed:{data}')
     
     
     def _on_remove_video_feed(self, data):
-        logger.debug(f'MainUnitWebSocket:_on_remove_video_feed:{data}')
-        if data.get('id') is None:
+        if not check_keys(dictionary=data, keys=['id']):
+            logger.error(f'MainUnitWebSocket:_on_remove_video_feed:invalid data')
             return
-        self._main_unit.remove_video_feed(data['id'])
+        logger.debug(f'MainUnitWebSocket:_on_remove_video_feed:{data}')
