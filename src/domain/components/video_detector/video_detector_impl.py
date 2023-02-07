@@ -19,8 +19,10 @@ class VideoDetectorImpl(VideoDetector):
         self._delay = delay
         
         self._last_detected_objects = []
-        self._event = None
-        self._thread = None
+        self._event = Event()
+        self._thread = Thread(target=self._video_detector_loop)
+        self._thread.name = f' Thread-Video Detector {self._video_capture.url}'
+        self._thread.daemon = True
         
         self._on_object_detection = None
         self._on_error = None
@@ -58,15 +60,12 @@ class VideoDetectorImpl(VideoDetector):
 
     # * Methods
     def start(self):
-        if self._event is not None:
-            self._event.set()
+        if self._thread.is_alive():
             return
+
         
+        self._event.clear()
         self._video_capture.start()
-        self._event = Event()
-        self._thread = Thread(target=self._video_detector_loop)
-        self._thread.name = f' Thread-Video Detector {self._video_capture.url}'
-        self._thread.daemon = True
         self._thread.start()
         logger.debug('started')
         

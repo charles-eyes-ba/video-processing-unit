@@ -18,10 +18,14 @@ class OpenCVVideoCapture(VideoCapture):
         self._url = url
         self._cap = None
         self._frame = None
-        self._event = None
         self._on_error = None
-        self._thread = None
+        
+        self._event = Event()
         self._lock = Lock()
+        self._thread = Thread(target=self._loop)
+        self._thread.name = f' Thread-Video Capture {self._url}'
+        self._thread.daemon = True
+        
         logger.debug(f'{self._url}:initialized')
     
         
@@ -32,8 +36,7 @@ class OpenCVVideoCapture(VideoCapture):
         
     # * Methods  
     def start(self):
-        if self._event is not None:
-            self._event.set()
+        if self._thread.is_alive():
             return
         
         self._cap = cv2.VideoCapture(self._url)
@@ -42,10 +45,7 @@ class OpenCVVideoCapture(VideoCapture):
             call(self._on_error, exception)
             return
         
-        self._event = Event()
-        self._thread = Thread(target=self._loop)
-        self._thread.name = f' Thread-Video Capture {self._url}'
-        self._thread.daemon = True
+        self._event.clear()
         self._thread.start()
         logger.debug(f'{self._url}:started')
         
