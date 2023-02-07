@@ -62,7 +62,7 @@ class VideoDetectorImpl(VideoDetector):
             self._event.set()
             return
         
-        # self._video_capture.start()
+        self._video_capture.start()
         self._event = Event()
         self._thread = Thread(target=self._video_detector_loop)
         self._thread.name = f' Thread-Video Detector {self._video_capture.url}'
@@ -72,7 +72,7 @@ class VideoDetectorImpl(VideoDetector):
         
         
     def stop(self):
-        # self._video_capture.stop()
+        self._video_capture.stop()
         self._event.set()
         logger.debug('stopped')
     

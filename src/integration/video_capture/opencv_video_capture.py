@@ -1,5 +1,5 @@
 import cv2
-from threading import Thread, Event
+from threading import Thread, Event, Lock
 from copy import deepcopy
 from src.common.logger import logger
 from src.domain.dependencies.video_capture import VideoCapture
@@ -21,6 +21,7 @@ class OpenCVVideoCapture(VideoCapture):
         self._event = None
         self._on_error = None
         self._thread = None
+        self._lock = Lock()
         logger.debug(f'{self._url}:initialized')
     
         
@@ -51,12 +52,14 @@ class OpenCVVideoCapture(VideoCapture):
         
     def stop(self):
         self._event.set()
-        self._release()
         logger.debug(f'{self._url}:stopped')
         
         
     def lastest_frame(self):
-        return deepcopy(self._frame)
+        self._lock.acquire()
+        frame_copy = deepcopy(self._frame)
+        self._lock.release()
+        return frame_copy
         
         
     # * Utils
@@ -79,7 +82,10 @@ class OpenCVVideoCapture(VideoCapture):
             if self._event.is_set():
                 break
             try:
+                self._lock.acquire()
                 _, self._frame = self._cap.read()
+                self._lock.release()
+                
             except Exception as exception:
                 logger.error(f'{self._url}:error')
                 call(self._on_error, exception)
