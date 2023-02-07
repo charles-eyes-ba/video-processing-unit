@@ -28,7 +28,7 @@ class TrackedVideoImpl(TrackedVideo):
         self._video_detector = self._dependencies.video_detector(video_capture, ai_engine)
         
         self._video_detector.setup_callbacks(
-            on_object_detection,
-            on_error
+            on_object_detection = lambda objects: on_object_detection(self._video_feed.id, objects),
+            on_error = lambda error: on_object_detection(self._video_feed.id, error)
         )
         self._video_detector.start()
