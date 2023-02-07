@@ -85,14 +85,16 @@ $ python .
 
 - Send video feed ids:
 ```json
-{
-  "ids": [
-    "camera_1",
-    "camera_2",
-    "camera_3",
-    "camera_4"
-  ]
-}
+[
+  {
+    "id": "camera_1",
+    "detector_status": "RUNNING"
+  },
+  {
+    "id": "camera_2",
+    "detector_status": "ERROR"
+  },
+]
 ```
 
 - Send detections:
@@ -124,10 +126,6 @@ $ python .
     "config": {
       "run_detection": true
     }
-  },
-  {
-    "id": "camera_2",
-    "url": "http://camera.2"
   }
 ]
 ```
@@ -136,7 +134,10 @@ $ python .
 ```json
 {
   "id": "camera_1",
-  "url": "http://camera.1"
+  "url": "http://camera.1",
+  "config": {
+    "run_detection": true
+  }
 }
 ```
 
@@ -147,6 +148,15 @@ $ python .
 }
 ```
 
+- Receive a message to update video config:
+```json
+{
+  "id": "camera_1",
+  "config": {
+    "run_detection": false
+  }
+}
+```
 
 ## Debugging
 - Show the video feed with boxes
