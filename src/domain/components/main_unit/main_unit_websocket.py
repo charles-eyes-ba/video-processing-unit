@@ -3,6 +3,7 @@ import signal
 from src.dependency_injector import DependencyInjector
 from src.domain.components.main_unit import MainUnit
 from src.models.video_feed import VideoFeed
+from src.common.dict_encoder import DictEncoder
 from src.common.logger import logger
 from src.common.check_keys import check_keys
 
@@ -50,7 +51,7 @@ class MainUnitWebSocket:
     
     
     def _on_request_current_video_feed_list(self):
-        logger.debug(self._main_unit.videos_infos)
+        logger.debug(DictEncoder.encode(self._main_unit.videos_infos))
     
     
     def _on_video_feed_list_update(self, data: list):

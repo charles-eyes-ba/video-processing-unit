@@ -9,7 +9,7 @@ from src.common.call import call
 class MainUnitBasic:
     
     @property
-    def videos_infos(self):
+    def videos_infos(self) -> list[VideoInfo]:
         infos = []
         for tracked_video in self._tracked_videos:
             infos.append(VideoInfo(tracked_video.video_feed.id, tracked_video.video_detector_status))

@@ -58,20 +58,20 @@ class WebSocket(ABC):
     
     
     @abstractmethod
-    def send_current_video_feed_list(self, video_feed_ids: list[str]):
+    def send_current_videos_infos(self, videos_infos: list[dict]):
         """ 
         Send the video feed list to server 
         
         Parameters
         ----------
-        video_feed_ids : list
-            The list with all video feed ids
+        videos_infos : list
+            The list with all video infos
         """
         raise NotImplementedError('send_current_video_feed_list() must be implemented')
     
 
     @abstractmethod
-    def send_detections(self, id, objects):
+    def send_detections(self, id, objects: list[str]):
         """ 
         Send detections to server 
         
@@ -86,7 +86,7 @@ class WebSocket(ABC):
     
     
     @abstractmethod
-    def send_error(self, id, error):
+    def send_error(self, id, error: str):
         """ 
         Send error to server 
         
