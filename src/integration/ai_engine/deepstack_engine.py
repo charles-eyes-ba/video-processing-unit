@@ -2,8 +2,8 @@ import base64
 from numpy import ndarray
 from deepstack_sdk import ServerConfig, Detection, Enhance
 from src.domain.dependencies.ai_engine import AIEngine
-
 from src.common.logger import logger
+
 
 class DeepStackEngine(AIEngine):
     def __init__(self, deepstack_url: str, threshold: float = 0.5):

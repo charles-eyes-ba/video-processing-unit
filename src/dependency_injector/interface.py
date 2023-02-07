@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-
 from src.domain.dependencies.ai_engine import AIEngine
 from src.domain.dependencies.video_capture import VideoCapture
 from src.domain.components.video_detector import VideoDetector
 from src.domain.components.tracked_video import TrackedVideo
+
 
 class DependencyInjector(ABC):
     

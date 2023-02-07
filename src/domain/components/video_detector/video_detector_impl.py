@@ -2,7 +2,6 @@ from threading import Thread
 from time import sleep
 from src.domain.dependencies.ai_engine import AIEngine
 from src.domain.dependencies.video_capture import VideoCapture
-from src.dependency_injector import DependencyInjector
 from src.common.call import call
 from src.common.logger import logger
 from .interface import VideoDetector

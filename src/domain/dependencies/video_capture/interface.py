@@ -1,6 +1,7 @@
 from numpy import ndarray
 from abc import ABC, abstractmethod
 
+
 class VideoCapture(ABC):
     """ Class to get video frames from a source """
     

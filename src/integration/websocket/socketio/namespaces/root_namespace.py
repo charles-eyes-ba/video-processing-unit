@@ -1,6 +1,7 @@
 from socketio import ClientNamespace
 from src.common.call import call
 
+
 class RootNamespace(ClientNamespace):
     """ Class that handles the root namespace """
     

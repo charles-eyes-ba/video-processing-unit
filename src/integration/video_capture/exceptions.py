@@ -8,7 +8,8 @@ class VideoCaptureCouldNotConnect(Exception):
             The message with error details
         """
         self.message = message
-        
+
+
 class VideoCaptureConnectionLost(Exception):
     """ Video capture connection lost """
     def __init__(self, message):

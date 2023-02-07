@@ -1,6 +1,7 @@
 from numpy import ndarray
 from abc import ABC, abstractmethod
 
+
 class AIEngine(ABC):
     """ Class that handles the detection of objects in an image """
 

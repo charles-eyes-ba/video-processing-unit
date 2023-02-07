@@ -1,11 +1,11 @@
+import cv2
 from threading import Thread
 from copy import deepcopy
-import cv2
-
 from src.common.logger import logger
 from src.domain.dependencies.video_capture import VideoCapture
 from src.common.call import call
 from .exceptions import VideoCaptureCouldNotConnect, VideoCaptureConnectionLost
+
 
 class OpenCVVideoCapture(VideoCapture):
     def __init__(self, url: str):

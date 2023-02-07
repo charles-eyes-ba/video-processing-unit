@@ -1,10 +1,9 @@
+import time
+import signal
 from src.domain.components.main_unit import MainUnit
 from src.domain.dependencies.websocket import WebSocket
 from src.models.video_feed import VideoFeed
-
 from src.common.logger import logger
-import time
-import signal
 
 
 class MainUnitWebSocket:

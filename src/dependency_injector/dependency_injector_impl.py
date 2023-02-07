@@ -1,17 +1,14 @@
 from .interface import DependencyInjector
 from src.common.environment import DEEPSTACK_URL
-
 from src.domain.dependencies.ai_engine import AIEngine
 from src.integration.ai_engine.deepstack_engine import DeepStackEngine
-
 from src.domain.dependencies.video_capture import VideoCapture
 from src.integration.video_capture.opencv_video_capture import OpenCVVideoCapture
-
 from src.domain.components.video_detector import VideoDetector
 from src.domain.components.video_detector.video_detector_impl import VideoDetectorImpl
-
 from src.domain.components.tracked_video import TrackedVideo
 from src.domain.components.tracked_video.tracked_video_impl import TrackedVideoImpl
+
 
 class DependencyInjectorImpl(DependencyInjector):
     

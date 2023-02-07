@@ -2,7 +2,7 @@ import socketio
 from src.common.logger import logger
 from src.common.call import call
 from src.domain.dependencies.websocket import WebSocket
-from .namespaces.root_namespace import RootNamespace
+from .namespaces import RootNamespace
 
 
 class WebSocketIO(WebSocket):
