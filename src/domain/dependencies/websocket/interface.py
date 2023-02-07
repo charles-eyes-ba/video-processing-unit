@@ -11,7 +11,7 @@ class WebSocket(ABC):
         on_connect_error=None, 
         on_disconnect=None, 
         on_request_current_video_feed_list=None,
-        on_video_feeds_update=None, 
+        on_video_feed_list_update=None, 
         on_add_video_feed=None, 
         on_remove_video_feed=None
     ):
@@ -28,7 +28,7 @@ class WebSocket(ABC):
             Function that is called when the connection is lost
         on_request_current_video_feed_list : function
             Function that is called when the server request all the current video feeds
-        on_video_feeds_update : function
+        on_video_feed_list_update : function
             Function that is called when the all video feeds are updated
         on_add_video_feed : function
             Function that is called when a new video feed is added

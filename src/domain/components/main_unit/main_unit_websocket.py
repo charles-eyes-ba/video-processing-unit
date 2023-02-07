@@ -20,7 +20,7 @@ class MainUnitWebSocket:
             on_connect_error=self._on_connect_error,
             on_disconnect=self._on_disconnect,
             on_request_current_video_feed_list=self._on_request_current_video_feed_list,
-            on_video_feeds_update=self._on_video_feeds_update,
+            on_video_feed_list_update=self._on_video_feed_list_update,
             on_add_video_feed=self._on_add_video_feed,
             on_remove_video_feed=self._on_remove_video_feed
         )
@@ -39,8 +39,7 @@ class MainUnitWebSocket:
     
     
     def _on_connect_error(self):
-        logger.debug('MainUnitWebSocket:_on_connect_error')
-        logger.debug(f'MainUnitWebSocket:Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
+        logger.debug(f'MainUnitWebSocket:_on_connect_error:Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
         time.sleep(self._websocket_delay_retry)
         self._websocket.connect()
     
@@ -53,13 +52,13 @@ class MainUnitWebSocket:
         logger.debug('MainUnitWebSocket:_on_request_current_video_feed_list')
     
     
-    def _on_video_feeds_update(self, data: dict):
-        logger.debug("MainUnitWebSocket:_on_video_feeds_update", data)
+    def _on_video_feed_list_update(self, data: dict):
+        logger.debug(f'MainUnitWebSocket:_on_video_feed_list_update:{data}')
     
     
     def _on_add_video_feed(self, data: dict):
-        logger.debug("MainUnitWebSocket:_on_add_video_feed", data)
+        logger.debug(f'MainUnitWebSocket:_on_add_video_feed:{data}')
     
     
     def _on_remove_video_feed(self, data):
-        logger.debug("MainUnitWebSocket:_on_remove_video_feed", data)
+        logger.debug(f'MainUnitWebSocket:_on_remove_video_feed:{data}')

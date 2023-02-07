@@ -14,7 +14,7 @@ class WebSocketIO(WebSocket):
         self._on_connect_error_callback = None
         self._on_disconnect_callback = None
         self._on_request_current_video_feed_list_callback = None
-        self._on_video_feeds_update_callback = None
+        self._on_video_feed_list_update_callback = None
         self._on_add_video_feed_callback = None
         self._on_remove_video_feed_callback = None
         
@@ -47,7 +47,7 @@ class WebSocketIO(WebSocket):
         on_connect_error=None, 
         on_disconnect=None, 
         on_request_current_video_feed_list=None,
-        on_video_feeds_update=None, 
+        on_video_feed_list_update=None, 
         on_add_video_feed=None, 
         on_remove_video_feed=None
     ):
@@ -55,7 +55,7 @@ class WebSocketIO(WebSocket):
         self._on_connect_error_callback = on_connect_error
         self._on_disconnect_callback = on_disconnect
         self._on_request_current_video_feed_list_callback = on_request_current_video_feed_list
-        self._on_video_feeds_update_callback = on_video_feeds_update
+        self._on_video_feed_list_update_callback = on_video_feed_list_update
         self._on_add_video_feed_callback = on_add_video_feed
         self._on_remove_video_feed_callback = on_remove_video_feed
       
@@ -126,7 +126,7 @@ class WebSocketIO(WebSocket):
             All video feeds configs
         """
         logger.debug('WebSocketIO:New feed list event')
-        call(self._on_video_feeds_update_callback, data)
+        call(self._on_video_feed_list_update_callback, data)
             
             
     def _on_add_video_feed(self, data):

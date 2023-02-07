@@ -11,9 +11,6 @@ from src.integration.websocket.socketio import WebSocketIO
 logger.setLevel(level=logging.DEBUG)
 logger.debug('Starting __main__')
 
-# websocket = WebSocketIO(WEBSOCKET_URL)
-# vpu = MainUnitWebSocket(websocket)
-# vpu.start()
-
 websocket = WebSocketIO(WEBSOCKET_URL)
-websocket.connect()
+vpu = MainUnitWebSocket(websocket)
+vpu.start()
