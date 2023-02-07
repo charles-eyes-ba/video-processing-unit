@@ -1,16 +1,19 @@
-from src.factory import vpu_factory, websocket_factory, video_capture_factory, frame_collector_factory, detector_factory, dnn_factory
+import signal
 import logging
+from src.common.logger import logger
 
-logging.basicConfig(level=logging.DEBUG)
+from src.common.environment import WEBSOCKET_URL
+from src.common.environment import CAM_JARDIM_URL, CAM_QUINTAL_URL, CAM_RUA_DIREITA_URL, CAM_RUA_ESQUERDA_URL
 
-# Main
-def create_detector(id, url, config_path,  weights_path,  classes_path):
-    video_capture = video_capture_factory.create_video_capture(url)
-    frame_collector = frame_collector_factory.create_frame_collector(video_capture)
-    dnn = dnn_factory.create_dnn(config_path, weights_path, classes_path)
-    return detector_factory.create_detector(id, frame_collector, dnn)
+from src.domain.components.main_unit import MainUnit, MainUnitWebSocket
+from src.integration.websocket.socketio import WebSocketIO
+from src.dependency_injector.dependency_injector_impl import DependencyInjectorImpl
+from src.models.video_feed import VideoFeed
 
-if __name__ == '__main__':
-    websocket = websocket_factory.create_websocket()
-    vpu = vpu_factory.create_vpu(websocket, create_detector)
-    vpu.start()
+
+logger.setLevel(level=logging.DEBUG)
+logger.debug('Starting __main__')
+
+dependencies = DependencyInjectorImpl()
+vpu = MainUnitWebSocket(dependencies)
+vpu.start()
