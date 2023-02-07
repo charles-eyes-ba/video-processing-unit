@@ -64,7 +64,8 @@ class VideoDetectorImpl(VideoDetector):
         
         self._video_capture.start()
         self._is_running = True
-        self._thread = Thread(target=self._loop)
+        self._thread = Thread(target=self._video_detector_loop)
+        self._thread.name = f' Thread-Video Detector {self._video_capture.url}'
         self._thread.daemon = True
         self._thread.start()
         logger.debug('started')
@@ -85,7 +86,7 @@ class VideoDetectorImpl(VideoDetector):
     
 
     # * Main loop
-    def _loop(self):
+    def _video_detector_loop(self):
         """ Main loop of the video detector """
         while self._is_running:
             frame = self._video_capture.lastest_frame()

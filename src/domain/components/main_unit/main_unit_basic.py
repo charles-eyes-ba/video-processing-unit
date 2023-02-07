@@ -2,6 +2,7 @@ from src.models.video_feed import VideoFeed
 from src.dependency_injector import DependencyInjector
 from src.domain.components.tracked_video import TrackedVideo
 from src.common.logger import logger
+from src.common.call import call
 
 
 class MainUnitBasic:
@@ -9,6 +10,8 @@ class MainUnitBasic:
     def __init__(self, dependencies: DependencyInjector):
         self._dependencies = dependencies
         self._tracked_videos: list[TrackedVideo] = []
+        self._on_object_detection = None
+        self._on_error = None
         logger.debug('initialized')
     
     
@@ -19,11 +22,11 @@ class MainUnitBasic:
     
     # * Callbacks Handlers
     def _tracked_video_object_detection(self, id: str, objects: list[str]):
-        self._on_object_detection(id, objects)
+        call(self._on_object_detection, id, objects)
         
         
     def _tracked_video_error(self, id: str, error: Exception):
-        self._on_error(id, error)
+        call(self._on_error, id, error)
     
     
     # * Handle Tracked Videos

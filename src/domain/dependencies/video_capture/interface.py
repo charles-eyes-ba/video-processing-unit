@@ -1,9 +1,16 @@
 from numpy import ndarray
 from abc import ABC, abstractmethod
+from src.common.abstract_attribute import abstract_attribute
 
 
 class VideoCapture(ABC):
     """ Class to get video frames from a source """
+    
+    @abstract_attribute
+    def url(self) -> str:
+        """ Video feed URL """
+        raise NotImplementedError('url() must be defined')
+    
     
     @abstractmethod
     def __init__(self, url: str):

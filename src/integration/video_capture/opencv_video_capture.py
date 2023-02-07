@@ -8,6 +8,12 @@ from .exceptions import VideoCaptureCouldNotConnect, VideoCaptureConnectionLost
 
 
 class OpenCVVideoCapture(VideoCapture):
+    
+    @property
+    def url(self) -> str:
+        return self._url
+    
+    
     def __init__(self, url: str):
         self._url = url
         self._cap = None
@@ -37,6 +43,7 @@ class OpenCVVideoCapture(VideoCapture):
         
         self._is_running = True
         self._thread = Thread(target=self._loop)
+        self._thread.name = f' Thread-Video Capture {self._url}'
         self._thread.daemon = True
         self._thread.start()
         logger.debug(f'{self._url}:started')

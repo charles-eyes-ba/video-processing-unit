@@ -14,17 +14,6 @@ from src.models.video_feed import VideoFeed
 logger.setLevel(level=logging.DEBUG)
 logger.debug('Starting __main__')
 
-# websocket = WebSocketIO(WEBSOCKET_URL)
-# vpu = MainUnitWebSocket(websocket)
-# vpu.start()
-
 dependencies = DependencyInjectorImpl()
-vpu = MainUnit(dependencies)
-
-vpu.start_to_track_video(VideoFeed(
-    id="camera_jardim",
-    url="http://camera_jardim"
-))
-
-vpu.print()
-signal.pause()
+vpu = MainUnitWebSocket(dependencies)
+vpu.start()
