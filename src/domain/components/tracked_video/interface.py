@@ -38,6 +38,12 @@ class TrackedVideo(ABC):
         raise NotImplementedError('__init__() must be defined')
         
     
+    @abstractmethod    
+    def stop(self):
+        """ Stop to track the video """
+        raise NotImplementedError('stop() must be defined')
+        
+    
     @abstractmethod
     def add_detector(self, video_detector: VideoDetector, on_object_detection, on_error):
         """

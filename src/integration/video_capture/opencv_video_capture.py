@@ -66,8 +66,8 @@ class OpenCVVideoCapture(VideoCapture):
         
     # * Utils
     def _release(self):
+        logger.debug('released')
         self._cap.release()
-        self._is_running = False
     
         
     # * Main loop

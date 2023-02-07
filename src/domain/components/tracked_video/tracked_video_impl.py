@@ -1,6 +1,7 @@
 from src.models.video_feed import VideoFeed
 from src.models.video_status import VideoStatus
 from src.domain.components.video_detector import VideoDetector
+from src.common.logger import logger
 from .interface import TrackedVideo
 
 
@@ -25,6 +26,16 @@ class TrackedVideoImpl(TrackedVideo):
         self._video_feed = video_feed
         self._video_detector = None
         self._video_detector_status = VideoStatus.OFF
+        logger.debug('Initialized')
+        
+        
+    def __del__(self):
+        logger.debug('del')
+        
+        
+    # * Interfaces
+    def stop(self):
+        self._video_detector.stop()
         
         
     # * Add Workers

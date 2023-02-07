@@ -50,7 +50,7 @@ class MainUnitWebSocket:
     
     
     def _on_request_current_video_feed_list(self):
-        logger.debug(self._main_unit.videos)
+        logger.debug(self._main_unit.videos_infos)
     
     
     def _on_video_feed_list_update(self, data: list):
