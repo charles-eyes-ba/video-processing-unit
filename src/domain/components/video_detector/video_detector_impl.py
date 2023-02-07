@@ -28,7 +28,7 @@ class VideoDetectorImpl(VideoDetector):
         self._video_capture.setup_callbacks(
             on_error=self._on_video_capture_error
         )
-        logger.debug(f'VideoDetectorImpl:initialized')
+        logger.debug(f'Initialized')
 
 
     # * Video Feed callbacks
@@ -41,7 +41,7 @@ class VideoDetectorImpl(VideoDetector):
         exception : Exception
             The exception that occurred
         """
-        logger.debug('VideoDetectorImpl:error')
+        logger.debug('error')
         self.stop()
         self._on_error(exception)
         
@@ -58,7 +58,7 @@ class VideoDetectorImpl(VideoDetector):
 
     # * Methods
     def start(self):
-        logger.debug('VideoDetectorImpl:starting')
+        logger.debug('starting')
         if self._thread is not None and self._thread.is_alive():
             return
         
@@ -67,21 +67,21 @@ class VideoDetectorImpl(VideoDetector):
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
         self._thread.start()
-        logger.debug('VideoDetectorImpl:started')
+        logger.debug('started')
         
         
     def stop(self):
-        logger.debug('VideoDetectorImpl:stopping')
+        logger.debug('stopping')
         self._is_running = False
         self._video_capture.stop()
-        logger.debug('VideoDetectorImpl:stopped')
+        logger.debug('stopped')
         
         
     def pause(self):
-        logger.debug('VideoDetectorImpl:pausing')
+        logger.debug('pausing')
         self._is_running = False
         self._video_capture.pause()
-        logger.debug('VideoDetectorImpl:paused')
+        logger.debug('paused')
     
 
     # * Main loop
@@ -97,6 +97,6 @@ class VideoDetectorImpl(VideoDetector):
                 if hasNewDetections:
                     self._last_detected_objects = objects
                     call(self._on_object_detection, objects)
-                    logger.debug('VideoDetectorImpl:_on_object_detection called')
+                    logger.debug('_on_object_detection called')
 
             sleep(self._delay)

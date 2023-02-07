@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from src.common.abstract_attribute import abstract_attribute
 from src.models.video_feed import VideoFeed
 from src.domain.components.video_detector import VideoDetector
+from src.models.video_status import VideoStatus
 
 
 class TrackedVideo(ABC):
@@ -16,6 +17,12 @@ class TrackedVideo(ABC):
     def video_detector(self) -> VideoDetector or None:
         """ Video detector information if exists """
         raise NotImplementedError('video_detector() must be defined')
+    
+    
+    @abstract_attribute
+    def video_detector_status(self) -> VideoStatus:
+        """ Video detector status """
+        raise NotImplementedError('video_detector_status() must be defined')
     
     
     @abstractmethod

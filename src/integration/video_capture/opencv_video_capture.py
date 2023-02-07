@@ -15,7 +15,7 @@ class OpenCVVideoCapture(VideoCapture):
         self._is_running = False
         self._on_error = None
         self._thread = None
-        logger.debug(f'OpenCVVideoCapture:{self._url}:initialized')
+        logger.debug(f'{self._url}:initialized')
     
         
     # * Setups
@@ -39,18 +39,18 @@ class OpenCVVideoCapture(VideoCapture):
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
         self._thread.start()
-        logger.debug(f'OpenCVVideoCapture:{self._url}:started')
+        logger.debug(f'{self._url}:started')
         
         
     def stop(self):
         self._is_running = False
         self._release()
-        logger.debug(f'OpenCVVideoCapture:{self._url}:stopped')
+        logger.debug(f'{self._url}:stopped')
         
         
     def pause(self):
         self._is_running = False
-        logger.debug(f'OpenCVVideoCapture:{self._url}:paused')
+        logger.debug(f'{self._url}:paused')
         
         
     def lastest_frame(self):
@@ -77,7 +77,7 @@ class OpenCVVideoCapture(VideoCapture):
             try:
                 _, self._frame = self._cap.read()
             except Exception as exception:
-                logger.error(f'OpenCVVideoCapture:{self._url}:error')
+                logger.error(f'{self._url}:error')
                 call(self._on_error, exception)
                 break
         self._release()

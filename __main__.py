@@ -26,4 +26,5 @@ vpu.start_to_track_video(VideoFeed(
     url="http://camera_jardim"
 ))
 
+vpu.print()
 signal.pause()

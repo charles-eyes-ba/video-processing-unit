@@ -25,7 +25,7 @@ class MainUnitWebSocket:
             on_add_video_feed=self._on_add_video_feed,
             on_remove_video_feed=self._on_remove_video_feed
         )
-        logger.debug('MainUnitWebSocket:initialized')
+        logger.debug('initialized')
     
     
     # * Interfaces
@@ -36,36 +36,36 @@ class MainUnitWebSocket:
     
     # * WebSocket Deletage
     def _on_connect(self):
-        logger.debug('MainUnitWebSocket:_on_connect')
+        logger.debug('_on_connect')
     
     
     def _on_connect_error(self):
-        logger.debug(f'MainUnitWebSocket:_on_connect_error:Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
+        logger.debug(f'_on_connect_error:Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
         time.sleep(self._websocket_delay_retry)
         self._websocket.connect()
     
     
     def _on_disconnect(self):
-        logger.debug('MainUnitWebSocket:_on_disconnect')
+        logger.debug('_on_disconnect')
     
     
     def _on_request_current_video_feed_list(self):
-        logger.debug(f'MainUnitWebSocket:_on_request_current_video_feed_list:{self._main_unit.video_feed_ids}')
+        logger.debug(f'_on_request_current_video_feed_list:{self._main_unit.video_feed_ids}')
     
     
     def _on_video_feed_list_update(self, data: dict):
-        logger.debug(f'MainUnitWebSocket:_on_video_feed_list_update:{data}')
+        logger.debug(f'_on_video_feed_list_update:{data}')
     
     
     def _on_add_video_feed(self, data: dict):
         if not check_keys(dictionary=data, keys=['id', 'url']):
-            logger.error(f'MainUnitWebSocket:_on_add_video_feed:invalid data')
+            logger.error(f'_on_add_video_feed:invalid data')
             return
-        logger.debug(f'MainUnitWebSocket:_on_add_video_feed:{data}')
+        logger.debug(f'_on_add_video_feed:{data}')
     
     
     def _on_remove_video_feed(self, data):
         if not check_keys(dictionary=data, keys=['id']):
-            logger.error(f'MainUnitWebSocket:_on_remove_video_feed:invalid data')
+            logger.error(f'_on_remove_video_feed:invalid data')
             return
-        logger.debug(f'MainUnitWebSocket:_on_remove_video_feed:{data}')
+        logger.debug(f'_on_remove_video_feed:{data}')

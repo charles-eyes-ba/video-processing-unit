@@ -12,7 +12,7 @@ class DeepStackEngine(AIEngine):
         self._deepstack_config = ServerConfig(deepstack_url)
         self._detection = Detection(self._deepstack_config)
         self._enhancer = Enhance(self._deepstack_config)
-        logger.debug('DeepStackEngine:initialized')
+        logger.debug('Initialized')
         
         
     def extract_objects(self, image: ndarray) -> list[str]:
@@ -25,5 +25,5 @@ class DeepStackEngine(AIEngine):
             if obj.confidence >= self._threshold:
                 objects.append(obj.label)
                 
-        logger.debug(f'DeepStackEngine:objects found {objects}')
+        logger.debug(f'Objects found {objects}')
         return objects

@@ -20,7 +20,7 @@ class WebSocketIO(WebSocket):
         self._root_namespace = self._generate_root_namespace()
         self._socketio = socketio.Client()
         self._socketio.register_namespace(self._root_namespace)
-        logger.debug('WebSocketIO:initialized')
+        logger.debug('Initialized')
 
 
     # * Utils
@@ -62,56 +62,56 @@ class WebSocketIO(WebSocket):
     # * Interface to Handle
     def connect(self):
         self._socketio.connect(self._server_url)
-        logger.debug('WebSocketIO:Connected to websocket')
+        logger.debug('Connected to websocket')
         
 
     # * Send Methods
     def send_current_video_feed_list(self, video_feed_ids: list[str]):
         try:
             self._root_namespace.emit(RootNamespace.VIDEO_FEED_IDS, { 'ids': video_feed_ids })
-            logger.error(f'WebSocketIO:Detect message with this {video_feed_ids} was sent')
+            logger.error(f'Detect message with this {video_feed_ids} was sent')
         except:
-            logger.error('WebSocketIO:Error sending detections')
+            logger.error('Error sending detections')
     
     
     def send_detections(self, id, objects):
         try:
             self._root_namespace.emit(RootNamespace.DETECT, { 'id': id, 'objects': objects })
-            logger.error(f'WebSocketIO:Detect message about {id} was sent')
+            logger.error(f'Detect message about {id} was sent')
         except:
-            logger.error('WebSocketIO:Error sending detections')
+            logger.error('Error sending detections')
     
     
     def send_error(self, id, error):
         try:
             self._root_namespace.emit(RootNamespace.ERROR, { 'id': id, 'error': error.message })
-            logger.error(f'WebSocketIO:Error message about {id} was sent')
+            logger.error(f'Error message about {id} was sent')
         except:
-            logger.error('WebSocketIO:Error sending error')
+            logger.error('Error sending error')
     
 
     # * Receive Events
     def _on_connect(self):
         """ On connect event """
-        logger.debug('WebSocketIO:Connected event')
+        logger.debug('Connected event')
         call(self._on_connect_callback)
         
         
     def _on_connect_error(self):
         """ On connect error event """
-        logger.debug('WebSocketIO:Connect error event')
+        logger.debug('Connect error event')
         call(self._on_connect_error_callback)
 
 
     def _on_disconnect(self):
         """ On disconnect event """
-        logger.debug('WebSocketIO:Disconnected event')
+        logger.debug('Disconnected event')
         call(self._on_disconnect_callback)
         
         
     def _on_request_current_video_feed_list(self):
         """ On request current video feed list event """
-        logger.debug('WebSocketIO:Current video feed list requested')
+        logger.debug('Current video feed list requested')
         call(self._on_request_current_video_feed_list_callback)
         
     
@@ -124,7 +124,7 @@ class WebSocketIO(WebSocket):
         data : dict
             All video feeds configs
         """
-        logger.debug('WebSocketIO:New feed list event')
+        logger.debug('New feed list event')
         call(self._on_video_feed_list_update_callback, data)
             
             
@@ -137,7 +137,7 @@ class WebSocketIO(WebSocket):
         data : dict
             The video feed to add
         """
-        logger.debug('WebSocketIO:Add video feed event')
+        logger.debug('Add video feed event')
         call(self._on_add_video_feed_callback, data)
             
             
@@ -150,5 +150,5 @@ class WebSocketIO(WebSocket):
         data : dict
             The id of the video feed to remove
         """
-        logger.debug('WebSocketIO:Remove video feed event')
+        logger.debug('Remove video feed event')
         call(self._on_remove_video_feed_callback, data)
