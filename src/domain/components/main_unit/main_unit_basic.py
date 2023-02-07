@@ -44,8 +44,8 @@ class MainUnitBasic:
 
         
     def remove_video_feed(self, video_feed_id: str):
-        for video_detector in self._video_detector_list:
+        for index, video_detector in enumerate(self._video_detector_list):
             if video_detector.id == video_feed_id:
-                del video_detector
+                del self._video_detector_list[index]
                 break
         logger.debug(f'MainUnitImpl:removed {video_feed_id}')

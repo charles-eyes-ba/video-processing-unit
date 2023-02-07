@@ -49,7 +49,7 @@ class MainUnitWebSocket:
     
     
     def _on_request_current_video_feed_list(self):
-        logger.debug('MainUnitWebSocket:_on_request_current_video_feed_list')
+        logger.debug(f'MainUnitWebSocket:_on_request_current_video_feed_list:{self._main_unit.video_feed_ids}')
     
     
     def _on_video_feed_list_update(self, data: dict):
@@ -58,7 +58,14 @@ class MainUnitWebSocket:
     
     def _on_add_video_feed(self, data: dict):
         logger.debug(f'MainUnitWebSocket:_on_add_video_feed:{data}')
+        if data.get('id') is None or data.get('url') is None:
+            return
+        video_feed = VideoFeed(data['id'], data['url'])
+        self._main_unit.add_video_feed(video_feed)
     
     
     def _on_remove_video_feed(self, data):
         logger.debug(f'MainUnitWebSocket:_on_remove_video_feed:{data}')
+        if data.get('id') is None:
+            return
+        self._main_unit.remove_video_feed(data['id'])
