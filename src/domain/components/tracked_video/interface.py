@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from src.common.abstract_attribute import abstract_attribute
 from src.models.video_feed import VideoFeed
 from src.domain.components.video_detector import VideoDetector
-from src.dependency_injector import DependencyInjector
 
 
 class TrackedVideo(ABC):
@@ -20,7 +19,7 @@ class TrackedVideo(ABC):
     
     
     @abstractmethod
-    def __init__(self, dependencies: DependencyInjector, id: str, url: str):
+    def __init__(self, id: str, url: str):
         """
         Initializer
         

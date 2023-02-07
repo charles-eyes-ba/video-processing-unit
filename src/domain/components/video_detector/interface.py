@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
 from src.domain.dependencies.video_capture import VideoCapture
 from src.domain.dependencies.ai_engine import AIEngine
-from src.dependency_injector import DependencyInjector
+
 
 class VideoDetector(ABC):
     """ Class that make detections in a image. """
     
     @abstractmethod
-    def __init__(self, dependencies: DependencyInjector, video_capture: VideoCapture, ai_engine: AIEngine, delay: int):
+    def __init__(self, video_capture: VideoCapture, ai_engine: AIEngine, delay: int):
         """
         Initializer
         

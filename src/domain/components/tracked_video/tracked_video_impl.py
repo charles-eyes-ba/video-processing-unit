@@ -16,19 +16,15 @@ class TrackedVideoImpl(TrackedVideo):
         return self._video_detector
     
     
-    def __init__(self, dependencies: DependencyInjector, id: str, url: str):
-        self._dependencies = dependencies
+    def __init__(self, id: str, url: str):
         self._video_feed = VideoFeed(id, url)
         self._video_detector = None
         
         
-    def start_detector(self, on_object_detection, on_error):
-        ai_engine = self._dependencies.ai_engine()
-        video_capture = self._dependencies.video_capture(self._video_feed.url)
-        self._video_detector = self._dependencies.video_detector(video_capture, ai_engine)
-        
+    def add_detector(self, video_detector: VideoDetector, on_object_detection, on_error):
+        self._video_detector = video_detector
         self._video_detector.setup_callbacks(
             on_object_detection = lambda objects: on_object_detection(self._video_feed.id, objects),
-            on_error = lambda error: on_object_detection(self._video_feed.id, error)
+            on_error = lambda error: on_error(self._video_feed.id, error)
         )
         self._video_detector.start()
