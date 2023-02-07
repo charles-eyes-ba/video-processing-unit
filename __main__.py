@@ -23,7 +23,7 @@ vpu = MainUnit(dependencies)
 
 vpu.start_to_track_video(VideoFeed(
     id="camera_jardim",
-    url=CAM_JARDIM_URL
+    url="http://camera_jardim"
 ))
 
 signal.pause()

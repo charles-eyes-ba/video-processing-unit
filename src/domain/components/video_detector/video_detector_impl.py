@@ -41,6 +41,7 @@ class VideoDetectorImpl(VideoDetector):
         exception : Exception
             The exception that occurred
         """
+        logger.debug('VideoDetectorImpl:error')
         self.stop()
         self._on_error(exception)
         
@@ -57,6 +58,7 @@ class VideoDetectorImpl(VideoDetector):
 
     # * Methods
     def start(self):
+        logger.debug('VideoDetectorImpl:starting')
         if self._thread is not None and self._thread.is_alive():
             return
         
@@ -69,12 +71,14 @@ class VideoDetectorImpl(VideoDetector):
         
         
     def stop(self):
+        logger.debug('VideoDetectorImpl:stopping')
         self._is_running = False
         self._video_capture.stop()
         logger.debug('VideoDetectorImpl:stopped')
         
         
     def pause(self):
+        logger.debug('VideoDetectorImpl:pausing')
         self._is_running = False
         self._video_capture.pause()
         logger.debug('VideoDetectorImpl:paused')

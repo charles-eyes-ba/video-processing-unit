@@ -31,7 +31,9 @@ class OpenCVVideoCapture(VideoCapture):
         
         self._cap = cv2.VideoCapture(self._url)
         if self._cap is None or not self._cap.isOpened():
-            raise VideoCaptureCouldNotConnect(f'Could not connect to video source: {self._url}')
+            exception = VideoCaptureCouldNotConnect(f'Could not connect to video source: {self._url}')
+            call(self._on_error, exception)
+            return
         
         self._is_running = True
         self._thread = Thread(target=self._loop)
@@ -59,14 +61,6 @@ class OpenCVVideoCapture(VideoCapture):
     def _release(self):
         self._cap.release()
         self._is_running = False
-        
-        
-    def _read(self):
-        try:
-            _, frame = self._cap.read()
-        except:
-            raise VideoCaptureConnectionLost(f'Connection to video source lost: {self._url}')
-        return frame
     
         
     # * Main loop
@@ -81,9 +75,9 @@ class OpenCVVideoCapture(VideoCapture):
         """
         while self._is_running:
             try:
-                self._frame = self._read()
-            except Exception as e:
-                logger.debug(f'OpenCVVideoCapture:{self._url}:error')
-                call(self._on_error, e)
+                _, self._frame = self._cap.read()
+            except Exception as exception:
+                logger.error(f'OpenCVVideoCapture:{self._url}:error')
+                call(self._on_error, exception)
                 break
         self._release()
