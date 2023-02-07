@@ -40,10 +40,10 @@ class RootNamespace(ClientNamespace):
             Callback for when the connection fails
         on_disconnect : function
             Callback for when the connection is closed
-        on_reconnect : function
-            Callback for when the connection is re-established
-        _on_video_feed_list_update_callback : function
-            Callback for the request_unit_configuration event
+        on_request_current_video_feed_list : function
+            Callback to send back the video feed list
+        on_video_feed_list_update : function
+            Callback for the video_feed_list_update event
         on_add_video_feed : function
             Callback for the add_video_feed event
         on_remove_video_feed : function

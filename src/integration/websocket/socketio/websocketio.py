@@ -70,7 +70,7 @@ class WebSocketIO(WebSocket):
     def send_current_video_feed_list(self, video_feed_ids: list[str]):
         try:
             self._root_namespace.emit(RootNamespace.VIDEO_FEED_IDS, { 'ids': video_feed_ids })
-            logger.error(f'WebSocketIO:Detect message about {id} was sent')
+            logger.error(f'WebSocketIO:Detect message with this {video_feed_ids} was sent')
         except:
             logger.error('WebSocketIO:Error sending detections')
     
@@ -112,7 +112,7 @@ class WebSocketIO(WebSocket):
         
     def _on_request_current_video_feed_list(self):
         """ On request current video feed list event """
-        logger.debug('WebSocketIO:Disconnected event')
+        logger.debug('WebSocketIO:Current video feed list requested')
         call(self._on_request_current_video_feed_list_callback)
         
     
