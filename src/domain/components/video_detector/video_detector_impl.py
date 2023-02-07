@@ -29,7 +29,9 @@ class VideoDetectorImpl(VideoDetector):
         self._on_object_detection = None
         self._on_error = None
         
-        self._video_capture.setup_callbacks(on_error=self._on_video_capture_error)
+        self._video_capture.setup_callbacks(
+            on_error=self._on_video_capture_error
+        )
         logger.debug(f'VideoDetectorImpl:{id}:initialized')
 
 
