@@ -1,5 +1,5 @@
 import cv2
-from threading import Thread
+from threading import Thread, Event
 from copy import deepcopy
 from src.common.logger import logger
 from src.domain.dependencies.video_capture import VideoCapture
@@ -18,7 +18,7 @@ class OpenCVVideoCapture(VideoCapture):
         self._url = url
         self._cap = None
         self._frame = None
-        self._is_running = False
+        self._event = None
         self._on_error = None
         self._thread = None
         logger.debug(f'{self._url}:initialized')
@@ -31,8 +31,8 @@ class OpenCVVideoCapture(VideoCapture):
         
     # * Methods  
     def start(self):
-        if self._thread is not None and self._thread.is_alive():
-            self._is_running = True
+        if self._event is not None:
+            self._event.set()
             return
         
         self._cap = cv2.VideoCapture(self._url)
@@ -41,7 +41,7 @@ class OpenCVVideoCapture(VideoCapture):
             call(self._on_error, exception)
             return
         
-        self._is_running = True
+        self._event = Event()
         self._thread = Thread(target=self._loop)
         self._thread.name = f' Thread-Video Capture {self._url}'
         self._thread.daemon = True
@@ -50,14 +50,9 @@ class OpenCVVideoCapture(VideoCapture):
         
         
     def stop(self):
-        self._is_running = False
+        self._event.set()
         self._release()
         logger.debug(f'{self._url}:stopped')
-        
-        
-    def pause(self):
-        self._is_running = False
-        logger.debug(f'{self._url}:paused')
         
         
     def lastest_frame(self):
@@ -80,7 +75,9 @@ class OpenCVVideoCapture(VideoCapture):
         VideoFeedConnectionLost
             If the video feed connection was lost. Message Format: Lost connection to {feed_url}
         """
-        while self._is_running:
+        while True:
+            if self._event.is_set():
+                break
             try:
                 _, self._frame = self._cap.read()
             except Exception as exception:

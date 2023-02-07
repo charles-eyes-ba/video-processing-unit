@@ -48,9 +48,3 @@ class VideoDetector(ABC):
     def stop(self):
         """ Stop the detector """
         raise NotImplementedError('stop() not implemented')
-    
-    
-    @abstractmethod
-    def pause(self):
-        """ Pause the detector """
-        raise NotImplementedError('pause() not implemented')

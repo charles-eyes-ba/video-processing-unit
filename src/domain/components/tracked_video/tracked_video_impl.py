@@ -29,10 +29,6 @@ class TrackedVideoImpl(TrackedVideo):
         logger.debug('Initialized')
         
         
-    def __del__(self):
-        logger.debug('del')
-        
-        
     # * Interfaces
     def stop(self):
         self._video_detector.stop()

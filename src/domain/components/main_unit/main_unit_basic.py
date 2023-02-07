@@ -68,6 +68,7 @@ class MainUnitBasic:
         logger.debug(f'removing {video_feed_id}')
         for index, tracked_video in enumerate(self._tracked_videos):
             if tracked_video.video_feed.id == video_feed_id:
+                self._tracked_videos[index].stop()
                 del self._tracked_videos[index]
                 break
         logger.debug(f'removed {video_feed_id}')

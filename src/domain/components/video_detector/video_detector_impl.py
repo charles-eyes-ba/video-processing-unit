@@ -1,4 +1,4 @@
-from threading import Thread
+from threading import Thread, Event
 from time import sleep
 from src.domain.dependencies.ai_engine import AIEngine
 from src.domain.dependencies.video_capture import VideoCapture
@@ -19,7 +19,7 @@ class VideoDetectorImpl(VideoDetector):
         self._delay = delay
         
         self._last_detected_objects = []
-        self._is_running = False
+        self._event = None
         self._thread = None
         
         self._on_object_detection = None
@@ -58,12 +58,12 @@ class VideoDetectorImpl(VideoDetector):
 
     # * Methods
     def start(self):
-        logger.debug('starting')
-        if self._thread is not None and self._thread.is_alive():
+        if self._event is not None:
+            self._event.set()
             return
         
-        self._video_capture.start()
-        self._is_running = True
+        # self._video_capture.start()
+        self._event = Event()
         self._thread = Thread(target=self._video_detector_loop)
         self._thread.name = f' Thread-Video Detector {self._video_capture.url}'
         self._thread.daemon = True
@@ -72,23 +72,18 @@ class VideoDetectorImpl(VideoDetector):
         
         
     def stop(self):
-        logger.debug('stopping')
-        self._is_running = False
-        self._video_capture.stop()
+        # self._video_capture.stop()
+        self._event.set()
         logger.debug('stopped')
-        
-        
-    def pause(self):
-        logger.debug('pausing')
-        self._is_running = False
-        self._video_capture.pause()
-        logger.debug('paused')
     
 
     # * Main loop
     def _video_detector_loop(self):
         """ Main loop of the video detector """
-        while self._is_running:
+        while True:
+            if self._event.is_set():
+                break
+            
             frame = self._video_capture.lastest_frame()
 
             if frame is not None:
