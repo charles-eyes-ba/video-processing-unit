@@ -1,4 +1,5 @@
 from src.models.video_feed import VideoFeed
+from src.models.video_config import VideoConfig
 from src.models.video_status import VideoStatus
 from src.domain.components.video_detector import VideoDetector
 from src.common.logger import logger
@@ -30,11 +31,20 @@ class TrackedVideoImpl(TrackedVideo):
         
         
     # * Interfaces
+    def set_config(self, config: VideoConfig):
+        if config.run_detector:
+            self._video_detector_status = VideoStatus.RUNNING
+            self._video_detector.start()
+        else:
+            self._video_detector_status = VideoStatus.OFF
+            self._video_detector.stop()
+        
+    
     def stop(self):
         self._video_detector.stop()
         
         
-    # * Add Workers
+    # * Detector
     def add_detector(self, video_detector: VideoDetector, on_object_detection, on_error):
         def _object_detection(objects: list[str]):
             on_object_detection(self._video_feed.id, objects)
@@ -49,6 +59,3 @@ class TrackedVideoImpl(TrackedVideo):
             _object_detection,
             _error
         )
-        
-        self._video_detector_status = VideoStatus.RUNNING
-        self._video_detector.start()

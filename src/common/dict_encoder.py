@@ -46,7 +46,7 @@ class DictEncoder:
                 obj_dict[key] = DictEncoder._encode_list(value)
             # If the attribute is an enum
             elif isinstance(value, Enum):
-                obj_dict[key] = value.name
+                obj_dict[key] = value.value
             # If the attribute has __dict__
             elif hasattr(value, '__dict__'):
                 obj_dict[key] = DictEncoder.encode(value)

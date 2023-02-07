@@ -120,7 +120,10 @@ $ python .
 [
   {
     "id": "camera_1",
-    "url": "http://camera.1"
+    "url": "http://camera.1",
+    "config": {
+      "run_detection": true
+    }
   },
   {
     "id": "camera_2",

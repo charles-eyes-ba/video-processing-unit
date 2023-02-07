@@ -1,5 +1,6 @@
 from src.models.video_feed import VideoFeed
 from src.models.video_info import VideoInfo
+from src.models.video_config import VideoConfig
 from src.dependency_injector import DependencyInjector
 from src.domain.components.tracked_video import TrackedVideo
 from src.common.logger import logger
@@ -39,14 +40,14 @@ class MainUnitBasic:
     
     
     # * Handle Tracked Videos
-    def update_tracked_videos(self, video_feed_list: list[VideoFeed]):
+    def update_tracked_videos(self, video_feed_list: list[(VideoFeed, VideoConfig)]):
         logger.debug(f'removing {len(self._tracked_videos)} and adding {len(video_feed_list)}')
         self._tracked_videos = []
-        for video_feed in video_feed_list:
-            self.start_to_track_video(video_feed)
+        for video_feed, video_config in video_feed_list:
+            self.start_to_track_video(video_feed, video_config)
 
 
-    def start_to_track_video(self, video_feed: VideoFeed):
+    def start_to_track_video(self, video_feed: VideoFeed, video_config: VideoConfig):
         logger.debug(f'adding {video_feed.id}')
         if video_feed.id in map(lambda item: item.video_feed.id, self._tracked_videos):
             logger.debug(f'removing old {video_feed.id}')
@@ -60,6 +61,7 @@ class MainUnitBasic:
             self._tracked_video_object_detection,
             self._tracked_video_error
         )
+        tracked_video.set_config(video_config)
         self._tracked_videos.append(tracked_video)
         logger.debug(f'added {video_feed.id}')
         
@@ -72,3 +74,10 @@ class MainUnitBasic:
                 del self._tracked_videos[index]
                 break
         logger.debug(f'removed {video_feed_id}')
+        
+        
+    def update_tracked_video_config(self, video_feed_id: str, video_config: VideoConfig):
+        for index, tracked_video in enumerate(self._tracked_videos):
+            if tracked_video.video_feed.id == video_feed_id:
+                self._tracked_videos[index].set_config(video_config)
+                break

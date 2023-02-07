@@ -3,6 +3,7 @@ import signal
 from src.dependency_injector import DependencyInjector
 from src.domain.components.main_unit import MainUnit
 from src.models.video_feed import VideoFeed
+from src.models.video_config import VideoConfig
 from src.common.dict_encoder import DictEncoder
 from src.common.logger import logger
 from src.common.check_keys import check_keys
@@ -59,18 +60,23 @@ class MainUnitWebSocket:
     def _on_video_feed_list_update(self, data: list):
         video_feed_list = []
         for dictionary in data:
-            if not check_keys(dictionary, keys=['id', 'url']):
+            if not check_keys(dictionary, keys=['id', 'url']) or not check_keys(dictionary.get('config'), keys=['run_detector']):
                 return
-            video_feed_list.append(VideoFeed(dictionary['id'], dictionary['url']))
+            
+            video_feed = VideoFeed(id=data['id'], url=data['url'])
+            video_config = VideoConfig(run_detector=data['config']['run_detector'])
+            video_feed_list.append((video_feed, video_config))
         self._main_unit.update_tracked_videos(video_feed_list)
     
     
     def _on_add_video_feed(self, data: dict):
-        if not check_keys(dictionary=data, keys=['id', 'url']):
+        if not check_keys(data, keys=['id', 'url']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
             logger.error(f'invalid data')
             return
-        video_feed = VideoFeed(data['id'], data['url'])
-        self._main_unit.start_to_track_video(video_feed)
+        
+        video_feed = VideoFeed(id=data['id'], url=data['url'])
+        video_config = VideoConfig(run_detector=data['config']['run_detector'])
+        self._main_unit.start_to_track_video(video_feed, video_config)
     
     
     def _on_remove_video_feed(self, data):
@@ -81,4 +87,8 @@ class MainUnitWebSocket:
         
         
     def _on_update_video_feed_config(self, data):
-        logger.debug(data)
+        if not check_keys(dictionary=data, keys=['id', 'config']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
+            logger.error(f'invalid data')
+            return
+        video_config = VideoConfig(run_detector=data['config']['run_detector'])
+        self._main_unit.update_tracked_video_config(data['id'], video_config)
