@@ -12,18 +12,18 @@ class MainUnitBasic:
         logger.debug('initialized')
     
     
-    def print(self):
-        for tracked_video in self._tracked_videos:
-            logger.debug(f'{tracked_video.video_feed.id} | {tracked_video.video_detector_status}')
+    def setup_callbacks(self, on_object_detection, on_error):
+        self._on_object_detection = on_object_detection
+        self._on_error = on_error
     
     
     # * Callbacks Handlers
     def _tracked_video_object_detection(self, id: str, objects: list[str]):
-        logger.debug(f'detection:{id}:{objects}')
+        self._on_object_detection(id, objects)
         
         
     def _tracked_video_error(self, id: str, error: Exception):
-        logger.error(f'error:{id}:{error}')
+        self._on_error(id, error)
     
     
     # * Handle Tracked Videos
