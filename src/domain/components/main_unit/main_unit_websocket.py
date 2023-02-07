@@ -51,7 +51,8 @@ class MainUnitWebSocket:
     
     
     def _on_request_current_video_feed_list(self):
-        logger.debug(DictEncoder.encode(self._main_unit.videos_infos))
+        videos = DictEncoder.encode(self._main_unit.videos_infos)
+        self._websocket.send_current_videos_infos(videos)
     
     
     def _on_video_feed_list_update(self, data: list):
