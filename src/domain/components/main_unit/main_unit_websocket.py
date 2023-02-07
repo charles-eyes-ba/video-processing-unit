@@ -36,7 +36,7 @@ class MainUnitWebSocket:
     
     # * WebSocket Deletage
     def _on_connect(self):
-        logger.debug('Connected')
+        pass
     
     
     def _on_connect_error(self):
@@ -46,15 +46,20 @@ class MainUnitWebSocket:
     
     
     def _on_disconnect(self):
-        logger.debug('')
+        self._websocket.connect()
     
     
     def _on_request_current_video_feed_list(self):
-        logger.debug(f'')
+        logger.debug(self._main_unit.videos)
     
     
-    def _on_video_feed_list_update(self, data: dict):
-        logger.debug(f'{data}')
+    def _on_video_feed_list_update(self, data: list):
+        video_feed_list = []
+        for dictionary in data:
+            if not check_keys(dictionary, keys=['id', 'url']):
+                return
+            video_feed_list.append(VideoFeed(dictionary['id'], dictionary['url']))
+        self._main_unit.update_tracked_videos(video_feed_list)
     
     
     def _on_add_video_feed(self, data: dict):
@@ -69,4 +74,4 @@ class MainUnitWebSocket:
         if not check_keys(dictionary=data, keys=['id']):
             logger.error(f'invalid data')
             return
-        logger.debug(f'{data}')
+        self._main_unit.remove_tracked_video(data['id'])

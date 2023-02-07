@@ -7,6 +7,17 @@ from src.common.call import call
 
 class MainUnitBasic:
     
+    @property
+    def videos(self):
+        response = []
+        for tracked_video in self._tracked_videos:
+            response.append({
+                "id": tracked_video.video_feed.id,
+                "video_detector_status": tracked_video.video_detector_status.name
+            })
+        return response
+        
+    
     def __init__(self, dependencies: DependencyInjector):
         self._dependencies = dependencies
         self._tracked_videos: list[TrackedVideo] = []

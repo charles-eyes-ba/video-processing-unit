@@ -42,4 +42,6 @@ class TrackedVideoImpl(TrackedVideo):
             _object_detection,
             _error
         )
+        
+        self._video_detector_status = VideoStatus.RUNNING
         self._video_detector.start()
