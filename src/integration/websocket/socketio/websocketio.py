@@ -1,14 +1,13 @@
 import socketio
-from time import sleep
-
 from src.common.logger import logger
 from src.common.call import call
 from src.domain.dependencies.websocket import WebSocket
 from .namespaces.root_namespace import RootNamespace
 
+
 class WebSocketIO(WebSocket):
     
-    def __init__(self, server_url):
+    def __init__(self, server_url : str):
         self._server_url = server_url
         self._on_connect_callback = None
         self._on_connect_error_callback = None

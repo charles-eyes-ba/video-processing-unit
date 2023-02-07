@@ -1,8 +1,21 @@
 from abc import ABC, abstractmethod
-from src.models.video_feed import VideoFeed
+
 
 class WebSocket(ABC):
     """ Class that handles the websocket connection """
+    
+    @abstractmethod
+    def __init__(self, server_url : str):
+        """
+        Initializer
+        
+        Parameters
+        ----------
+        server_url : str
+            URL to try the connection
+        """
+        raise NotImplementedError('__init__() must be implemented')
+
 
     @abstractmethod
     def setup_callbacks(
