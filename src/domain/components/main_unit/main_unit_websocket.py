@@ -24,7 +24,8 @@ class MainUnitWebSocket:
             on_request_current_video_feed_list=self._on_request_current_video_feed_list,
             on_video_feed_list_update=self._on_video_feed_list_update,
             on_add_video_feed=self._on_add_video_feed,
-            on_remove_video_feed=self._on_remove_video_feed
+            on_remove_video_feed=self._on_remove_video_feed,
+            on_update_video_feed_config=self._on_update_video_feed_config
         )
         logger.debug('Initialized')
     
@@ -77,3 +78,7 @@ class MainUnitWebSocket:
             logger.error(f'invalid data')
             return
         self._main_unit.remove_tracked_video(data['id'])
+        
+        
+    def _on_update_video_feed_config(self, data):
+        logger.debug(data)

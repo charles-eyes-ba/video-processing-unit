@@ -26,7 +26,8 @@ class WebSocket(ABC):
         on_request_current_video_feed_list=None,
         on_video_feed_list_update=None, 
         on_add_video_feed=None, 
-        on_remove_video_feed=None
+        on_remove_video_feed=None,
+        on_update_video_feed_config=None
     ):
         """ 
         Setup the callbacks 
@@ -47,6 +48,8 @@ class WebSocket(ABC):
             Function that is called when a new video feed is added
         on_remove_video_feed : function
             Function that is called when a video feed is removed
+        on_update_video_feed_config : function
+            Function that is called when a video feed receives a new config
         """
         raise NotImplementedError('setup_callbacks() must be implemented')
     

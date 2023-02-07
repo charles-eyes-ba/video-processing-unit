@@ -16,6 +16,7 @@ class WebSocketIO(WebSocket):
         self._on_video_feed_list_update_callback = None
         self._on_add_video_feed_callback = None
         self._on_remove_video_feed_callback = None
+        self._on_update_video_feed_config_callback = None
         
         self._root_namespace = self._generate_root_namespace()
         self._socketio = socketio.Client()
@@ -34,7 +35,8 @@ class WebSocketIO(WebSocket):
             on_request_current_video_feed_list=self._on_request_current_video_feed_list,
             on_video_feed_list_update=self._on_video_feed_list_update,
             on_add_video_feed=self._on_add_video_feed,
-            on_remove_video_feed=self._on_remove_video_feed
+            on_remove_video_feed=self._on_remove_video_feed,
+            on_update_video_feed_config=self._on_update_video_feed_config
         )
         return root_namespace
 
@@ -48,7 +50,8 @@ class WebSocketIO(WebSocket):
         on_request_current_video_feed_list=None,
         on_video_feed_list_update=None, 
         on_add_video_feed=None, 
-        on_remove_video_feed=None
+        on_remove_video_feed=None,
+        on_update_video_feed_config=None
     ):
         self._on_connect_callback = on_connect
         self._on_connect_error_callback = on_connect_error
@@ -57,6 +60,7 @@ class WebSocketIO(WebSocket):
         self._on_video_feed_list_update_callback = on_video_feed_list_update
         self._on_add_video_feed_callback = on_add_video_feed
         self._on_remove_video_feed_callback = on_remove_video_feed
+        self._on_update_video_feed_config_callback = on_update_video_feed_config
       
       
     # * Interface to Handle
@@ -152,3 +156,16 @@ class WebSocketIO(WebSocket):
         """
         logger.debug('Remove video feed event')
         call(self._on_remove_video_feed_callback, data)
+        
+        
+    def _on_update_video_feed_config(self, data):
+        """ 
+        On update video config from the server
+        
+        Parameters
+        ----------
+        data : dict
+            The new config for the tracked video
+        """
+        logger.debug('Video config update')
+        call(self._on_update_video_feed_config_callback, data)
