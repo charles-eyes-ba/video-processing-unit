@@ -19,24 +19,20 @@ class TrackedVideo(ABC):
     
     
     @abstractmethod
-    def __init__(self, id: str, url: str):
+    def __init__(self, video_feed: VideoFeed):
         """
         Initializer
         
         Paramters
         ---------
-        dependencies: DependencyInjector
-            Dependencies to use if necessary
-        id: str
-            ID for the video
-        url: str
-            URL to retrive the video
+        video_feed: VideoFeed
+            The video feed to track
         """
         raise NotImplementedError('__init__() must be defined')
         
     
     @abstractmethod
-    def start_detector(self, on_object_detection, on_error):
+    def add_detector(self, video_detector: VideoDetector, on_object_detection, on_error):
         """
         Initialize and start detection in the video
         

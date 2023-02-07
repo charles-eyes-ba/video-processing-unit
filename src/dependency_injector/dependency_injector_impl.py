@@ -1,5 +1,6 @@
 from .interface import DependencyInjector
 from src.common.environment import DEEPSTACK_URL
+from src.models.video_feed import VideoFeed
 from src.domain.dependencies.ai_engine import AIEngine
 from src.integration.ai_engine.deepstack_engine import DeepStackEngine
 from src.domain.dependencies.video_capture import VideoCapture
@@ -32,6 +33,6 @@ class DependencyInjectorImpl(DependencyInjector):
     
     
     # * Tracked Video
-    def tracked_video(self, id: str, url: str) -> TrackedVideo:
-        return TrackedVideoImpl(self, id, url)
+    def tracked_video(self, video_feed: VideoFeed) -> TrackedVideo:
+        return TrackedVideoImpl(self, video_feed)
         

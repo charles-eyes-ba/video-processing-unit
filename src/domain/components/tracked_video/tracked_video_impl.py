@@ -16,8 +16,8 @@ class TrackedVideoImpl(TrackedVideo):
         return self._video_detector
     
     
-    def __init__(self, id: str, url: str):
-        self._video_feed = VideoFeed(id, url)
+    def __init__(self, video_feed: VideoFeed):
+        self._video_feed = video_feed
         self._video_detector = None
         
         

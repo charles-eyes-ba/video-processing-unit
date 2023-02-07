@@ -12,23 +12,28 @@ class MainUnitBasic:
         logger.debug('MainUnitImpl:initialized')
     
     
+    # * Handle Tracked Videos
     def update_tracked_videos(self, video_feed_list: list[VideoFeed]):
         logger.debug(f'MainUnitImpl:removing {len(self._tracked_videos)} and adding {len(video_feed_list)}')
         self._tracked_videos = []
         for video_feed in video_feed_list:
-            self.start_video_track(video_feed)
+            self.start_to_track_video(video_feed)
 
 
-    def start_video_track(self, video_feed: VideoFeed):
-        tracked_video = self._dependencies.tracked_video(video_feed.id, video_feed.url)
-        self._tracked_videos.append(tracked_video)
-        logger.debug(f'MainUnitImpl:added {video_feed.id}')
+    def start_to_track_video(self, video_feed: VideoFeed):
+        ai_engine = self._dependencies.ai_engine()
+        video_capture = self._dependencies.video_capture(video_feed.url)
+        video_detector = self._dependencies.video_detector(video_capture, ai_engine)
         
-        tracked_video.start_detector(
+        tracked_video = self._dependencies.tracked_video(video_feed)
+        tracked_video.add_detector(video_detector,
             on_object_detection = lambda id, objects: logger.debug(f'MainUnitImpl:detection:{id}:{objects}'),
             on_error = lambda id, objects: logger.debug(f'MainUnitImpl:error:{id}:{objects}')
         )
-
+        
+        self._tracked_videos.append(tracked_video)
+        logger.debug(f'MainUnitImpl:added {video_feed.id}')
+        
         
     def remove_tracked_video(self, video_feed_id: str):
         for index, tracked_video in enumerate(self._tracked_videos):

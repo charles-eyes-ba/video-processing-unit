@@ -3,6 +3,7 @@ from src.domain.dependencies.ai_engine import AIEngine
 from src.domain.dependencies.video_capture import VideoCapture
 from src.domain.components.video_detector import VideoDetector
 from src.domain.components.tracked_video import TrackedVideo
+from src.models.video_feed import VideoFeed
 
 
 class DependencyInjector(ABC):
@@ -45,7 +46,7 @@ class DependencyInjector(ABC):
     
     
     # * Tracked Video
-    def tracked_video(self, id: str, url: str) -> TrackedVideo:
+    def tracked_video(self, video_feed: VideoFeed) -> TrackedVideo:
         """ 
         Return an instance of VideoDetector 
         
