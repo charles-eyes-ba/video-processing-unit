@@ -1,6 +1,5 @@
 from src.models.video_feed import VideoFeed
 from src.domain.components.video_detector import VideoDetector
-from src.dependency_injector import DependencyInjector
 from .interface import TrackedVideo
 
 
