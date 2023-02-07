@@ -28,7 +28,7 @@ class VideoDetectorImpl(VideoDetector):
         self._video_capture.setup_callbacks(
             on_error=self._on_video_capture_error
         )
-        logger.debug(f'VideoDetectorImpl:{id}:initialized')
+        logger.debug(f'VideoDetectorImpl:initialized')
 
 
     # * Video Feed callbacks
@@ -92,7 +92,7 @@ class VideoDetectorImpl(VideoDetector):
                 hasNewDetections = self._last_detected_objects != objects
                 if hasNewDetections:
                     self._last_detected_objects = objects
-                    call(self._on_object_detection, self.id, objects)
+                    call(self._on_object_detection, objects)
                     logger.debug('VideoDetectorImpl:_on_object_detection called')
 
             sleep(self._delay)

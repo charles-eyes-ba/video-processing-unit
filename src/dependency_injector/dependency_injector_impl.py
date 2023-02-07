@@ -29,10 +29,10 @@ class DependencyInjectorImpl(DependencyInjector):
     
     # * Video Detector
     def video_detector(self, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
-        return VideoDetectorImpl(self, video_capture, ai_engine, delay)
+        return VideoDetectorImpl(video_capture, ai_engine, delay)
     
     
     # * Tracked Video
     def tracked_video(self, video_feed: VideoFeed) -> TrackedVideo:
-        return TrackedVideoImpl(self, video_feed)
+        return TrackedVideoImpl(video_feed)
         
