@@ -35,4 +35,3 @@ class DependencyInjectorImpl(DependencyInjector):
     # * Tracked Video
     def tracked_video(self, video_feed: VideoFeed) -> TrackedVideo:
         return TrackedVideoImpl(video_feed)
-        
