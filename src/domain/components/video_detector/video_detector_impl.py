@@ -3,6 +3,7 @@ from time import sleep
 
 from src.domain.dependencies.ai_engine import AIEngine
 from src.domain.dependencies.video_capture import VideoCapture
+from src.dependency_injector import DependencyInjector
 from src.common.call import call
 
 from .interface import VideoDetector
@@ -12,12 +13,11 @@ from src.common.logger import logger
 class VideoDetectorImpl(VideoDetector):
     def __init__(
         self, 
-        id: str, 
+        dependencies: DependencyInjector, 
         video_capture: VideoCapture, 
         ai_engine: AIEngine, 
         delay: int = 5
     ):
-        self.id = id
         self._video_capture = video_capture
         self._ai_engine = ai_engine
         self._delay = delay
@@ -44,7 +44,7 @@ class VideoDetectorImpl(VideoDetector):
             The exception that occurred
         """
         self.stop()
-        self._on_error(self.id, exception)
+        self._on_error(exception)
         
         
     # * Setups
@@ -67,19 +67,19 @@ class VideoDetectorImpl(VideoDetector):
         self._thread = Thread(target=self._loop)
         self._thread.daemon = True
         self._thread.start()
-        logger.debug(f'VideoDetectorImpl:{self.id}:started')
+        logger.debug('VideoDetectorImpl:started')
         
         
     def stop(self):
         self._is_running = False
         self._video_capture.stop()
-        logger.debug(f'VideoDetectorImpl:{self.id}:stopped')
+        logger.debug('VideoDetectorImpl:stopped')
         
         
     def pause(self):
         self._is_running = False
         self._video_capture.pause()
-        logger.debug(f'VideoDetectorImpl:{self.id}:paused')
+        logger.debug('VideoDetectorImpl:paused')
     
 
     # * Main loop
@@ -95,6 +95,6 @@ class VideoDetectorImpl(VideoDetector):
                 if hasNewDetections:
                     self._last_detected_objects = objects
                     call(self._on_object_detection, self.id, objects)
-                    logger.debug(f'VideoDetectorImpl:{self.id}:_on_object_detection called')
+                    logger.debug('VideoDetectorImpl:_on_object_detection called')
 
             sleep(self._delay)

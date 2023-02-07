@@ -5,6 +5,19 @@ class VideoCapture(ABC):
     """ Class to get video frames from a source """
     
     @abstractmethod
+    def __init__(self, url: str):
+        """
+        Initializer
+        
+        Parameters
+        ----------
+        url : str
+            URL to retrive the video
+        """
+        raise NotImplementedError('__init__(url:) not implemented')
+    
+    
+    @abstractmethod
     def setup_callbacks(self, on_error = None):
         """ 
         Setup the callbacks 
