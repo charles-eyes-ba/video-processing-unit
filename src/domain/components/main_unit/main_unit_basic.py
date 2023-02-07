@@ -22,7 +22,7 @@ class MainUnitBasic:
         self._tracked_videos: list[TrackedVideo] = []
         self._on_object_detection = None
         self._on_error = None
-        logger.debug('initialized')
+        logger.debug('Initialized')
     
     
     def setup_callbacks(self, on_object_detection, on_error):
@@ -41,16 +41,14 @@ class MainUnitBasic:
     
     # * Handle Tracked Videos
     def update_tracked_videos(self, video_feed_list: list[(VideoFeed, VideoConfig)]):
-        logger.debug(f'removing {len(self._tracked_videos)} and adding {len(video_feed_list)}')
+        logger.debug(f'Removing {len(self._tracked_videos)} and adding {len(video_feed_list)}')
         self._tracked_videos = []
         for video_feed, video_config in video_feed_list:
             self.start_to_track_video(video_feed, video_config)
 
 
     def start_to_track_video(self, video_feed: VideoFeed, video_config: VideoConfig):
-        logger.debug(f'adding {video_feed.id}')
         if video_feed.id in map(lambda item: item.video_feed.id, self._tracked_videos):
-            logger.debug(f'removing old {video_feed.id}')
             self.remove_tracked_video(video_feed.id)
         
         ai_engine = self._dependencies.ai_engine()
@@ -63,17 +61,16 @@ class MainUnitBasic:
         )
         tracked_video.set_config(video_config)
         self._tracked_videos.append(tracked_video)
-        logger.debug(f'added {video_feed.id}')
+        logger.debug(f'Added {video_feed.id}')
         
         
     def remove_tracked_video(self, video_feed_id: str):
-        logger.debug(f'removing {video_feed_id}')
         for index, tracked_video in enumerate(self._tracked_videos):
             if tracked_video.video_feed.id == video_feed_id:
                 self._tracked_videos[index].stop()
                 del self._tracked_videos[index]
+                logger.debug(f'Removed {video_feed_id}')
                 break
-        logger.debug(f'removed {video_feed_id}')
         
         
     def update_tracked_video_config(self, video_feed_id: str, video_config: VideoConfig):

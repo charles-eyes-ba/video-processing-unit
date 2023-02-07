@@ -23,7 +23,7 @@ class OpenCVVideoCapture(VideoCapture):
         self._thread = None
         self._event = Event()
         self._lock = Lock()
-        logger.debug(f'{self._url}:initialized')
+        logger.debug(f'Initialized {self._url}')
     
         
     # * Setups
@@ -47,12 +47,12 @@ class OpenCVVideoCapture(VideoCapture):
         self._thread.name = f' Thread-Video Capture {self._url}'
         self._thread.daemon = True
         self._thread.start()
-        logger.debug(f'{self._url}:started')
+        logger.debug(f'Started the capture of {self._url}')
         
         
     def stop(self):
         self._event.set()
-        logger.debug(f'{self._url}:stopped')
+        logger.debug(f'Stopped the capture of {self._url}')
         
         
     def lastest_frame(self):
@@ -64,8 +64,8 @@ class OpenCVVideoCapture(VideoCapture):
         
     # * Utils
     def _release(self):
-        logger.debug('released')
         self._cap.release()
+        logger.debug('Released')
     
         
     # * Main loop
@@ -90,4 +90,6 @@ class OpenCVVideoCapture(VideoCapture):
                 logger.error(f'{self._url}:error')
                 call(self._on_error, exception)
                 break
+            
         self._release()
+        logger.debug('Ending the thread')

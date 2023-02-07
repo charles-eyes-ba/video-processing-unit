@@ -32,6 +32,7 @@ class TrackedVideoImpl(TrackedVideo):
         
     # * Interfaces
     def set_config(self, config: VideoConfig):
+        logger.debug(f'New config received {config.__dict__}')
         if config.run_detector:
             self._video_detector_status = VideoStatus.RUNNING
             self._video_detector.start()
@@ -41,11 +42,13 @@ class TrackedVideoImpl(TrackedVideo):
         
     
     def stop(self):
+        logger.debug('Stopping')
         self._video_detector.stop()
         
         
     # * Detector
     def add_detector(self, video_detector: VideoDetector, on_object_detection, on_error):
+        logger.debug('Adding detector')
         def _object_detection(objects: list[str]):
             on_object_detection(self._video_feed.id, objects)
             

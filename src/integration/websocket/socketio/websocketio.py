@@ -66,14 +66,13 @@ class WebSocketIO(WebSocket):
     # * Interface to Handle
     def connect(self):
         self._socketio.connect(self._server_url)
-        logger.debug('Connected to websocket')
         
 
     # * Send Methods
     def send_current_videos_infos(self, videos_infos: list[dict]):
         try:
             self._root_namespace.emit(RootNamespace.VIDEO_FEED_IDS, videos_infos)
-            logger.error(f'Detect message with this {videos_infos} was sent')
+            logger.debug(f'Detect message with this {videos_infos} was sent')
         except:
             logger.error('Error sending detections')
     
@@ -81,7 +80,7 @@ class WebSocketIO(WebSocket):
     def send_detections(self, id, objects: list[str]):
         try:
             self._root_namespace.emit(RootNamespace.DETECT, { 'id': id, 'objects': objects })
-            logger.error(f'Detect message about {id} was sent')
+            logger.debug(f'Detect message about {id} was sent')
         except:
             logger.error('Error sending detections')
     
@@ -89,7 +88,7 @@ class WebSocketIO(WebSocket):
     def send_error(self, id, error: str):
         try:
             self._root_namespace.emit(RootNamespace.ERROR, { 'id': id, 'error': error })
-            logger.error(f'Error message about {id} was sent')
+            logger.debug(f'Error message about {id} was sent')
         except:
             logger.error('Error sending error')
     

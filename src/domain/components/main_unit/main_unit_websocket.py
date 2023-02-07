@@ -39,25 +39,28 @@ class MainUnitWebSocket:
     
     # * WebSocket Deletage
     def _on_connect(self):
-        pass
+        logger.debug('Connected to the websocket server')
     
     
     def _on_connect_error(self):
-        logger.info(f'Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
+        logger.debug(f'Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
         time.sleep(self._websocket_delay_retry)
         self._websocket.connect()
     
     
     def _on_disconnect(self):
+        logger.debug('Disconnected from the websocket server')
         self._websocket.connect()
     
     
     def _on_request_current_video_feed_list(self):
+        logger.debug('Request the current videos infos')
         videos = DictEncoder.encode(self._main_unit.videos_infos)
         self._websocket.send_current_videos_infos(videos)
     
     
     def _on_video_feed_list_update(self, data: list):
+        logger.debug('New video feed list')
         video_feed_list = []
         for dictionary in data:
             if not check_keys(dictionary, keys=['id', 'url']) or not check_keys(dictionary.get('config'), keys=['run_detector']):
@@ -70,6 +73,7 @@ class MainUnitWebSocket:
     
     
     def _on_add_video_feed(self, data: dict):
+        logger.debug('Add a new video feed')
         if not check_keys(data, keys=['id', 'url']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
             logger.error(f'invalid data')
             return
@@ -80,6 +84,7 @@ class MainUnitWebSocket:
     
     
     def _on_remove_video_feed(self, data):
+        logger.debug('Remove a video feed')
         if not check_keys(dictionary=data, keys=['id']):
             logger.error(f'invalid data')
             return
@@ -87,6 +92,7 @@ class MainUnitWebSocket:
         
         
     def _on_update_video_feed_config(self, data):
+        logger.debug('Update a video feed config')
         if not check_keys(dictionary=data, keys=['id', 'config']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
             logger.error(f'invalid data')
             return

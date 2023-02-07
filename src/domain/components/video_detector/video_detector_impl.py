@@ -41,7 +41,7 @@ class VideoDetectorImpl(VideoDetector):
         exception : Exception
             The exception that occurred
         """
-        logger.debug('error')
+        logger.debug(f'Got an video capture error {exception}')
         self.stop()
         self._on_error(exception)
         
@@ -67,13 +67,13 @@ class VideoDetectorImpl(VideoDetector):
         self._thread.name = f' Thread-Video Detector {self._video_capture.url}'
         self._thread.daemon = True
         self._thread.start()
-        logger.debug('started')
+        logger.debug('Started')
         
         
     def stop(self):
         self._video_capture.stop()
         self._event.set()
-        logger.debug('stopped')
+        logger.debug('Stopped')
     
 
     # * Main loop
@@ -92,6 +92,7 @@ class VideoDetectorImpl(VideoDetector):
                 if hasNewDetections:
                     self._last_detected_objects = objects
                     call(self._on_object_detection, objects)
-                    logger.debug('_on_object_detection called')
+                    logger.debug(f'Detection callback called {objects}')
 
             sleep(self._delay)
+        logger.debug('Ending the thread')
