@@ -13,7 +13,7 @@ class MainUnitBasic:
     def videos_infos(self) -> list[VideoInfo]:
         infos = []
         for tracked_video in self._tracked_videos:
-            infos.append(VideoInfo(tracked_video.video_feed.id, tracked_video.video_detector_status))
+            infos.append(VideoInfo(tracked_video.id, tracked_video.video_detector_status))
         return infos
         
     
@@ -48,7 +48,7 @@ class MainUnitBasic:
 
 
     def start_to_track_video(self, video_feed: VideoFeed, video_config: VideoConfig):
-        if video_feed.id in map(lambda item: item.video_feed.id, self._tracked_videos):
+        if video_feed.id in map(lambda item: item.id, self._tracked_videos):
             self.remove_tracked_video(video_feed.id)
         tracked_video = self._dependencies.tracked_video(video_feed)
         tracked_video.setup_detector(
@@ -62,7 +62,7 @@ class MainUnitBasic:
         
     def remove_tracked_video(self, video_feed_id: str):
         for index, tracked_video in enumerate(self._tracked_videos):
-            if tracked_video.video_feed.id == video_feed_id:
+            if tracked_video.id == video_feed_id:
                 self._tracked_videos[index].stop()
                 del self._tracked_videos[index]
                 logger.debug(f'Removed {video_feed_id}')
@@ -71,6 +71,6 @@ class MainUnitBasic:
         
     def update_tracked_video_config(self, video_feed_id: str, video_config: VideoConfig):
         for index, tracked_video in enumerate(self._tracked_videos):
-            if tracked_video.video_feed.id == video_feed_id:
+            if tracked_video.id == video_feed_id:
                 self._tracked_videos[index].set_config(video_config)
                 break
