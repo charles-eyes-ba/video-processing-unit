@@ -13,15 +13,8 @@ class TrackedVideoImpl(TrackedVideo):
     def id(self) -> str:
         return self._video_feed.id
     
-    @property
-    def video_feed(self) -> VideoFeed:
-        return self._video_feed
     
-    # * Video Detector
-    @property
-    def video_detector(self) -> VideoDetector or None:
-        return self._video_detector
-    
+    # * Status
     @property
     def video_detector_status(self) -> VideoStatus:
         return self._video_detector_status

@@ -14,17 +14,6 @@ class TrackedVideo(ABC):
         """ ID (same of video_feed.id) """
         raise NotImplementedError('id() must be defined')
     
-    @abstract_attribute
-    def video_feed(self) -> VideoFeed:
-        """ Video feed infos """
-        raise NotImplementedError('video_feed() must be defined')
-    
-    
-    @abstract_attribute
-    def video_detector(self) -> VideoDetector or None:
-        """ Video detector information if exists """
-        raise NotImplementedError('video_detector() must be defined')
-    
     
     @abstract_attribute
     def video_detector_status(self) -> VideoStatus:
