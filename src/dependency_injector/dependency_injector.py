@@ -1,4 +1,3 @@
-from .interface import DependencyInjector
 from src.common.environment import DEEPSTACK_URL, WEBSOCKET_URL
 from src.models.video_feed import VideoFeed
 from src.domain.dependencies.ai_engine import AIEngine
@@ -24,24 +23,54 @@ class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
     
     # * AI Engine
     def ai_engine(self) -> AIEngine:
+        """ Return an instance of AIEngine """
         return self.__ai_engine_shared
     
     
     # * Video Capture
     def video_capture(self, url: str) -> VideoCapture:
+        """ 
+        Return an instance of VideoCapture 
+        
+        Parameters
+        ----------
+        url : str
+            URL to retrive the video
+        """
         return OpenCVVideoCapture(url)
     
     
     # * Video Detector
     def video_detector(self, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
+        """ 
+        Return an instance of VideoDetector 
+        
+        Parameters
+        ----------
+        video_capture : VideoCapture
+            Video capture to analyze
+        ai_engine : AIEngine
+            AI framework to use in the video
+        delay : int
+            Delay to rerun AI alg
+        """
         return VideoDetectorImpl(video_capture, ai_engine, delay)
     
     
     # * Tracked Video
     def tracked_video(self, video_feed: VideoFeed) -> TrackedVideo:
+        """ 
+        Return an instance of VideoDetector 
+        
+        Parameters
+        ----------
+        video_feed : VideoFeed
+            video feed to track
+        """
         return TrackedVideoImpl(self, video_feed)
     
     
     # * WebSocket
     def websocket(self) -> WebSocket:
+        """ Return an instance of WebSocket """
         return self.__websocket

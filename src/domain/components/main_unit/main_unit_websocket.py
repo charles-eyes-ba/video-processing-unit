@@ -1,17 +1,17 @@
 import time
 import signal
-from src.dependency_injector import DependencyInjector
 from src.domain.components.main_unit import MainUnit
 from src.models.video_feed import VideoFeed
 from src.models.video_config import VideoConfig
 from src.common.dict_encoder import DictEncoder
+from .dependencies import MainUnitDependencies
 from src.common.logger import logger
 from src.common.check_keys import check_keys
 
 
 class MainUnitWebSocket:
     
-    def __init__(self, dependencies: DependencyInjector):
+    def __init__(self, dependencies: MainUnitDependencies):
         self._dependencies = dependencies
         self._main_unit = MainUnit(dependencies)
         self._websocket = self._dependencies.websocket()

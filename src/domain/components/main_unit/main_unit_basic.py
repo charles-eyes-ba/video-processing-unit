@@ -1,7 +1,6 @@
 from src.models.video_feed import VideoFeed
 from src.models.video_info import VideoInfo
 from src.models.video_config import VideoConfig
-from src.dependency_injector import DependencyInjector
 from src.domain.components.tracked_video import TrackedVideo
 from src.common.logger import logger
 from src.common.call import call
