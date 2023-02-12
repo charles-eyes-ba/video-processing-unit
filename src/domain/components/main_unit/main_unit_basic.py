@@ -5,6 +5,7 @@ from src.dependency_injector import DependencyInjector
 from src.domain.components.tracked_video import TrackedVideo
 from src.common.logger import logger
 from src.common.call import call
+from .dependencies import MainUnitDependencies
 
 
 class MainUnitBasic:
@@ -17,7 +18,7 @@ class MainUnitBasic:
         return infos
         
     
-    def __init__(self, dependencies: DependencyInjector):
+    def __init__(self, dependencies: MainUnitDependencies):
         self._dependencies = dependencies
         self._tracked_videos: list[TrackedVideo] = []
         self._on_object_detection = None
@@ -50,12 +51,8 @@ class MainUnitBasic:
     def start_to_track_video(self, video_feed: VideoFeed, video_config: VideoConfig):
         if video_feed.id in map(lambda item: item.video_feed.id, self._tracked_videos):
             self.remove_tracked_video(video_feed.id)
-        
-        ai_engine = self._dependencies.ai_engine()
-        video_capture = self._dependencies.video_capture(video_feed.url)
-        video_detector = self._dependencies.video_detector(video_capture, ai_engine)
         tracked_video = self._dependencies.tracked_video(video_feed)
-        tracked_video.add_detector(video_detector,
+        tracked_video.setup_detector(
             self._tracked_video_object_detection,
             self._tracked_video_error
         )

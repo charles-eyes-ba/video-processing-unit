@@ -4,9 +4,15 @@ from src.models.video_feed import VideoFeed
 from src.models.video_config import VideoConfig
 from src.domain.components.video_detector import VideoDetector
 from src.models.video_status import VideoStatus
+from .dependencies import TrackedVideoDependencies
 
 
 class TrackedVideo(ABC):
+    
+    @abstract_attribute
+    def id(self) -> str:
+        """ ID (same of video_feed.id) """
+        raise NotImplementedError('id() must be defined')
     
     @abstract_attribute
     def video_feed(self) -> VideoFeed:
@@ -27,7 +33,7 @@ class TrackedVideo(ABC):
     
     
     @abstractmethod
-    def __init__(self, video_feed: VideoFeed):
+    def __init__(self, dependencies: TrackedVideoDependencies, video_feed: VideoFeed):
         """
         Initializer
         
@@ -35,6 +41,8 @@ class TrackedVideo(ABC):
         ---------
         video_feed: VideoFeed
             The video feed to track
+        dependencies: TrackedVideoDependencies
+            Dependencies for the component
         """
         raise NotImplementedError('__init__() must be defined')
         
@@ -59,15 +67,15 @@ class TrackedVideo(ABC):
         
     
     @abstractmethod
-    def add_detector(self, video_detector: VideoDetector, on_object_detection, on_error):
+    def setup_detector(self, on_object_detection, on_error):
         """
         Initialize and start detection in the video
         
         Parameters
         ----------
-        on_object_detection : function
+        on_object_detection: function
             Callback when a new detection happens
-        on_error : function
+        on_error: function
             Callback when the video results in error
         """
         raise NotImplementedError('start_detector() must be defined')

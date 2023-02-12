@@ -11,9 +11,11 @@ from src.domain.components.tracked_video import TrackedVideo
 from src.domain.components.tracked_video.tracked_video_impl import TrackedVideoImpl
 from src.domain.dependencies.websocket import WebSocket
 from src.integration.websocket.socketio import WebSocketIO
+from src.domain.components.tracked_video.dependencies import TrackedVideoDependencies
+from src.domain.components.main_unit.dependencies import MainUnitDependencies
 
 
-class DependencyInjectorImpl(DependencyInjector):
+class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
     
     def __init__(self):
         self.__ai_engine_shared = DeepStackEngine(DEEPSTACK_URL)
@@ -37,7 +39,7 @@ class DependencyInjectorImpl(DependencyInjector):
     
     # * Tracked Video
     def tracked_video(self, video_feed: VideoFeed) -> TrackedVideo:
-        return TrackedVideoImpl(video_feed)
+        return TrackedVideoImpl(self, video_feed)
     
     
     # * WebSocket
