@@ -20,24 +20,13 @@ This diagram represents a bit of the architecture of how the VPU was built.
 
 > The dashed box (Video) represents a video source outside from the system.
 
-- __A.I. Engine__:
-- __Video Capture__: 
-- __Object Detector__: 
-- __Object Distance__: 
-- __Tracked Video__: 
-- __Main Unit__: 
-- __Websocket__: 
-- __Main Unit + Websocket__: 
-
-## Tests Notes
-
-
-## Main Dependencies
-
-| Module | Version |
-| --- | --- |
-| [Socket.IO](https://github.com/miguelgrinberg/python-socketio) | 5.5.0 |
-| [Dotenv](https://github.com/theskumar/python-dotenv) | 0.19.2 |
+- __A.I. Engine__: This component is responsible to integrate with some framework that will enable other components to run computer vision algorithms (such as object detection).
+- __Video Capture__: This component is responsible for integrating with a video source and making sure to always provide the latest frame from the video source.
+- __Object Detector or any detector__: This kind of component is responsible for running the specific algorithm and provides the result.
+- __Tracked Video__: This component is responsible to aggregate all the algorithm and its status for a specific video source.
+- __Main Unit__: This component is responsible to handle all the tracked videos.
+- __Websocket__: This component is responsible for integrating with the websocket technology. This component will provide all necessary callbacks to communicate with other systems using websocket.
+- __Main Unit + Websocket__: This component is responsible for creating the integration between the main unit and the websocket.
 
 ## Setup
 
