@@ -49,7 +49,8 @@ class MainUnitWebSocket:
     
     
     def _on_disconnect(self):
-        logger.debug('Disconnected from the websocket server')
+        logger.debug(f'Disconnected from the websocket server. Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
+        time.sleep(self._websocket_delay_retry)
         self._websocket.connect()
     
     
