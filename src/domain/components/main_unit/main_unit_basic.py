@@ -3,7 +3,6 @@ from src.models.video_info import VideoInfo
 from src.models.video_config import VideoConfig
 from src.domain.components.tracked_video import TrackedVideo
 from src.common.logger import logger
-from src.common.call import call
 from .dependencies import MainUnitDependencies
 
 
@@ -30,15 +29,6 @@ class MainUnitBasic:
         self._on_error = on_error
     
     
-    # * Callbacks Handlers
-    def _tracked_video_object_detection(self, id: str, objects: list[str]):
-        call(self._on_object_detection, id, objects)
-        
-        
-    def _tracked_video_error(self, id: str, error: Exception):
-        call(self._on_error, id, error)
-    
-    
     # * Handle Tracked Videos
     def update_tracked_videos(self, video_feed_list: list[(VideoFeed, VideoConfig)]):
         logger.debug(f'Removing {len(self._tracked_videos)} and adding {len(video_feed_list)}')
@@ -52,8 +42,8 @@ class MainUnitBasic:
             self.remove_tracked_video(video_feed.id)
         tracked_video = self._dependencies.tracked_video(video_feed)
         tracked_video.setup_detector(
-            self._tracked_video_object_detection,
-            self._tracked_video_error
+            self._on_object_detection,
+            self._on_error
         )
         tracked_video.set_config(video_config)
         self._tracked_videos.append(tracked_video)
