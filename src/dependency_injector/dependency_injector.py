@@ -1,23 +1,33 @@
-from abc import ABC, abstractmethod
+from src.common.environment import DEEPSTACK_URL, WEBSOCKET_URL
 from src.models.video_feed import VideoFeed
 from src.domain.dependencies.ai_engine import AIEngine
+from src.integration.ai_engine.deepstack_engine import DeepStackEngine
 from src.domain.dependencies.video_capture import VideoCapture
+from src.integration.video_capture.opencv_video_capture import OpenCVVideoCapture
 from src.domain.components.video_detector import VideoDetector
+from src.domain.components.video_detector.video_detector_impl import VideoDetectorImpl
 from src.domain.components.tracked_video import TrackedVideo
+from src.domain.components.tracked_video.tracked_video_impl import TrackedVideoImpl
 from src.domain.dependencies.websocket import WebSocket
+from src.integration.websocket.socketio import WebSocketIO
+from src.domain.components.tracked_video.dependencies import TrackedVideoDependencies
+from src.domain.components.main_unit.dependencies import MainUnitDependencies
 
 
-class DependencyInjector(ABC):
+class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
+    
+    def __init__(self):
+        self.__ai_engine_shared = DeepStackEngine(DEEPSTACK_URL)
+        self.__websocket = WebSocketIO(WEBSOCKET_URL)
+        
     
     # * AI Engine
-    @abstractmethod
     def ai_engine(self) -> AIEngine:
         """ Return an instance of AIEngine """
-        raise NotImplementedError('ai_engine() must be defined')
+        return self.__ai_engine_shared
     
     
     # * Video Capture
-    @abstractmethod
     def video_capture(self, url: str) -> VideoCapture:
         """ 
         Return an instance of VideoCapture 
@@ -27,11 +37,10 @@ class DependencyInjector(ABC):
         url : str
             URL to retrive the video
         """
-        raise NotImplementedError('video_capture() must be defined')
+        return OpenCVVideoCapture(url)
     
     
     # * Video Detector
-    @abstractmethod
     def video_detector(self, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
         """ 
         Return an instance of VideoDetector 
@@ -45,11 +54,10 @@ class DependencyInjector(ABC):
         delay : int
             Delay to rerun AI alg
         """
-        raise NotImplementedError('video_detector() must be defined')
+        return VideoDetectorImpl(video_capture, ai_engine, delay)
     
     
     # * Tracked Video
-    @abstractmethod
     def tracked_video(self, video_feed: VideoFeed) -> TrackedVideo:
         """ 
         Return an instance of VideoDetector 
@@ -59,11 +67,10 @@ class DependencyInjector(ABC):
         video_feed : VideoFeed
             video feed to track
         """
-        raise NotImplementedError('tracked_video() must be defined')
+        return TrackedVideoImpl(self, video_feed)
     
     
     # * WebSocket
-    @abstractmethod
     def websocket(self) -> WebSocket:
         """ Return an instance of WebSocket """
-        raise NotImplementedError('websocket() must be defined')
+        return self.__websocket

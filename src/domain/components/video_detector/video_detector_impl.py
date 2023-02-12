@@ -43,7 +43,7 @@ class VideoDetectorImpl(VideoDetector):
         """
         logger.debug(f'Got an video capture error {exception}')
         self.stop()
-        self._on_error(exception)
+        call(self._on_error, exception)
         
         
     # * Setups

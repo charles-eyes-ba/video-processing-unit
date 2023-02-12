@@ -1,17 +1,17 @@
 import time
 import signal
-from src.dependency_injector import DependencyInjector
 from src.domain.components.main_unit import MainUnit
 from src.models.video_feed import VideoFeed
 from src.models.video_config import VideoConfig
 from src.common.dict_encoder import DictEncoder
+from .dependencies import MainUnitDependencies
 from src.common.logger import logger
 from src.common.check_keys import check_keys
 
 
 class MainUnitWebSocket:
     
-    def __init__(self, dependencies: DependencyInjector):
+    def __init__(self, dependencies: MainUnitDependencies):
         self._dependencies = dependencies
         self._main_unit = MainUnit(dependencies)
         self._websocket = self._dependencies.websocket()
@@ -64,18 +64,18 @@ class MainUnitWebSocket:
         logger.debug('New video feed list')
         video_feed_list = []
         for dictionary in data:
-            if not check_keys(dictionary, keys=['id', 'url']) or not check_keys(dictionary.get('config'), keys=['run_detector']):
+            if not check_keys(dictionary, keys=['id', 'url', 'config']) or not check_keys(dictionary.get('config'), keys=['run_detector']):
                 return
             
-            video_feed = VideoFeed(id=data['id'], url=data['url'])
-            video_config = VideoConfig(run_detector=data['config']['run_detector'])
+            video_feed = VideoFeed(id=dictionary['id'], url=dictionary['url'])
+            video_config = VideoConfig(run_detector=dictionary['config']['run_detector'])
             video_feed_list.append((video_feed, video_config))
         self._main_unit.update_tracked_videos(video_feed_list)
     
     
     def _on_add_video_feed(self, data: dict):
         logger.debug('Add a new video feed')
-        if not check_keys(data, keys=['id', 'url']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
+        if not check_keys(data, keys=['id', 'url', 'config']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
             logger.error(f'invalid data')
             return
         

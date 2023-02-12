@@ -1,1 +1,1 @@
-from .interface import DependencyInjector
+from .dependency_injector import DependencyInjector
