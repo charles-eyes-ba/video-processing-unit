@@ -28,6 +28,26 @@ This diagram represents a bit of the architecture of how the VPU was built.
 - __Websocket__: This component is responsible for integrating with the websocket technology. This component will provide all necessary callbacks to communicate with other systems using websocket.
 - __Main Unit + Websocket__: This component is responsible for creating the integration between the main unit and the websocket.
 
+### Folders
+
+```
+> common: All utils methods/class/components
+> dependency_injector: The dependency injector component responsible to implements all the components dependencies
+> domain
+  > components
+    > component_name
+      - __init__.py: Export the interface for the component (present on interface.py)
+      - interface.py: Declarate the interface for the component
+      - dependencies.py: Declare (if needs) all the dependencies for the component
+      - *_impl.py: Implements the interface declared on interface.py
+  > dependencies
+    > dependency_name: Contains all the dependencies that is needed to use an external library
+      - __init__.py: Export the interface for the dependency
+      - interface.py: Declarate the interface for the dependency
+> integrations: Implementations for all dependencies in domain > dependencies
+> models: All the models used in the project
+```
+
 ## Setup
 
 Create a `.env` file following the `.env.example` file.
