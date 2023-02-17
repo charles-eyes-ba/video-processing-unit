@@ -15,7 +15,7 @@ class MainUnitWebSocket:
         self._dependencies = dependencies
         self._main_unit = MainUnit(dependencies)
         self._websocket = self._dependencies.websocket()
-        self._websocket_delay_retry = 5
+        self._websocket_delay_retry = 30
         self._video_detector_list = []
         
         self._websocket.setup_callbacks(
@@ -49,9 +49,7 @@ class MainUnitWebSocket:
     
     
     def _on_disconnect(self):
-        logger.debug(f'Disconnected from the websocket server. Trying to connect to websocket again in {self._websocket_delay_retry} seconds...')
-        time.sleep(self._websocket_delay_retry)
-        self._websocket.connect()
+        logger.debug(f'Disconnected from the websocket server.')
     
     
     def _on_request_current_video_feed_list(self):
