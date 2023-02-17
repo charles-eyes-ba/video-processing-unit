@@ -15,7 +15,7 @@ class MainUnitWebSocket:
         self._dependencies = dependencies
         self._main_unit = MainUnit(dependencies)
         self._websocket = self._dependencies.websocket()
-        self._websocket_delay_retry = 30
+        self._websocket_delay_retry = 10
         self._video_detector_list = []
         
         self._websocket.setup_callbacks(
