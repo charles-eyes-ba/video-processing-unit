@@ -72,7 +72,7 @@ class WebSocketIO(WebSocket):
     def send_current_videos_infos(self, videos_infos: list[dict]):
         try:
             self._root_namespace.emit(RootNamespace.VIDEO_FEED_IDS, videos_infos)
-            logger.debug(f'Detect message with this {videos_infos} was sent')
+            logger.debug(f'Current videos are {videos_infos}')
         except:
             logger.error('Error sending detections')
     
