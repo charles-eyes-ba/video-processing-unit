@@ -1,8 +1,8 @@
 from src.models.video_feed import VideoFeed
 from src.models.video_config import VideoConfig
 from src.models.video_status import VideoStatus
-from src.domain.components.video_detector import VideoDetector
 from src.common.logger import logger
+from src.common.call import call
 from .interface import TrackedVideo
 from .dependencies import TrackedVideoDependencies
 
@@ -54,12 +54,12 @@ class TrackedVideoImpl(TrackedVideo):
     def setup_detector(self, on_object_detection, on_error):
         logger.debug('Adding detector')
         def _object_detection(objects: list[str]):
-            on_object_detection(self._video_feed.id, objects)
+            call(on_object_detection, self._video_feed.id, objects)
             
         def _error(error: Exception):
             self._video_detector.stop()
             self._video_detector_status = VideoStatus.ERROR
-            on_error(self._video_feed.id, error)
+            call(on_error, self._video_feed.id, error)
             
         self._video_detector.setup_callbacks(
             _object_detection,
