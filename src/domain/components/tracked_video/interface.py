@@ -15,9 +15,15 @@ class TrackedVideo(ABC):
     
     
     @abstract_attribute
-    def video_detector_status(self) -> DetectorStatus:
+    def frame_collector_status(self) -> DetectorStatus:
         """ Video detector status """
-        raise NotImplementedError('video_detector_status() must be defined')
+        raise NotImplementedError('frame_collector_status() must be defined')
+    
+    
+    @abstract_attribute
+    def object_detector_status(self) -> DetectorStatus:
+        """ Video detector status """
+        raise NotImplementedError('object_detector_status() must be defined')
     
     
     @abstractmethod

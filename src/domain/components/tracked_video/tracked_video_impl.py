@@ -17,8 +17,12 @@ class TrackedVideoImpl(TrackedVideo):
     
     # * Status
     @property
-    def video_detector_status(self) -> DetectorStatus:
-        return self._video_detector_status
+    def frame_collector_status(self) -> DetectorStatus:
+        return self._frame_collector_status
+        
+    @property
+    def object_detector_status(self) -> DetectorStatus:
+        return self._object_detector_status
     
     
     # * Init
@@ -34,10 +38,11 @@ class TrackedVideoImpl(TrackedVideo):
         
         self._ai_engine = self._dependencies.ai_engine()
         self._video_capture = self._dependencies.video_capture(self._video_feed.id, self._video_feed.url)
+        self._frame_collector_status = DetectorStatus.OFF
         
-        self._video_detector = self._dependencies.object_detector(self._video_feed.id, self._video_capture, self._ai_engine)
-        self._video_detector_status = DetectorStatus.OFF
-        self._detectors.append(self._video_detector)
+        self._object_detector = self._dependencies.object_detector(self._video_feed.id, self._video_capture, self._ai_engine)
+        self._object_detector_status = DetectorStatus.OFF
+        self._detectors.append(self._object_detector)
         
         logger.debug('Initialized')
         
@@ -57,17 +62,19 @@ class TrackedVideoImpl(TrackedVideo):
         self._video_config = config
         
         if not self._video_config.run_frame_collector:
+            self._frame_collector_status = DetectorStatus.OFF
             _ = [detector.stop() for detector in self._detectors]
             self._video_capture.stop()
             return
         
-        self._video_capture.start()    
-        self._video_detector_status = self._update_detector(self._video_config.run_object_detector, self._video_detector)
+        self._frame_collector_status = DetectorStatus.RUNNING
+        self._video_capture.start()   
+        self._object_detector_status = self._update_detector(self._video_config.run_object_detector, self._object_detector)
         
     
     def stop(self):
         logger.debug('Stopping')
-        self._video_detector.stop()
+        self.set_config(VideoConfig.all_disabled())
         
         
     # * Detector
@@ -77,11 +84,11 @@ class TrackedVideoImpl(TrackedVideo):
             call(on_object_detection, self._video_feed.id, objects)
             
         def _error(error: Exception):
-            self._video_detector.stop()
-            self._video_detector_status = DetectorStatus.ERROR
+            self._object_detector.stop()
+            self._object_detector_status = DetectorStatus.ERROR
             call(on_error, self._video_feed.id, error)
             
-        self._video_detector.setup_callbacks(
+        self._object_detector.setup_callbacks(
             _object_detection,
             _error
         )

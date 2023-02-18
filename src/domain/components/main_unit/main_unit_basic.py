@@ -12,7 +12,11 @@ class MainUnitBasic:
     def videos_infos(self) -> list[VideoInfo]:
         infos = []
         for tracked_video in self._tracked_videos:
-            infos.append(VideoInfo(tracked_video.id, tracked_video.video_detector_status))
+            infos.append(VideoInfo(
+                tracked_video.id,
+                tracked_video.frame_collector_status,
+                tracked_video.object_detector_status
+            ))
         return infos
         
     
@@ -63,4 +67,5 @@ class MainUnitBasic:
         for index, tracked_video in enumerate(self._tracked_videos):
             if tracked_video.id == video_feed_id:
                 self._tracked_videos[index].set_config(video_config)
+                logger.debug(f'Updated {video_feed_id}')
                 break
