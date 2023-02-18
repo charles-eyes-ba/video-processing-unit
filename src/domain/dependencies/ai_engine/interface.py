@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 
 class AIEngine(ABC):
-    """ Class that handles the detection of objects in an image """
+    """ Interface to provide methods to execute AI algorithms """
 
     @abstractmethod
     def extract_objects(self, image: ndarray) -> list[str]:

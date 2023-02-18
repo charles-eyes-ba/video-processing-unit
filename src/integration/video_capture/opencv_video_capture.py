@@ -4,10 +4,11 @@ from copy import deepcopy
 from src.common.logger import logger
 from src.domain.dependencies.video_capture import VideoCapture
 from src.common.call import call
-from .exceptions import VideoCaptureCouldNotConnect, VideoCaptureConnectionLost
+from .exceptions import VideoCaptureCouldNotConnect
 
 
 class OpenCVVideoCapture(VideoCapture):
+    """ Integration with OpenCV to get the video feed from url """
     
     @property
     def url(self) -> str:
@@ -65,6 +66,7 @@ class OpenCVVideoCapture(VideoCapture):
         
     # * Utils
     def _release(self):
+        """ Release all the subcomponents """
         self._cap.release()
         logger.debug('Released')
     

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class WebSocket(ABC):
-    """ Class that handles the websocket connection """
+    """ Handle the websocket connection """
     
     @abstractmethod
     def __init__(self, server_url : str):

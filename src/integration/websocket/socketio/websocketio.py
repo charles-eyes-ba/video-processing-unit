@@ -6,6 +6,7 @@ from .namespaces import RootNamespace
 
 
 class WebSocketIO(WebSocket):
+    """ Integration with SocketIO """
     
     def __init__(self, server_url : str):
         self._server_url = server_url

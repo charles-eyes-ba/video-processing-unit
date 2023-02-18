@@ -6,6 +6,8 @@ from src.common.logger import logger
 
 
 class DeepStackEngine(AIEngine):
+    """ Integration with DeepStack """
+    
     def __init__(self, deepstack_url: str, threshold: float = 0.5):
         self._threshold = threshold
         self._deepstack_url = deepstack_url

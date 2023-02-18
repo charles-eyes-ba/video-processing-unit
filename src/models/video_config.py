@@ -1,4 +1,5 @@
 class VideoConfig:
+    """ Configuration to define which component should run """
 
     @staticmethod
     def all_disabled() -> 'VideoConfig':

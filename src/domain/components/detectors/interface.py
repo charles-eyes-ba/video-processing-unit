@@ -5,6 +5,7 @@ from src.domain.dependencies.ai_engine import AIEngine
 
 
 class Detector(ABC):
+    """ Common interface for all detectos """
     
     @abstract_attribute
     def id(self) -> str:

@@ -4,7 +4,7 @@ from src.domain.components.detectors import Detector
 
 
 class ObjectDetector(Detector, ABC):
-    """ Class that make detections in a image. """
+    """ Video scanner to find objects """
     
     @abstract_attribute
     def id(self) -> str:

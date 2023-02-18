@@ -4,7 +4,7 @@ from src.common.abstract_attribute import abstract_attribute
 
 
 class VideoCapture(ABC):
-    """ Class to get video frames from a source """
+    """ Retrive video frames from a source """
     
     @abstract_attribute
     def id(self) -> str:

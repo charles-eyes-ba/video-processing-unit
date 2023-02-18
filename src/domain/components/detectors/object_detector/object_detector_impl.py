@@ -8,6 +8,8 @@ from .interface import ObjectDetector
 
 
 class ObjectDetectorImpl(ObjectDetector):
+    """ Object Detector implementation """
+    
     def __init__(
         self, 
         id: str,

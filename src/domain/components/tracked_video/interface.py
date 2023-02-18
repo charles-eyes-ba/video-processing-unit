@@ -2,11 +2,12 @@ from abc import ABC, abstractmethod
 from src.common.abstract_attribute import abstract_attribute
 from src.models.video_feed import VideoFeed
 from src.models.video_config import VideoConfig
-from src.models.detector_status import DetectorStatus
+from src.models.status import Status
 from .dependencies import TrackedVideoDependencies
 
 
 class TrackedVideo(ABC):
+    """ Handle a tracked video """
     
     @abstract_attribute
     def id(self) -> str:
@@ -15,13 +16,13 @@ class TrackedVideo(ABC):
     
     
     @abstract_attribute
-    def frame_collector_status(self) -> DetectorStatus:
+    def frame_collector_status(self) -> Status:
         """ Video detector status """
         raise NotImplementedError('frame_collector_status() must be defined')
     
     
     @abstract_attribute
-    def object_detector_status(self) -> DetectorStatus:
+    def object_detector_status(self) -> Status:
         """ Video detector status """
         raise NotImplementedError('object_detector_status() must be defined')
     

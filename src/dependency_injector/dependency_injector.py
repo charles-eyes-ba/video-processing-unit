@@ -15,6 +15,7 @@ from src.domain.components.main_unit.dependencies import MainUnitDependencies
 
 
 class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
+    """ Reponsible to create an instance for each interface """
     
     def __init__(self):
         self.__ai_engine_shared = DeepStackEngine(DEEPSTACK_URL)
