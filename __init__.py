@@ -1,0 +1,1 @@
+from src.domain.components.main_unit import MainUnit as VideoProcessingUnit
