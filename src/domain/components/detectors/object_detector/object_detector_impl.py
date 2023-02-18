@@ -4,10 +4,10 @@ from src.domain.dependencies.ai_engine import AIEngine
 from src.domain.dependencies.video_capture import VideoCapture
 from src.common.call import call
 from src.common.logger import logger
-from .interface import VideoDetector
+from .interface import ObjectDetector
 
 
-class VideoDetectorImpl(VideoDetector):
+class ObjectDetectorImpl(ObjectDetector):
     def __init__(
         self, 
         id: str,
@@ -73,7 +73,6 @@ class VideoDetectorImpl(VideoDetector):
         
         
     def stop(self):
-        self._video_capture.stop()
         self._event.set()
         logger.debug('Stopped')
     

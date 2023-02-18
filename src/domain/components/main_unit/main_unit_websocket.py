@@ -31,6 +31,28 @@ class MainUnitWebSocket:
         logger.debug('Initialized')
     
     
+    # * Validators
+    def _validate_video_feed_config(self, data: dict) -> bool:
+        return check_keys(
+            dictionary=data, 
+            keys=[
+                'run_frame_collector',
+                'run_object_detector'
+            ]
+        )
+    
+    
+    def _validate_full_video_feed(self, data: dict) -> bool:
+        return check_keys(
+            dictionary=data, 
+            keys=[
+                'id',
+                'url',
+                'config'
+            ]
+        ) and self._validate_video_feed_config(data.get('config'))
+    
+    
     # * Interfaces
     def start(self):
         self._websocket.connect()
@@ -58,27 +80,28 @@ class MainUnitWebSocket:
         self._websocket.send_current_videos_infos(videos)
     
     
-    def _on_video_feed_list_update(self, data: list):
+    def _on_video_feed_list_update(self, data: list[dict]):
         logger.debug('New video feed list')
         video_feed_list = []
         for dictionary in data:
-            if not check_keys(dictionary, keys=['id', 'url', 'config']) or not check_keys(dictionary.get('config'), keys=['run_detector']):
+            if not self._validate_full_video_feed(dictionary):
+                logger.debug(f'Invalid data')
                 return
             
             video_feed = VideoFeed(id=dictionary['id'], url=dictionary['url'])
-            video_config = VideoConfig(run_detector=dictionary['config']['run_detector'])
+            video_config = VideoConfig(**data['config'])
             video_feed_list.append((video_feed, video_config))
         self._main_unit.update_tracked_videos(video_feed_list)
     
     
     def _on_add_video_feed(self, data: dict):
         logger.debug('Add a new video feed')
-        if not check_keys(data, keys=['id', 'url', 'config']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
-            logger.error(f'invalid data')
-            return
+        if not self._validate_full_video_feed(data):
+                logger.debug(f'Invalid data')
+                return
         
         video_feed = VideoFeed(id=data['id'], url=data['url'])
-        video_config = VideoConfig(run_detector=data['config']['run_detector'])
+        video_config = VideoConfig(**data['config'])
         self._main_unit.start_to_track_video(video_feed, video_config)
     
     
@@ -92,8 +115,9 @@ class MainUnitWebSocket:
         
     def _on_update_video_feed_config(self, data):
         logger.debug('Update a video feed config')
-        if not check_keys(dictionary=data, keys=['id', 'config']) or not check_keys(dictionary=data.get('config'), keys=['run_detector']):
+        if not check_keys(dictionary=data, keys=['id', 'config']) or not self._validate_video_feed_config(data['config']):
             logger.error(f'invalid data')
             return
-        video_config = VideoConfig(run_detector=data['config']['run_detector'])
+        
+        video_config = VideoConfig(**data['config'])
         self._main_unit.update_tracked_video_config(data['id'], video_config)

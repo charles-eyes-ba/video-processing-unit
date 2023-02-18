@@ -2,8 +2,7 @@ from abc import ABC, abstractmethod
 from src.common.abstract_attribute import abstract_attribute
 from src.models.video_feed import VideoFeed
 from src.models.video_config import VideoConfig
-from src.domain.components.video_detector import VideoDetector
-from src.models.video_status import VideoStatus
+from src.models.detector_status import DetectorStatus
 from .dependencies import TrackedVideoDependencies
 
 
@@ -16,7 +15,7 @@ class TrackedVideo(ABC):
     
     
     @abstract_attribute
-    def video_detector_status(self) -> VideoStatus:
+    def video_detector_status(self) -> DetectorStatus:
         """ Video detector status """
         raise NotImplementedError('video_detector_status() must be defined')
     

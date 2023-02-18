@@ -4,8 +4,7 @@ from src.domain.dependencies.video_capture import VideoCapture
 from src.domain.dependencies.ai_engine import AIEngine
 
 
-class VideoDetector(ABC):
-    """ Class that make detections in a image. """
+class Detector(ABC):
     
     @abstract_attribute
     def id(self) -> str:
@@ -28,21 +27,6 @@ class VideoDetector(ABC):
             Delay to rerun the IA algorithms
         """
         raise NotImplementedError('__init__() not implemented')
-    
-    
-    @abstractmethod
-    def setup_callbacks(self, on_object_detection = None, on_error = None):
-        """
-        Setup the callbacks
-        
-        Parameters
-        ----------
-        on_object_detection : function
-            The function to call when an object is detected. The function must have the following signature: function(camera_id, classes)
-        on_error : function
-            The function to call when an error occurs. The function must have the following signature: function(camera_id, exception)
-        """
-        raise NotImplementedError('setup_callbacks() not implemented')
 
 
     @abstractmethod

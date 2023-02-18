@@ -4,8 +4,8 @@ from src.domain.dependencies.ai_engine import AIEngine
 from src.integration.ai_engine.deepstack_engine import DeepStackEngine
 from src.domain.dependencies.video_capture import VideoCapture
 from src.integration.video_capture.opencv_video_capture import OpenCVVideoCapture
-from src.domain.components.video_detector import VideoDetector
-from src.domain.components.video_detector.video_detector_impl import VideoDetectorImpl
+from src.domain.components.detectors.object_detector import ObjectDetector
+from src.domain.components.detectors.object_detector.object_detector_impl import ObjectDetectorImpl
 from src.domain.components.tracked_video import TrackedVideo
 from src.domain.components.tracked_video.tracked_video_impl import TrackedVideoImpl
 from src.domain.dependencies.websocket import WebSocket
@@ -41,7 +41,7 @@ class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
     
     
     # * Video Detector
-    def video_detector(self, id: str, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
+    def object_detector(self, id: str, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> ObjectDetector:
         """ 
         Return an instance of VideoDetector 
         
@@ -54,7 +54,7 @@ class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
         delay : int
             Delay to rerun AI alg
         """
-        return VideoDetectorImpl(id, video_capture, ai_engine, delay)
+        return ObjectDetectorImpl(id, video_capture, ai_engine, delay)
     
     
     # * Tracked Video

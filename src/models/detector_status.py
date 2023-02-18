@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class VideoStatus(Enum):
+class DetectorStatus(Enum):
     OFF = "OFF"
     RUNNING = "RUNNING"
     ERROR = "ERROR"

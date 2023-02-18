@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from src.domain.dependencies.ai_engine import AIEngine
 from src.domain.dependencies.video_capture import VideoCapture
-from src.domain.components.video_detector import VideoDetector
+from src.domain.components.detectors.object_detector import ObjectDetector
 
 
 class TrackedVideoDependencies(ABC):
@@ -29,9 +29,9 @@ class TrackedVideoDependencies(ABC):
     
     # * Video Detector
     @abstractmethod
-    def video_detector(self, id: str, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
+    def object_detector(self, id: str, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> ObjectDetector:
         """ 
-        Return an instance of VideoDetector 
+        Return an instance of ObjectDetector 
         
         Parameters
         ----------
@@ -42,4 +42,4 @@ class TrackedVideoDependencies(ABC):
         delay : int
             Delay to rerun AI alg
         """
-        raise NotImplementedError('video_detector() must be defined')
+        raise NotImplementedError('object_detector() must be defined')
