@@ -28,7 +28,7 @@ class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
     
     
     # * Video Capture
-    def video_capture(self, url: str) -> VideoCapture:
+    def video_capture(self, id: str, url: str) -> VideoCapture:
         """ 
         Return an instance of VideoCapture 
         
@@ -37,11 +37,11 @@ class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
         url : str
             URL to retrive the video
         """
-        return OpenCVVideoCapture(url)
+        return OpenCVVideoCapture(id, url)
     
     
     # * Video Detector
-    def video_detector(self, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
+    def video_detector(self, id: str, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
         """ 
         Return an instance of VideoDetector 
         
@@ -54,7 +54,7 @@ class DependencyInjector(TrackedVideoDependencies, MainUnitDependencies):
         delay : int
             Delay to rerun AI alg
         """
-        return VideoDetectorImpl(video_capture, ai_engine, delay)
+        return VideoDetectorImpl(id, video_capture, ai_engine, delay)
     
     
     # * Tracked Video

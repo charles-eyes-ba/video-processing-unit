@@ -25,9 +25,9 @@ class TrackedVideoImpl(TrackedVideo):
         self._dependencies = dependencies
         self._video_feed = video_feed
         self._ai_engine = self._dependencies.ai_engine()
-        self._video_capture = self._dependencies.video_capture(self._video_feed.url)
+        self._video_capture = self._dependencies.video_capture(self._video_feed.id, self._video_feed.url)
         
-        self._video_detector = self._dependencies.video_detector(self._video_capture, self._ai_engine)
+        self._video_detector = self._dependencies.video_detector(self._video_feed.id, self._video_capture, self._ai_engine)
         self._video_detector_status = VideoStatus.OFF
         
         self._video_capture.start()

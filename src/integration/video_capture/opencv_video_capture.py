@@ -14,7 +14,8 @@ class OpenCVVideoCapture(VideoCapture):
         return self._url
     
     
-    def __init__(self, url: str):
+    def __init__(self, id: str, url: str):
+        self.id = id
         self._url = url
         self._cap = None
         self._frame = None
@@ -23,7 +24,7 @@ class OpenCVVideoCapture(VideoCapture):
         self._thread = None
         self._event = Event()
         self._lock = Lock()
-        logger.debug(f'Initialized {self._url}')
+        logger.debug(f'Initialized {self.id}')
     
         
     # * Setups
@@ -38,21 +39,21 @@ class OpenCVVideoCapture(VideoCapture):
         
         self._cap = cv2.VideoCapture(self._url)
         if self._cap is None or not self._cap.isOpened():
-            exception = VideoCaptureCouldNotConnect(f'Could not connect to video source: {self._url}')
+            exception = VideoCaptureCouldNotConnect(f'Could not connect to video source: {self.id}')
             call(self._on_error, exception)
             return
         
         self._event.clear()
         self._thread = Thread(target=self._loop)
-        self._thread.name = f' Thread-Video Capture {self._url}'
+        self._thread.name = f' Thread-Video Capture {self.id}'
         self._thread.daemon = True
         self._thread.start()
-        logger.debug(f'Started the capture of {self._url}')
+        logger.debug(f'Started the capture of {self.id}')
         
         
     def stop(self):
         self._event.set()
-        logger.debug(f'Stopped the capture of {self._url}')
+        logger.debug(f'Stopped the capture of {self.id}')
         
         
     def lastest_frame(self):
@@ -87,7 +88,7 @@ class OpenCVVideoCapture(VideoCapture):
                 self._lock.release()
                 
             except Exception as exception:
-                logger.error(f'{self._url}:error')
+                logger.error(f'{self.id}:error')
                 call(self._on_error, exception)
                 break
             

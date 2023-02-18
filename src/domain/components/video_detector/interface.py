@@ -1,10 +1,17 @@
 from abc import ABC, abstractmethod
+from src.common.abstract_attribute import abstract_attribute
 from src.domain.dependencies.video_capture import VideoCapture
 from src.domain.dependencies.ai_engine import AIEngine
 
 
 class VideoDetector(ABC):
     """ Class that make detections in a image. """
+    
+    @abstract_attribute
+    def id(self) -> str:
+        """ ID (same of video_feed.id) """
+        raise NotImplementedError('id() must be defined')
+    
     
     @abstractmethod
     def __init__(self, video_capture: VideoCapture, ai_engine: AIEngine, delay: int):

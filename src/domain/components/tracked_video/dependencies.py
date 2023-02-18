@@ -8,14 +8,14 @@ class TrackedVideoDependencies(ABC):
     
     # * AI Engine
     @abstractmethod
-    def ai_engine(self) -> 'AIEngine':
+    def ai_engine(self) -> AIEngine:
         """ Return an instance of AIEngine """
         raise NotImplementedError('ai_engine() must be defined')
     
     
     # * Video Capture
     @abstractmethod
-    def video_capture(self, url: str) -> 'VideoCapture':
+    def video_capture(self, id: str, url: str) -> VideoCapture:
         """ 
         Return an instance of VideoCapture 
         
@@ -29,7 +29,7 @@ class TrackedVideoDependencies(ABC):
     
     # * Video Detector
     @abstractmethod
-    def video_detector(self, video_capture: 'VideoCapture', ai_engine: 'AIEngine', delay: int = 5) -> 'VideoDetector':
+    def video_detector(self, id: str, video_capture: VideoCapture, ai_engine: AIEngine, delay: int = 5) -> VideoDetector:
         """ 
         Return an instance of VideoDetector 
         

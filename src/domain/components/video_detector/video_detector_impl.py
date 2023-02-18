@@ -10,10 +10,12 @@ from .interface import VideoDetector
 class VideoDetectorImpl(VideoDetector):
     def __init__(
         self, 
+        id: str,
         video_capture: VideoCapture, 
         ai_engine: AIEngine, 
         delay: int = 5
     ):
+        self.id = id
         self._video_capture = video_capture
         self._ai_engine = ai_engine
         self._delay = delay
@@ -28,7 +30,7 @@ class VideoDetectorImpl(VideoDetector):
         self._video_capture.setup_callbacks(
             on_error=self._on_video_capture_error
         )
-        logger.debug(f'Initialized')
+        logger.debug(f'Initialized {self.id}')
 
 
     # * Video Feed callbacks
@@ -41,7 +43,7 @@ class VideoDetectorImpl(VideoDetector):
         exception : Exception
             The exception that occurred
         """
-        logger.debug(f'Got an video capture error {exception}')
+        logger.debug(f'Got on {self.id} video capture error {exception}')
         self.stop()
         call(self._on_error, exception)
         
@@ -64,7 +66,7 @@ class VideoDetectorImpl(VideoDetector):
         self._event.clear()
         self._video_capture.start()
         self._thread = Thread(target=self._video_detector_loop)
-        self._thread.name = f' Thread-Video Detector {self._video_capture.url}'
+        self._thread.name = f' Thread-Video Detector {self.id}'
         self._thread.daemon = True
         self._thread.start()
         logger.debug('Started')

@@ -7,6 +7,12 @@ class VideoCapture(ABC):
     """ Class to get video frames from a source """
     
     @abstract_attribute
+    def id(self) -> str:
+        """ ID (same of video_feed.id) """
+        raise NotImplementedError('id() must be defined')
+    
+    
+    @abstract_attribute
     def url(self) -> str:
         """ Video feed URL """
         raise NotImplementedError('url() must be defined')
